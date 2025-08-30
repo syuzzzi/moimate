@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { ThemeProvider } from "styled-components";
-import theme from "../theme";
 
 const Container = styled.div`
   display: flex;
@@ -20,11 +18,9 @@ const Text = styled.h1`
 
 const Hing = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <Container>
-        <Text>hing</Text>
-      </Container>
-    </ThemeProvider>
+    <Container>
+      <Text>hing</Text>
+    </Container>
   );
 };
 
