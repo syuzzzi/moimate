@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { ThemeProvider } from "styled-components";
+import theme from "../theme";
 
 const Container = styled.div`
   display: flex;
@@ -8,7 +10,7 @@ const Container = styled.div`
   height: 100vh;
   background-color: #fff;
   color: #333;
-  font-family: Arial, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.extraBold};
 `;
 
 const Text = styled.h1`
@@ -18,9 +20,11 @@ const Text = styled.h1`
 
 const Hing = () => {
   return (
-    <Container>
-      <Text>hing</Text>
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Container>
+        <Text>hing</Text>
+      </Container>
+    </ThemeProvider>
   );
 };
 
