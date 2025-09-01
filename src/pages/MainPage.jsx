@@ -1,0 +1,326 @@
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import theme from "../theme.js";
+import { Heart, Search } from "react-feather";
+import api from "../api/api";
+import Logo from "../../assets/logo.svg";
+import useSWR from "swr";
+
+const LogoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+  margin-bottom: 40px;
+`;
+
+const SectionContainer = styled.div`
+  margin-bottom: 40px;
+`;
+
+const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 20px;
+  font-family: ${({ theme }) => theme.fonts.bold};
+  margin-top: 25px;
+  margin-bottom: 2px;
+  color: #656565;
+`;
+
+const ViewAllButton = styled(Link)`
+  font-size: 16px;
+  font-weight: bold;
+  //font-family: ${({ theme }) => theme.fonts.bold};
+  margin-left: auto;
+  text-decoration: none;
+  color: ${({ theme }) => theme.colors.mainBlue};
+`;
+
+const PostListContainer = styled.div`
+  min-height: 150px;
+`;
+
+const ListItem = styled(Link)`
+  display: block;
+  padding: 15px 0;
+  border-bottom: 1px solid #ddd;
+  text-decoration: none;
+  color: inherit;
+`;
+
+const ListTitle = styled.h3`
+  font-size: 16px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+  color: ${({ theme }) => theme.colors.grey};
+  margin-bottom: 5px;
+`;
+
+const ListInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const ListDate = styled.span`
+  color: #888;
+  font-family: ${({ theme }) => theme.fonts.regular};
+`;
+
+const LikesContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+`;
+
+const LikesText = styled.span`
+  margin-left: 5px;
+  color: #979c9e;
+  font-family: ${({ theme }) => theme.fonts.regular};
+`;
+
+const CategoryContainer = styled.div`
+  margin-top: 30px;
+  margin-bottom: 10px;
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+`;
+
+const CategoryItem = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 25px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 50px;
+  text-align: center;
+`;
+
+const CategoryImage = styled.img`
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+`;
+
+const CategoryText = styled.span`
+  margin-top: 10px;
+  font-size: 14px;
+  font-family: ${({ theme }) => theme.fonts.bold};
+  color: ${({ theme }) => theme.colors.grey};
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  border: 2px solid ${({ theme }) => theme.colors.mainBlue};
+  border-radius: 10px;
+  padding: 10px;
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  height: 40px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-family: ${({ theme }) => theme.fonts.bold};
+`;
+
+const EmptyList = styled.div`
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  padding-bottom: 10px;
+`;
+
+const EmptyText = styled.span`
+  font-size: 16px;
+  color: #888;
+  font-family: ${({ theme }) => theme.fonts.bold};
+`;
+
+// Helper components
+const Section = ({ title, showViewAll, onViewAllPress, children }) => (
+  <SectionContainer>
+    <SectionHeader>
+      <SectionTitle>{title}</SectionTitle>
+      {showViewAll && (
+        <ViewAllButton to={onViewAllPress}>전체글 &gt;</ViewAllButton>
+      )}
+    </SectionHeader>
+    <div>{children}</div>
+  </SectionContainer>
+);
+
+const PostList = ({ data, currentUserId }) => {
+  if (!Array.isArray(data) || data.length === 0) {
+    return (
+      <EmptyList>
+        <EmptyText>모아모아의 첫 모임을 생성해보세요!</EmptyText>
+      </EmptyList>
+    );
+  }
+
+  return (
+    <PostListContainer>
+      {data.map((item) => {
+        const screen =
+          currentUserId && String(item.userId) === String(currentUserId)
+            ? "/mypostdetail"
+            : "/postdetail";
+        const postLink = `${screen}/${item.postId}`;
+        return (
+          <ListItem key={item.postId} to={postLink}>
+            <ListTitle>{item.title}</ListTitle>
+            <ListInfo>
+              <ListDate>
+                {item.createdAt?.split("T")[0].split("-").join(".")}
+              </ListDate>
+              <LikesContainer>
+                <Heart size={16} color="#979c9e" />
+                <LikesText>{item.likesCount}</LikesText>
+              </LikesContainer>
+            </ListInfo>
+          </ListItem>
+        );
+      })}
+    </PostListContainer>
+  );
+};
+
+// Main component
+const MainPage = () => {
+  const navigate = useNavigate();
+
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  const fetcher = (url) => api.get(url).then((res) => res.data.dtoList);
+
+  const { data: latestMeetings = [], isLoading: isLoadingLatest } = useSWR(
+    "/posts/list?sort=createdAt&size=3",
+    fetcher
+  );
+  const { data: popularMeetings = [], isLoading: isLoadingPopular } = useSWR(
+    "/posts/list?sort=likesCount&size=3",
+    fetcher
+  );
+
+  // Use useEffect for initial data fetching and side effects
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          const response = await api.get("/mypage/me", {
+            headers: {
+              access: `${token}`,
+            },
+          });
+          setCurrentUserId(response.data.data);
+        }
+      } catch (error) {
+        console.log("유저 정보 가져오기 실패:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  const category = [
+    {
+      id: "1",
+      name: "취미",
+      code: "HOBBY",
+      image: "../../assets/icons/categoriHobby.png",
+    },
+    {
+      id: "2",
+      name: "운동",
+      code: "EXERCISE",
+      image: "../../assets/icons/categoriExercise.png",
+    },
+    {
+      id: "3",
+      name: "또래",
+      code: "FRIEND",
+      image: "../../assets/icons/categoriFriend.png",
+    },
+    {
+      id: "4",
+      name: "공부",
+      code: "STUDY",
+      image: "../../assets/icons/categoriStudy.png",
+    },
+    {
+      id: "5",
+      name: "음악",
+      code: "MUSIC",
+      image: "../../assets/icons/categoriMusic.png",
+    },
+    {
+      id: "6",
+      name: "게임",
+      code: "GAME",
+      image: "../../assets/icons/categoriGame.png",
+    },
+  ];
+
+  if (isLoadingLatest || isLoadingPopular) {
+    return <div>Loading...</div>; // You can add a more sophisticated loader here
+  }
+
+  return (
+    <div style={{ padding: 20 }}>
+      <LogoContainer>
+        <img src={Logo} alt="logo" width={130} height={30} />
+      </LogoContainer>
+
+      {/* 검색창 */}
+      <Link to="/search" style={{ textDecoration: "none" }}>
+        <SearchContainer theme={theme}>
+          <SearchInput type="text" placeholder="검색" readOnly />
+          <Search size={26} color={theme.colors.mainBlue} />
+        </SearchContainer>
+      </Link>
+
+      {/* 카테고리 */}
+      <CategoryContainer>
+        {category.map((item) => (
+          <CategoryItem
+            key={item.id}
+            to={`/allposts?category=${item.code}&categoryName=${item.name}`}
+          >
+            <CategoryImage src={item.image} alt={item.name} />
+            <CategoryText theme={theme}>{item.name}</CategoryText>
+          </CategoryItem>
+        ))}
+      </CategoryContainer>
+
+      {/* 최신 모임 */}
+      <Section
+        title="최신 모임"
+        showViewAll
+        onViewAllPress="/allposts?sort=createdAt"
+      >
+        <PostList data={latestMeetings} currentUserId={currentUserId} />
+      </Section>
+
+      {/* 주간 TOP3 모임 */}
+      <Section title="주간 TOP3 모임">
+        <PostList data={popularMeetings} currentUserId={currentUserId} />
+      </Section>
+    </div>
+  );
+};
+
+export default MainPage;
