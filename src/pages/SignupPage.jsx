@@ -59,7 +59,7 @@ const GenderOption = styled.button`
 const GenderCircle = styled.div`
   width: 24px;
   height: 24px;
-  border-radius: 12px;
+  border-radius: 14px;
   border-width: 2px;
   border-style: solid;
   border-color: ${({ theme, selected }) =>
@@ -234,14 +234,14 @@ const Signup = () => {
           label="이름"
           value={name}
           onChange={_handleNameChange}
-          style={{ width: "100%" }}
+          style={{ width: "100%", paddingBottom: 20 }}
         />
         <Input
           label="비밀번호"
           value={password}
           onChange={_handlePasswordChange}
           isPassword={true}
-          style={{ width: "100%" }}
+          style={{ width: "100%", paddingBottom: 20 }}
         />
         <Input
           label="비밀번호 확인"
@@ -256,11 +256,11 @@ const Signup = () => {
           placeholder="01012345678"
           value={phone}
           onChange={_handlePhoneChange}
-          style={{ width: "100%" }}
+          style={{ width: "100%", paddingBottom: 20 }}
         />
         <Gender>
           <Label>성별</Label>
-          <GenderContainer>
+          <GenderContainer style={{ marginTop: 8 }}>
             <GenderOption onClick={() => setGender("FEMALE")}>
               <GenderCircle selected={gender === "FEMALE"}>
                 {gender === "FEMALE" && <GenderInnerCircle />}
