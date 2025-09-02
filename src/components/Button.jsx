@@ -16,10 +16,13 @@ const ButtonContainer = styled.button`
   opacity: ${({ disabled }) => (disabled ? 0.7 : 1)};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   border: none;
-  color: ${({ theme }) => theme.colors.white};
+  width: 100%; // React Native의 컨테이너처럼 너비 전체를 차지하도록 설정
+`;
+
+const ButtonText = styled.span`
   font-family: ${({ theme }) => theme.fonts.bold};
   font-size: 20px;
-  width: 100%; // React Native의 컨테이너처럼 너비 전체를 차지하도록 설정
+  color: ${({ theme, style }) => (style && style.color) || theme.colors.white};
 `;
 
 // Title 컴포넌트는 button 내부에 직접 스타일을 적용하여 제거합니다.
@@ -30,12 +33,12 @@ const IconWrapper = styled.img`
   margin-right: 10px;
 `;
 
-const Button = ({ title, onClick, disabled, icon, style }) => {
+const Button = ({ title, onClick, disabled, icon, style, textStyle }) => {
   return (
     <ButtonContainer onClick={onClick} disabled={disabled} style={style}>
       {/* 아이콘이 존재할 때만 렌더링 */}
       {icon && <IconWrapper src={icon} alt="icon" />}
-      {title}
+      <ButtonText style={textStyle}>{title}</ButtonText>
     </ButtonContainer>
   );
 };
@@ -46,6 +49,7 @@ Button.propTypes = {
   disabled: PropTypes.bool,
   icon: PropTypes.string, // 이미지 소스 경로를 받습니다.
   style: PropTypes.object,
+  textStyle: PropTypes.object,
 };
 
 export default Button;
