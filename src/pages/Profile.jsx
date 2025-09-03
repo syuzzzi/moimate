@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled, { useTheme } from "styled-components";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Star, ChevronLeft } from "react-feather";
 import api from "../api/api";
 import EncryptedStorage from "localforage";
@@ -183,12 +183,20 @@ const Profile = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { userId } = useParams(); // useParams 훅으로 userId를 가져옵니다.
+  const location = useLocation();
 
   const [user, setUser] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isMyProfile, setIsMyProfile] = useState(false);
+  // 수정된 데이터를 받아와서 user 상태를 업데이트하는 함수
+  const handleUpdate = (updatedData) => {
+    setUser((prev) => ({
+      ...prev,
+      ...updatedData,
+    }));
+  };
 
   const load = useCallback(async () => {
     try {
@@ -246,11 +254,16 @@ const Profile = () => {
 
   useEffect(() => {
     load();
-  }, [load]);
+  }, [load, location.state]);
 
   const handleModalClose = () => {
     setIsModalVisible(false);
     navigate("/login");
+  };
+
+  // '사진 / 경력 수정' 버튼 클릭 핸들러 수정
+  const handleEdit = () => {
+    navigate(`/editprofile`, { state: { user } });
   };
 
   const handleSignout = async () => {
@@ -302,7 +315,7 @@ const Profile = () => {
         <EditButton>
           <Button
             title="사진 / 경력 수정"
-            onClick={() => navigate(`/edit-profile`)}
+            onClick={handleEdit}
             style={{ height: "40px", width: "100%", fontSize: "16px" }}
           />
         </EditButton>
