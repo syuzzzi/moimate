@@ -15,6 +15,7 @@ import MyPage from "./MyPage";
 import AllPosts from "./AllPosts";
 import CreatePost from "./CreatePost";
 import Profile from "./Profile";
+import EditProfile from "./EditProfile";
 import { TabBar } from "../components";
 
 const App = () => {
@@ -30,7 +31,7 @@ const App = () => {
           <Route path="/allposts" element={<AllPosts />} />
           <Route path="/createpost" element={<CreatePost />} />
           <Route path="/profile" element={<Profile />} />
-
+          <Route path="/editprofile" element={<EditProfile />} />
           <Route path="/done" element={<SignupDonePage />} />
           <Route path="/hing" element={<Hing />} />
           <Route path="/" element={<SignupPage />} />
