@@ -59,7 +59,7 @@ const GenderOption = styled.button`
 const GenderCircle = styled.div`
   width: 24px;
   height: 24px;
-  border-radius: 12px;
+  border-radius: 14px;
   border-width: 2px;
   border-style: solid;
   border-color: ${({ theme, selected }) =>
@@ -193,7 +193,7 @@ const Signup = () => {
         gender,
       });
       console.log("회원가입 성공:", response.data);
-      navigate("/signup-done"); // 웹 라우팅 경로로 변경
+      navigate("/done"); // 웹 라우팅 경로로 변경
     } catch (error) {
       if (error.response) {
         console.error("서버 오류:", error.response.data);
@@ -221,12 +221,12 @@ const Signup = () => {
             onClick={checkEmailDuplicate}
             disabled={!email || !!emailErrorMessage}
             style={{
-              width: 90,
-              height: 50,
-              marginTop: 32,
-              fontSize: 15,
-              padding: 0,
+              width: "90px",
+              height: "50px",
+              borderRadius: "5px",
+              marginTop: 22,
             }}
+            textStyle={{ fontSize: 15, color: "#fff" }}
           />
         </EmailContainer>
         <ErrorMessage message={emailErrorMessage} />
@@ -234,14 +234,14 @@ const Signup = () => {
           label="이름"
           value={name}
           onChange={_handleNameChange}
-          style={{ width: "100%" }}
+          style={{ width: "100%", paddingBottom: 20 }}
         />
         <Input
           label="비밀번호"
           value={password}
           onChange={_handlePasswordChange}
           isPassword={true}
-          style={{ width: "100%" }}
+          style={{ width: "100%", paddingBottom: 20 }}
         />
         <Input
           label="비밀번호 확인"
@@ -256,11 +256,11 @@ const Signup = () => {
           placeholder="01012345678"
           value={phone}
           onChange={_handlePhoneChange}
-          style={{ width: "100%" }}
+          style={{ width: "100%", paddingBottom: 20 }}
         />
         <Gender>
           <Label>성별</Label>
-          <GenderContainer>
+          <GenderContainer style={{ marginTop: 8 }}>
             <GenderOption onClick={() => setGender("FEMALE")}>
               <GenderCircle selected={gender === "FEMALE"}>
                 {gender === "FEMALE" && <GenderInnerCircle />}

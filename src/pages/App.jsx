@@ -17,6 +17,9 @@ import CreatePost from "./CreatePost";
 import Profile from "./Profile";
 import EditProfile from "./EditProfile";
 import { TabBar } from "../components";
+import SigninPage from "./SigninPage";
+import SigninWithEmailPage from "./SigninWithEmailPage";
+import FindPwPage from "./FindPwPage";
 
 const App = () => {
   return (
@@ -34,12 +37,18 @@ const App = () => {
           <Route path="/editprofile" element={<EditProfile />} />
           <Route path="/done" element={<SignupDonePage />} />
           <Route path="/hing" element={<Hing />} />
-          <Route path="/" element={<SignupPage />} />
-
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/" element={<SigninPage />} />
+          <Route path="/signinwithemail" element={<SigninWithEmailPage />} />
+          <Route path="/findpw" element={<FindPwPage />} />
+          
+          
+       
           {/* 다른 라우트들을 여기에 추가하세요 */}
         </Routes>
       </div>
       <TabBar />
+     
     </ThemeProvider>
   );
 };
