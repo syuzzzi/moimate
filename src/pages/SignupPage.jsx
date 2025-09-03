@@ -193,7 +193,7 @@ const Signup = () => {
         gender,
       });
       console.log("회원가입 성공:", response.data);
-      navigate("/signup-done"); // 웹 라우팅 경로로 변경
+      navigate("/done"); // 웹 라우팅 경로로 변경
     } catch (error) {
       if (error.response) {
         console.error("서버 오류:", error.response.data);
