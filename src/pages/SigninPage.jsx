@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 //import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid"; // uuid 라이브러리 추가
+import Spinner from "../components/Spinner";
 
 const Container = styled.div`
   display: flex;
@@ -261,11 +262,7 @@ const Signin = () => {
 
   return (
     <Container>
-      {loading && (
-        <div style={{ position: "absolute", top: "50%", zIndex: 2 }}>
-          로딩 중...
-        </div>
-      )}
+      {loading && <Spinner fullscreen size="30px" thickness="4px" />}
 
       <Logo style={{ marginBottom: 50 }} />
 
@@ -327,9 +324,10 @@ const Signin = () => {
       />
 
       <AlertModal
-        $visible={modalVisible}
+        visible={modalVisible}
         message={modalMessage}
         onConfirm={() => setModalVisible(false)}
+        textStyle={{ whiteSpace: "pre-line" }}
       />
     </Container>
   );

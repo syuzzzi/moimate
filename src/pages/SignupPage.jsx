@@ -221,12 +221,12 @@ const Signup = () => {
             onClick={checkEmailDuplicate}
             disabled={!email || !!emailErrorMessage}
             style={{
-              width: 90,
-              height: 50,
-              marginTop: 32,
-              fontSize: 15,
-              padding: 0,
+              width: "90px",
+              height: "50px",
+              borderRadius: "5px",
+              marginTop: 22,
             }}
+            textStyle={{ fontSize: 15, color: "#fff" }}
           />
         </EmailContainer>
         <ErrorMessage message={emailErrorMessage} />
