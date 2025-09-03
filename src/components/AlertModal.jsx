@@ -37,6 +37,7 @@ const Message = styled.p`
   text-align: center;
   margin-bottom: 20px;
   line-height: 22px;
+  white-space: pre-line;
 `;
 
 const ButtonRow = styled.div`

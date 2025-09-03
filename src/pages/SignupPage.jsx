@@ -193,7 +193,7 @@ const Signup = () => {
         gender,
       });
       console.log("회원가입 성공:", response.data);
-      navigate("/signup-done"); // 웹 라우팅 경로로 변경
+      navigate("/done"); // 웹 라우팅 경로로 변경
     } catch (error) {
       if (error.response) {
         console.error("서버 오류:", error.response.data);
@@ -221,12 +221,12 @@ const Signup = () => {
             onClick={checkEmailDuplicate}
             disabled={!email || !!emailErrorMessage}
             style={{
-              width: 90,
-              height: 50,
-              marginTop: 32,
-              fontSize: 15,
-              padding: 0,
+              width: "90px",
+              height: "50px",
+              borderRadius: "5px",
+              marginTop: 22,
             }}
+            textStyle={{ fontSize: 15, color: "#fff" }}
           />
         </EmailContainer>
         <ErrorMessage message={emailErrorMessage} />
