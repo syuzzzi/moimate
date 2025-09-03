@@ -2,23 +2,35 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-// `styled.Text`는 웹에서 `styled.p` 또는 `styled.span`으로 대체합니다.
 const StyledText = styled.p`
   width: 100%;
-  height: 17px;
+  height: 20px;
   color: ${({ theme }) => theme.colors.red};
-  font-size: 13px;
+  font-size: 14px;
   font-family: ${({ theme }) => theme.fonts.regular};
   z-index: 999;
-  margin: 0; // p 태그의 기본 여백 제거
+  margin: 0;
+
+  // ✅ 메시지가 없으면 투명하게 만듭니다.
+  opacity: ${({ $hasMessage }) => ($hasMessage ? 1 : 0)};
+  transition: opacity 0.3s;
+
+  // ✅ 부모 컴포넌트에서 전달받은 스타일을 적용합니다.
+  ${(props) => props.style}
 `;
 
-const ErrorMessage = ({ message }) => {
-  return <StyledText>{message}</StyledText>;
+const ErrorMessage = ({ message, style }) => {
+  return (
+    <StyledText style={style} $hasMessage={!!message}>
+      {message}
+    </StyledText>
+  );
 };
 
 ErrorMessage.propTypes = {
   message: PropTypes.string.isRequired,
+  // ✅ style 프롭 타입을 추가합니다.
+  style: PropTypes.object,
 };
 
 export default ErrorMessage;

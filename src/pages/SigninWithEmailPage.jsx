@@ -167,7 +167,7 @@ const SigninWithEmail = () => {
         <RightAlignedWrapper style={{ alignContent: "flex-end" }}>
           <LostPw
             title="비밀번호를 잊으셨나요?"
-            onClick={() => navigate("/find-password")}
+            onClick={() => navigate("/findpw")}
             containerStyle={{ width: "100%", textAlign: "right" }}
           />
         </RightAlignedWrapper>
@@ -176,9 +176,9 @@ const SigninWithEmail = () => {
           title="로그인"
           onClick={_handleSigninBtnPress}
           disabled={disabled}
-          style={{ width: "100%", marginTop: 50 }}
+          style={{ width: "100%", marginTop: 30 }}
         />
-        <ErrorMessage message={errorMessage} />
+        <ErrorMessage message={errorMessage} style={{ marginTop: 10 }} />
       </Container>
       <FooterContainer>
         <Button

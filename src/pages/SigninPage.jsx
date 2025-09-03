@@ -237,7 +237,7 @@ const Signin = () => {
   }, [NAVER_CLIENT_ID, REDIRECT_URI]);
 
   const navigateToEmailSignup = () => {
-    navigate("/email-signup");
+    navigate("/signinwithemail");
   };
 
   useEffect(() => {
