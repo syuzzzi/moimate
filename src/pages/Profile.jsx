@@ -27,7 +27,7 @@ const HeaderContainer = styled.div`
 const HeaderTitle = styled.h1`
   font-size: 16px;
   font-weight: bold;
-  font-family: ${({ theme }) => theme.fonts.bold};
+  font-family: ${({ theme }) => theme.fonts.extraBold};
   color: ${({ theme }) => theme.colors.black};
 `;
 
@@ -316,7 +316,8 @@ const Profile = () => {
           <Button
             title="사진 / 경력 수정"
             onClick={handleEdit}
-            style={{ height: "40px", width: "100%", fontSize: "16px" }}
+            style={{ height: "40px", width: "100%" }}
+            textStyle={{ fontFamily: theme.fonts.bold, fontSize: 16 }}
           />
         </EditButton>
 
@@ -350,14 +351,22 @@ const Profile = () => {
           <Button
             title="로그아웃"
             onClick={handleSignout}
-            style={{ width: "95px", height: "40px", fontSize: "16px" }}
+            textStyle={{ fontSize: 16, fontFamily: theme.fonts.bold }}
+            style={{ width: "95px", height: "40px" }}
           />
           <Button
             title="회원탈퇴"
             onClick={handleDeleteAccount}
-            backgroundColor={theme.colors.lightBlue}
-            color={theme.colors.black}
-            style={{ width: "95px", height: "40px", fontSize: "16px" }}
+            textStyle={{
+              fontSize: 16,
+              color: theme.colors.black,
+              fontFamily: theme.fonts.bold,
+            }}
+            style={{
+              width: "95px",
+              height: "40px",
+              backgroundColor: theme.colors.lightBlue,
+            }}
           />
         </ButtonContainer>
       </Container>
