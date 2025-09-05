@@ -12,6 +12,7 @@ const Container = styled.div`
   flex: 1;
   background-color: white;
   padding: 5px;
+  margin-top: 15px;
 `;
 
 const Header = styled.h1`
