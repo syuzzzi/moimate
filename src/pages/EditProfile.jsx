@@ -10,7 +10,7 @@ import { Button, Input, AlertModal } from "../components";
 const Container = styled.div`
   flex: 1;
   background-color: #fff;
-  padding-top: 20px;
+  padding-top: 30px;
   padding-left: 20px;
   padding-right: 20px;
   display: flex;
@@ -31,7 +31,7 @@ const HeaderContainer = styled.div`
 const HeaderTitle = styled.h1`
   font-size: 16px;
   font-weight: bold;
-  font-family: ${({ theme }) => theme.fonts.bold};
+  font-family: ${({ theme }) => theme.fonts.extraBold};
   color: ${({ theme }) => theme.colors.black};
   position: absolute;
   left: 50%;
@@ -247,7 +247,7 @@ const EditProfile = () => {
           onClick={handleSave}
           disabled={disabled}
           containerStyle={{ height: 40, width: 85 }}
-          textStyle={{ fontSize: 12, marginLeft: 0 }}
+          textStyle={{ fontSize: 16, marginLeft: 0 }}
           style={{ height: 40, width: 85 }}
         />
       </ButtonContainer>

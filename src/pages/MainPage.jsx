@@ -10,7 +10,7 @@ import useSWR from "swr";
 const LogoContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 60px;
+  margin-top: 40px;
   margin-bottom: 40px;
 `;
 
@@ -26,16 +26,15 @@ const SectionHeader = styled.div`
 
 const SectionTitle = styled.h2`
   font-size: 20px;
-  font-family: ${({ theme }) => theme.fonts.bold};
-  margin-top: 25px;
-  margin-bottom: 2px;
+  font-family: ${({ theme }) => theme.fonts.extraBold};
+  margin-top: 20px;
+  margin-bottom: 5px;
   color: #656565;
 `;
 
 const ViewAllButton = styled(Link)`
   font-size: 16px;
-  font-weight: bold;
-  //font-family: ${({ theme }) => theme.fonts.bold};
+  font-family: ${({ theme }) => theme.fonts.bold};
   margin-left: auto;
   text-decoration: none;
   color: ${({ theme }) => theme.colors.mainBlue};
@@ -47,7 +46,7 @@ const PostListContainer = styled.div`
 
 const ListItem = styled(Link)`
   display: block;
-  padding: 15px 0;
+  padding: 5px 0;
   border-bottom: 1px solid #ddd;
   text-decoration: none;
   color: inherit;
@@ -55,9 +54,9 @@ const ListItem = styled(Link)`
 
 const ListTitle = styled.h3`
   font-size: 16px;
-  font-family: ${({ theme }) => theme.fonts.regular};
-  color: ${({ theme }) => theme.colors.grey};
-  margin-bottom: 5px;
+  font-family: ${({ theme }) => theme.fonts.bold};
+  color: ${({ theme }) => theme.colors.black};
+  margin-bottom: 3px;
 `;
 
 const ListInfo = styled.div`
@@ -69,7 +68,8 @@ const ListInfo = styled.div`
 
 const ListDate = styled.span`
   color: #888;
-  font-family: ${({ theme }) => theme.fonts.regular};
+  font-size: 14px;
+  font-family: ${({ theme }) => theme.fonts.bold};
 `;
 
 const LikesContainer = styled.div`
@@ -80,8 +80,9 @@ const LikesContainer = styled.div`
 
 const LikesText = styled.span`
   margin-left: 5px;
+  font-size: 14px;
   color: #979c9e;
-  font-family: ${({ theme }) => theme.fonts.regular};
+  font-family: ${({ theme }) => theme.fonts.bold};
 `;
 
 const CategoryContainer = styled.div`
@@ -149,7 +150,48 @@ const EmptyText = styled.span`
   font-family: ${({ theme }) => theme.fonts.bold};
 `;
 
-// Helper components
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+`;
+
+const ScrollableContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px; /* 스크롤바 공간을 위한 패딩 */
+`;
+
+const fixedContentStyle = {
+  flexShrink: 0,
+};
+
+const dummyMeetings = [
+  {
+    postId: 101,
+    title: "강남역 맛집 탐방 모임",
+    createdAt: "2025-09-02T10:00:00Z",
+    likesCount: 15,
+    userId: 1,
+  },
+  {
+    postId: 102,
+    title: "한강 러닝 크루 모집",
+    createdAt: "2025-09-01T15:30:00Z",
+    likesCount: 22,
+    userId: 2,
+  },
+  {
+    postId: 103,
+    title: "코딩 스터디 멤버 구해요 (React)",
+    createdAt: "2025-08-30T18:45:00Z",
+    likesCount: 8,
+    userId: 3,
+  },
+]; //더미데이터
+
 const Section = ({ title, showViewAll, onViewAllPress, children }) => (
   <SectionContainer>
     <SectionHeader>
@@ -206,17 +248,21 @@ const MainPage = () => {
 
   const fetcher = (url) => api.get(url).then((res) => res.data.dtoList);
 
-  const { data: latestMeetings = [], isLoading: isLoadingLatest } = useSWR(
+  /* const { data: latestMeetings = [], isLoading: isLoadingLatest } = useSWR(
     "/posts/list?sort=createdAt&size=3",
     fetcher
   );
   const { data: popularMeetings = [], isLoading: isLoadingPopular } = useSWR(
     "/posts/list?sort=likesCount&size=3",
     fetcher
-  );
+  );*/
+  const [latestMeetings, setLatestMeetings] = useState([]);
+  const [popularMeetings, setPopularMeetings] = useState([]); //더미데이터 삭제시 제거
 
   // Use useEffect for initial data fetching and side effects
   useEffect(() => {
+    setLatestMeetings(dummyMeetings); // 더미데이터 삭제시 제거
+    setPopularMeetings(dummyMeetings); // 더미데이터 삭제시 제거
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("accessToken");
@@ -274,52 +320,54 @@ const MainPage = () => {
       image: "../../assets/icons/categoriGame.png",
     },
   ];
-
+  /*
   if (isLoadingLatest || isLoadingPopular) {
     return <div>Loading...</div>; // You can add a more sophisticated loader here
-  }
+  }*/
 
   return (
-    <div style={{ padding: 20 }}>
-      <LogoContainer>
-        <img src={Logo} alt="logo" width={130} height={30} />
-      </LogoContainer>
+    <PageContainer>
+      <div style={fixedContentStyle}>
+        <LogoContainer>
+          <img src={Logo} alt="logo" width={180} height={50} />
+        </LogoContainer>
 
-      {/* 검색창 */}
-      <Link to="/search" style={{ textDecoration: "none" }}>
-        <SearchContainer theme={theme}>
-          <SearchInput type="text" placeholder="검색" readOnly />
-          <Search size={26} color={theme.colors.mainBlue} />
-        </SearchContainer>
-      </Link>
+        {/* 검색창 */}
+        <Link to="/search" style={{ textDecoration: "none" }}>
+          <SearchContainer theme={theme}>
+            <SearchInput type="text" placeholder="검색" readOnly />
+            <Search size={26} color={theme.colors.mainBlue} />
+          </SearchContainer>
+        </Link>
 
-      {/* 카테고리 */}
-      <CategoryContainer>
-        {category.map((item) => (
-          <CategoryItem
-            key={item.id}
-            to={`/allposts?category=${item.code}&categoryName=${item.name}`}
-          >
-            <CategoryImage src={item.image} alt={item.name} />
-            <CategoryText theme={theme}>{item.name}</CategoryText>
-          </CategoryItem>
-        ))}
-      </CategoryContainer>
+        {/* 카테고리 */}
+        <CategoryContainer>
+          {category.map((item) => (
+            <CategoryItem
+              key={item.id}
+              to={`/allposts?category=${item.code}&categoryName=${item.name}`}
+            >
+              <CategoryImage src={item.image} alt={item.name} />
+              <CategoryText theme={theme}>{item.name}</CategoryText>
+            </CategoryItem>
+          ))}
+        </CategoryContainer>
+      </div>
 
-      {/* 최신 모임 */}
-      <Section
-        title="최신 모임"
-        showViewAll
-        onViewAllPress="/allposts?sort=createdAt"
-      >
-        <PostList data={latestMeetings} currentUserId={currentUserId} />
-      </Section>
+      <ScrollableContent>
+        <Section
+          title="최신 모임"
+          showViewAll
+          onViewAllPress="/allposts?sort=createdAt"
+        >
+          <PostList data={latestMeetings} currentUserId={currentUserId} />
+        </Section>
 
-      {/* 주간 TOP3 모임 */}
-      <Section title="주간 TOP3 모임">
-        <PostList data={popularMeetings} currentUserId={currentUserId} />
-      </Section>
-    </div>
+        <Section title="주간 TOP3 모임">
+          <PostList data={popularMeetings} currentUserId={currentUserId} />
+        </Section>
+      </ScrollableContent>
+    </PageContainer>
   );
 };
 

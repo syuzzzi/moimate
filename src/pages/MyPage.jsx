@@ -64,7 +64,7 @@ const StarText = styled.p`
   font-size: 14px;
   color: ${(props) => props.theme.colors.mainBlue};
   margin-left: 7px;
-  font-family: ${({ theme }) => theme.fonts.extraBold};
+  font-family: ${({ theme }) => theme.fonts.bold};
   margin: 0;
 `;
 
@@ -94,14 +94,14 @@ const MeetingItem = styled(Link)`
 
 const MeetingTitle = styled.p`
   font-size: 16px;
-  font-family: ${({ theme }) => theme.fonts.extraBold};
+  font-family: ${({ theme }) => theme.fonts.bold};
   margin: 0;
 `;
 
 const MeetingDate = styled.p`
   font-size: 14px;
   color: ${(props) => props.theme.colors.grey};
-  font-family: ${({ theme }) => theme.fonts.regular};
+  font-family: ${({ theme }) => theme.fonts.bold};
   margin-top: 4px;
   margin: 0;
 `;
@@ -117,7 +117,7 @@ const PlaceholderWrapper = styled.div`
 const Placeholder = styled.p`
   font-size: 16px;
   color: ${(props) => props.theme.colors.grey};
-  font-family: ${({ theme }) => theme.fonts.regular};
+  font-family: ${({ theme }) => theme.fonts.bold};
   text-align: center;
 `;
 

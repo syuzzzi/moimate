@@ -13,7 +13,7 @@ import theme from "../theme.js";
 const Container = styled.div`
   background-color: #fff;
   padding: 20px;
-  min-height: 100vh;
+  margin-top: 20px;
 `;
 
 const SortContainer = styled.div`
@@ -36,7 +36,8 @@ const SortButton = styled.button`
   align-items: center;
   border: none;
   cursor: pointer;
-
+  background-color: ${({ theme, $active }) =>
+    $active ? theme.colors.lightBlue : "#e9e9e9"};
   &:last-child {
     margin-right: 0;
   }
@@ -48,14 +49,6 @@ const SortText = styled.span`
   font-family: ${({ theme }) => theme.fonts.bold};
   color: ${({ theme, $active }) =>
     $active ? theme.colors.mainBlue : theme.colors.grey};
-`;
-
-const SelectedSort = styled(SortButton)`
-  background-color: ${({ theme }) => theme.colors.tabBlue};
-`;
-
-const SelectedText = styled(SortText)`
-  color: ${({ theme }) => theme.colors.mainBlue};
 `;
 
 const PostListContainer = styled.ul`
@@ -87,7 +80,7 @@ const PostInfo = styled.div`
 
 const PostDate = styled.span`
   color: ${({ theme }) => theme.colors.grey};
-  font-family: ${({ theme }) => theme.fonts.regular};
+  font-family: ${({ theme }) => theme.fonts.bold};
   margin-top: 3px;
 `;
 
@@ -99,7 +92,7 @@ const LikesContainer = styled.div`
 const LikesText = styled.span`
   margin-left: 5px;
   color: #979c9e;
-  font-family: ${({ theme }) => theme.fonts.regular};
+  font-family: ${({ theme }) => theme.fonts.bold};
 `;
 
 const ButtonContainer = styled.div`
@@ -236,8 +229,8 @@ const AllPosts = ({ route }) => {
         <div>
           <h2
             style={{
-              fontSize: "20px",
-              fontWeight: "800",
+              fontSize: "22px",
+              fontFamily: theme.fonts.extraBold,
               marginTop: "15px",
               marginBottom: "5px",
             }}
@@ -248,8 +241,8 @@ const AllPosts = ({ route }) => {
             style={{
               fontSize: "14px",
               color: "#a1a1a1",
-              marginTop: "4px",
-              fontFamily: theme.fonts.regular,
+              marginTop: "10px",
+              fontFamily: theme.fonts.bold,
             }}
           >
             총 {meetings.length}개의 모임이 있습니다
@@ -257,10 +250,17 @@ const AllPosts = ({ route }) => {
         </div>
 
         <SortContainer>
-          <SortButton onClick={() => setSelectedSort("latest")}>
+          <SortButton
+            onClick={() => setSelectedSort("latest")}
+            $active={selectedSort === "latest"}
+          >
             <SortText $active={selectedSort === "latest"}>최신순</SortText>
           </SortButton>
-          <SortButton onClick={() => setSelectedSort("popular")}>
+
+          <SortButton
+            onClick={() => setSelectedSort("popular")}
+            $active={selectedSort === "popular"}
+          >
             <SortText $active={selectedSort === "popular"}>인기순</SortText>
           </SortButton>
         </SortContainer>
@@ -290,8 +290,8 @@ const AllPosts = ({ route }) => {
             style={{
               height: "40px",
               width: "95px",
-              fontSize: "16px",
             }}
+            textStyle={{ fontSize: 16, fontFamily: theme.fonts.bold }}
           />
         </ButtonContainer>
       </Container>
