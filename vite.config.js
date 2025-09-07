@@ -3,8 +3,10 @@ import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 
 export default defineConfig({
-
   plugins: [react(), svgr()],
+  define: {
+    global: "window",
+  },
   server: {
     proxy: {
       "/naver-token": {
@@ -18,12 +20,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/naver-api/, ""),
-
       },
       "/api": {
         target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
+      },
     },
   },
-}});
+});
