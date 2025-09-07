@@ -69,7 +69,7 @@ const ListInfo = styled.div`
 const ListDate = styled.span`
   color: #888;
   font-size: 14px;
-  font-family: ${({ theme }) => theme.fonts.bold};
+  font-family: ${({ theme }) => theme.fonts.regular};
 `;
 
 const LikesContainer = styled.div`
@@ -168,30 +168,6 @@ const fixedContentStyle = {
   flexShrink: 0,
 };
 
-const dummyMeetings = [
-  {
-    postId: 101,
-    title: "강남역 맛집 탐방 모임",
-    createdAt: "2025-09-02T10:00:00Z",
-    likesCount: 15,
-    userId: 1,
-  },
-  {
-    postId: 102,
-    title: "한강 러닝 크루 모집",
-    createdAt: "2025-09-01T15:30:00Z",
-    likesCount: 22,
-    userId: 2,
-  },
-  {
-    postId: 103,
-    title: "코딩 스터디 멤버 구해요 (React)",
-    createdAt: "2025-08-30T18:45:00Z",
-    likesCount: 8,
-    userId: 3,
-  },
-]; //더미데이터
-
 const Section = ({ title, showViewAll, onViewAllPress, children }) => (
   <SectionContainer>
     <SectionHeader>
@@ -248,21 +224,16 @@ const MainPage = () => {
 
   const fetcher = (url) => api.get(url).then((res) => res.data.dtoList);
 
-  /* const { data: latestMeetings = [], isLoading: isLoadingLatest } = useSWR(
+  const { data: latestMeetings = [], isLoading: isLoadingLatest } = useSWR(
     "/posts/list?sort=createdAt&size=3",
     fetcher
   );
   const { data: popularMeetings = [], isLoading: isLoadingPopular } = useSWR(
     "/posts/list?sort=likesCount&size=3",
     fetcher
-  );*/
-  const [latestMeetings, setLatestMeetings] = useState([]);
-  const [popularMeetings, setPopularMeetings] = useState([]); //더미데이터 삭제시 제거
+  );
 
-  // Use useEffect for initial data fetching and side effects
   useEffect(() => {
-    setLatestMeetings(dummyMeetings); // 더미데이터 삭제시 제거
-    setPopularMeetings(dummyMeetings); // 더미데이터 삭제시 제거
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("accessToken");
@@ -285,33 +256,33 @@ const MainPage = () => {
   const category = [
     {
       id: "1",
-      name: "취미",
-      code: "HOBBY",
-      image: "../../assets/icons/categoriHobby.png",
+      name: "언어",
+      code: "Language",
+      image: "../../assets/icons/categoriLanguage.png",
     },
     {
       id: "2",
-      name: "운동",
-      code: "EXERCISE",
-      image: "../../assets/icons/categoriExercise.png",
+      name: "문화",
+      code: "Culture",
+      image: "../../assets/icons/categoriCultures.png",
     },
     {
       id: "3",
-      name: "또래",
-      code: "FRIEND",
-      image: "../../assets/icons/categoriFriend.png",
+      name: "맛집",
+      code: "Food",
+      image: "../../assets/icons/categoriFood.png",
     },
     {
       id: "4",
-      name: "공부",
-      code: "STUDY",
-      image: "../../assets/icons/categoriStudy.png",
+      name: "취미",
+      code: "Hobby",
+      image: "../../assets/icons/categoriHobby.png",
     },
     {
       id: "5",
-      name: "음악",
-      code: "MUSIC",
-      image: "../../assets/icons/categoriMusic.png",
+      name: "KPOP",
+      code: "KPOP",
+      image: "../../assets/icons/categoriKPOP.png",
     },
     {
       id: "6",
