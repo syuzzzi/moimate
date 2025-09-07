@@ -1,51 +1,65 @@
 import React from "react";
 import styled from "styled-components";
 import { Star } from "react-feather";
+import PropTypes from "prop-types";
 
-const ReviewContainer = styled.div`
-  background-color: white;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.lightGrey};
+const Container = styled.div`
+  margin-top: 8px;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
 `;
 
-const Header = styled.div`
+const StarContainer = styled.div`
   display: flex;
+  flex-direction: row;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
 `;
 
 const StarText = styled.p`
   font-size: 14px;
+  color: ${({ theme }) => theme.colors.mainblue};
   font-weight: bold;
+  font-family: ${({ theme }) => theme.fonts.extraBold};
   margin-left: 5px;
-  color: ${({ theme }) => theme.colors.black};
+  margin-top: 0;
+  margin-bottom: 0;
 `;
 
-const Sentence = styled.p`
-  font-size: 15px;
-  color: ${({ theme }) => theme.colors.grey};
-  line-height: 1.4;
-  margin-bottom: 8px;
+const Content = styled.p`
+  font-size: 14px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+  color: #000;
+  margin-top: 5px;
+  margin-bottom: 2px;
 `;
 
 const DateText = styled.p`
   font-size: 12px;
-  color: ${({ theme }) => theme.colors.lightGrey};
+  font-family: ${({ theme }) => theme.fonts.regular};
+  color: #999;
+  margin-top: 4px;
+  margin-bottom: 2px;
 `;
 
 const Review = ({ star, sentence, createdAt }) => {
   return (
-    <ReviewContainer>
-      <Header>
-        <Star size={16} color="#FFC107" />
+    <Container>
+      <StarContainer>
+        <Star size={18} color="#FFC107" />
         <StarText>{star}</StarText>
-      </Header>
-      <Sentence>{sentence}</Sentence>
+      </StarContainer>
+      <Content>{sentence}</Content>
       <DateText>{createdAt}</DateText>
-    </ReviewContainer>
+    </Container>
   );
+};
+
+Review.propTypes = {
+  star: PropTypes.number.isRequired,
+  sentence: PropTypes.string.isRequired,
+  createdAt: PropTypes.string.isRequired,
 };
 
 export default Review;
