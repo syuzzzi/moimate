@@ -19,15 +19,16 @@ const Header = styled.h1`
   text-align: center;
   font-family: ${({ theme }) => theme.fonts.extraBold};
   padding: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   padding-top: 0px; /* 웹 환경에 맞게 상단 패딩 조정 */
 `;
 
 const ChatItem = styled(Link)`
-  padding: 15px;
+  padding: 10px 15px;
   background-color: white;
   display: block;
   text-decoration: none;
+  min-height: 40px;
 `;
 
 const ChatHeader = styled.div`
@@ -41,6 +42,7 @@ const ChatTitle = styled.p`
   font-size: 16px;
   font-family: ${({ theme }) => theme.fonts.bold};
   margin: 0;
+  margin-bottom: 5px;
   color: #333;
 `;
 
@@ -52,7 +54,6 @@ const ChatTime = styled.p`
 `;
 
 const ChatMessage = styled.p`
-  margin-top: 5px;
   font-size: 14px;
   font-family: ${({ theme }) => theme.fonts.regular};
   color: ${({ theme }) => theme.colors.grey};
@@ -60,6 +61,7 @@ const ChatMessage = styled.p`
 `;
 
 const Separator = styled.div`
+  margin-top: 3px;
   height: 1px;
   background-color: #e1e1e1;
 `;
