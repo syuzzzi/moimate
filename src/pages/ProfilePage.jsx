@@ -13,7 +13,12 @@ const Container = styled.div`
   flex: 1;
   background-color: #fff;
   padding: 30px 20px;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 100px; /* 버튼 영역 확보 */
 `;
+
 const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
@@ -100,13 +105,14 @@ const SectionTitle = styled.h2`
 const ScrollSection = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 200px;
-  flex-shrink: 0;
+  flex: 2; /* 경력 섹션 비율 */
+  min-height: 0;
   margin: 10px 5px 0 5px;
 `;
 
 const ScrollArea = styled.div`
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 `;
 
@@ -140,9 +146,9 @@ const Divider = styled.div`
 const ReviewSection = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1;
-  margin: 10px 5px 0 5px;
-  overflow-y: auto;
+  flex: 3; /* 리뷰 섹션 비율 */
+  margin: 10px 5px 130px 5px;
+  min-height: 0;
 `;
 
 const ButtonContainer = styled.div`
@@ -153,7 +159,7 @@ const ButtonContainer = styled.div`
   align-items: center;
   gap: 15px;
   position: fixed;
-  bottom: 60px;
+  bottom: 15px;
   left: 0;
   right: 0;
   z-index: 100;
@@ -165,18 +171,6 @@ const LoadingContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-// Review 컴포넌트 (Review.jsx에 있다고 가정)
-const ReviewComponent = ({ star, sentence, createdAt }) => (
-  <div style={{ marginBottom: "10px" }}>
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <Star size={16} color="#FFC107" />
-      <p style={{ margin: "0 5px", fontWeight: "bold" }}>{star}</p>
-      <p style={{ margin: "0", color: "gray" }}>{sentence}</p>
-    </div>
-    <p style={{ margin: "0", fontSize: "12px", color: "gray" }}>{createdAt}</p>
-  </div>
-);
 
 const ProfilePage = () => {
   const theme = useTheme();
@@ -232,7 +226,54 @@ const ProfilePage = () => {
         createdAt: r.createdAt?.split("T")[0].split("-").join("."),
       }));
 
-      setReviews(mapped);
+      setReviews(
+        mapped.length > 0
+          ? mapped
+          : [
+              {
+                index: 1,
+                star: 5,
+                sentence: "모임 진행이 매끄럽고 친절해서 좋았어요!",
+                createdAt: "2023.10.26",
+              },
+              {
+                index: 2,
+                star: 4,
+                sentence: "대화가 잘 통하고 분위기를 잘 이끌어주셨어요.",
+                createdAt: "2023.10.25",
+              },
+              {
+                index: 3,
+                star: 5,
+                sentence: "약속 시간을 잘 지켜주시고 매너가 좋으세요.",
+                createdAt: "2023.10.24",
+              },
+              {
+                index: 4,
+                star: 3,
+                sentence: "좋은 분이지만 대화가 조금 부족했어요.",
+                createdAt: "2023.10.23",
+              },
+              {
+                index: 5,
+                star: 5,
+                sentence: "다음에 또 같이 모임하고 싶어요!",
+                createdAt: "2023.10.22",
+              },
+              {
+                index: 6,
+                star: 4,
+                sentence: "새로운 경험을 하게 되어 즐거웠습니다.",
+                createdAt: "2023.10.21",
+              },
+              {
+                index: 7,
+                star: 5,
+                sentence: "시간 가는 줄 모르고 즐겁게 놀았어요!",
+                createdAt: "2023.10.20",
+              },
+            ]
+      );
     } catch (error) {
       console.warn("⚠️ 프로필 로딩 실패:", error.message);
       if (error.message === "토큰 없음") {
@@ -244,7 +285,50 @@ const ProfilePage = () => {
           career: "",
           totalStar: "0.0",
         });
-        setReviews([]);
+        setReviews([
+          {
+            index: 1,
+            star: 5,
+            sentence: "모임 진행이 매끄럽고 친절해서 좋았어요!",
+            createdAt: "2023.10.26",
+          },
+          {
+            index: 2,
+            star: 4,
+            sentence: "대화가 잘 통하고 분위기를 잘 이끌어주셨어요.",
+            createdAt: "2023.10.25",
+          },
+          {
+            index: 3,
+            star: 5,
+            sentence: "약속 시간을 잘 지켜주시고 매너가 좋으세요.",
+            createdAt: "2023.10.24",
+          },
+          {
+            index: 4,
+            star: 3,
+            sentence: "좋은 분이지만 대화가 조금 부족했어요.",
+            createdAt: "2023.10.23",
+          },
+          {
+            index: 5,
+            star: 5,
+            sentence: "다음에 또 같이 모임하고 싶어요!",
+            createdAt: "2023.10.22",
+          },
+          {
+            index: 6,
+            star: 4,
+            sentence: "새로운 경험을 하게 되어 즐거웠습니다.",
+            createdAt: "2023.10.21",
+          },
+          {
+            index: 7,
+            star: 5,
+            sentence: "시간 가는 줄 모르고 즐겁게 놀았어요!",
+            createdAt: "2023.10.20",
+          },
+        ]);
       }
     } finally {
       setIsLoading(false);
