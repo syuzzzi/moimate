@@ -148,7 +148,7 @@ export const categoryData = [
   { label: "맛집", value: "맛집" },
   { label: "KPOP", value: "KPOP" },
   { label: "취미", value: "취미" },
-  { label: "게임", value: "게임" },
+  { label: "취업", value: "취업" },
 ];
 
 export const cityData = [
