@@ -23,11 +23,12 @@ const TabBarContainer = styled.div`
 
 const TabItem = styled(Link)`
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: ${({ active, theme }) =>
-    active ? theme.colors.mainBlue : theme.colors.grey};
+  color: ${({ $active, theme }) =>
+    $active ? theme.colors.mainBlue : theme.colors.grey};
   font-size: 12px;
   gap: 4px;
   padding: 8px;
@@ -41,8 +42,8 @@ const TabItem = styled(Link)`
 
 const UnreadBadge = styled.div`
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: -5px;
+  left: 16px;
   background-color: red;
   color: white;
   font-size: 10px;
@@ -53,7 +54,7 @@ const UnreadBadge = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 4px;
+  padding: 0 1px;
 `;
 
 export const TabBar = () => {
@@ -99,7 +100,7 @@ export const TabBar = () => {
 
   return (
     <TabBarContainer>
-      <TabItem to="/main" active={location.pathname === "/" || undefined}>
+      <TabItem to="/main" $active={location.pathname === "/" || undefined}>
         <Home
           size={25}
           color={
@@ -109,7 +110,7 @@ export const TabBar = () => {
           }
         />
       </TabItem>
-      <TabItem to="/search" active={location.pathname === "/" || undefined}>
+      <TabItem to="/search" $active={location.pathname === "/" || undefined}>
         <Search
           size={25}
           color={
@@ -119,12 +120,7 @@ export const TabBar = () => {
           }
         />
       </TabItem>
-      <TabItem
-        to="/chatls"
-        /*to="#"
-         onClick={() => navigate("/chatls")} */
-        active={location.pathname === "/" || undefined}
-      >
+      <TabItem to="/chatls" $active={location.pathname === "/" || undefined}>
         <MessageSquare
           size={25}
           color={
@@ -136,9 +132,7 @@ export const TabBar = () => {
       </TabItem>
       <TabItem
         to="/notifications"
-        /*to="#"
-        onClick={() => navigate("/notifications")}  */
-        active={location.pathname === "/" || undefined}
+        $active={location.pathname === "/" || undefined}
       >
         <div style={{ position: "relative" }}>
           <Bell
@@ -157,7 +151,7 @@ export const TabBar = () => {
       <TabItem
         to="/mypage"
         onClick={() => navigate("/mypage")}
-        active={location.pathname === "/mypage" || undefined}
+        $active={location.pathname === "/mypage" || undefined}
       >
         <User
           size={25}
