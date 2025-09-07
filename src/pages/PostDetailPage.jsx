@@ -127,7 +127,7 @@ const Footer = styled.div`
   left: 0;
   right: 0;
   background-color: #fff;
-  padding: 10px 10px 70px 10px;
+  padding: 10px 10px 15px 10px;
   border-top: 1px solid ${({ theme }) => theme.colors.grey};
   display: flex;
   justify-content: space-between;
