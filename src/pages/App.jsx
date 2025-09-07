@@ -16,13 +16,15 @@ import AllPostsPage from "./AllPostsPage";
 import CreatePostPage from "./CreatePostPage";
 import ProfilePage from "./ProfilePage";
 import EditProfilePage from "./EditProfilePage";
-import { TabBar } from "../components";
 import SigninPage from "./SigninPage";
 import SigninWithEmailPage from "./SigninWithEmailPage";
 import FindPwPage from "./FindPwPage";
 import Layout from "../components/Layout";
 import PostDetailPage from "./PostDetailPage";
 import MyPostDetailPage from "./MyPostDetailPage";
+import PublicProfilePage from "./PublicProfilePage";
+import ChatPage from "./ChatPage";
+import EditPostPage from "./EditPostPage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -64,10 +66,13 @@ const App = () => {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/allposts" element={<AllPostsPage />} />
           <Route path="/createpost" element={<CreatePostPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/:userId" element={<ProfilePage />} />
           <Route path="/editprofile" element={<EditProfilePage />} />
           <Route path="/postdetail/:postId" element={<PostDetailPage />} />
           <Route path="/mypostdetail/:postId" element={<MyPostDetailPage />} />
+          <Route path="/publicprofile" element={<PublicProfilePage />} />
+          <Route path="/chat/:roomId" element={<ChatPage />} />
+          <Route path="/editpost/:postId" element={<EditPostPage />} />
           <Route path="/done" element={<SignupDonePage />} />
           <Route path="/hing" element={<Hing />} />
           <Route path="/signup" element={<SignupPage />} />
