@@ -322,7 +322,9 @@ const PostDetailPage = () => {
         <Divider />
       </Section>
 
-      <ProfileContainer onClick={() => navigate(`/profile/${user.userId}`)}>
+      <ProfileContainer
+        onClick={() => navigate(`/publicprofile/${user.userId}`)}
+      >
         <ProfileHeader>
           <ProfileImageContainer>
             <ProfileImage

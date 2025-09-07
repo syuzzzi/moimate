@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, Search, MessageSquare, Bell, User } from "react-feather";
-import EncryptedStorage from "localforage";
+
 import api from "../api/api";
 import theme from "../theme.js";
 
@@ -63,7 +63,7 @@ export const TabBar = () => {
 
   const checkLogin = useCallback(
     async (screenPath) => {
-      const token = await EncryptedStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
       if (!token) {
         // 실제 앱에서는 로그인 모달을 띄우거나 로그인 페이지로 리디렉션
         alert("로그인이 필요합니다."); // 임시 알림창
@@ -76,7 +76,7 @@ export const TabBar = () => {
   );
 
   const fetchUnreadNotifications = async () => {
-    const token = await EncryptedStorage.getItem("accessToken");
+    const token = localStorage.getItem("accessToken");
     if (!token) {
       setUnreadCount(0);
       return;

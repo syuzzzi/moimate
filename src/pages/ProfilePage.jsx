@@ -3,7 +3,6 @@ import styled, { useTheme } from "styled-components";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Star, ChevronLeft } from "react-feather";
 import api from "../api/api";
-import EncryptedStorage from "localforage";
 import { Button, Review } from "../components";
 import { jwtDecode } from "jwt-decode";
 
@@ -200,7 +199,7 @@ const ProfilePage = () => {
 
   const load = useCallback(async () => {
     try {
-      const token = await EncryptedStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
 
       const myUserIdRes = await api.get("/mypage/me", {
         headers: { access: token },
@@ -268,7 +267,7 @@ const ProfilePage = () => {
 
   const handleSignout = async () => {
     try {
-      await EncryptedStorage.removeItem("accessToken");
+      await localStorage.removeItem("accessToken");
       navigate("/");
     } catch (error) {
       console.error("로그아웃 에러 발생:", error);

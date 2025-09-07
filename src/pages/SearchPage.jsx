@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled, { useTheme } from "styled-components";
 import { Search as SearchIcon } from "react-feather";
 import api from "../api/api";
-import EncryptedStorage from "localforage";
 import { AlertModal } from "../components";
 
 const Container = styled.div`
@@ -112,7 +111,7 @@ const SearchPage = () => {
 
   const fetchUserInfo = async () => {
     try {
-      const token = await EncryptedStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
       if (token) {
         const response = await api.get("/mypage/me", {
           headers: {

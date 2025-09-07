@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import styled, { useTheme } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Input, Button, AlertModal } from "../components";
-import EncryptedStorage from "localforage";
 import api from "../api/api";
 import { ChevronLeft } from "react-feather";
 import Select from "react-select";
@@ -451,7 +450,7 @@ const CreatePostPage = () => {
 
   const handleSubmit = async () => {
     try {
-      const accessToken = await EncryptedStorage.getItem("accessToken");
+      const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
         setAlertMessage("게시글 생성을 위해 로그인이 필요합니다.");
         setOnConfirmAction(() => () => navigate("/login"));

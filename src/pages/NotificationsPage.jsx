@@ -3,7 +3,6 @@ import styled, { useTheme } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { Feather } from "react-feather";
 import api from "../api/api";
-import EncryptedStorage from "localforage";
 import { AlertModal } from "../components";
 
 const Container = styled.div`
@@ -174,7 +173,7 @@ const NotificationsPage = () => {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const token = await EncryptedStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
       if (!token) {
         setNotifications([]);
         setLoading(false);
@@ -194,7 +193,7 @@ const NotificationsPage = () => {
 
   const markAllAsRead = async () => {
     try {
-      const token = await EncryptedStorage.getItem("accessToken");
+      const token = await localStorage.getItem("accessToken");
       if (!token) return;
       await api.patch("/notifications/read-all", null, {
         headers: { access: token },
@@ -207,7 +206,7 @@ const NotificationsPage = () => {
 
   const fetchSessionInfo = async (item) => {
     try {
-      const token = await EncryptedStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
       if (!token) {
         setAlertMessage("세션 정보를 불러오기 위해 로그인이 필요합니다.");
         setAlertVisible(true);

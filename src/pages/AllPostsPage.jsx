@@ -3,7 +3,6 @@ import styled, { ThemeProvider } from "styled-components";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Heart } from "react-feather";
 import api from "../api/api";
-import EncryptedStorage from "localforage";
 import { Button } from "../components";
 import useSWR from "swr";
 import MoonLoader from "react-spinners/MoonLoader";

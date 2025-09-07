@@ -3,7 +3,6 @@ import styled, { useTheme } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { Star, ChevronRight } from "react-feather"; // ChevronRight를 직접 import
 import api from "../api/api";
-import EncryptedStorage from "localforage";
 import { jwtDecode } from "jwt-decode";
 
 // 스타일 정의
@@ -140,7 +139,7 @@ const MyPage = () => {
 
   const load = async () => {
     try {
-      const token = await EncryptedStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("토큰 없음");
 
       const userInfoRes = await api.get("/mypage/me", {
@@ -148,7 +147,7 @@ const MyPage = () => {
       });
 
       const userId = userInfoRes.data.data;
-      setCurrentUserId({ userId });
+      setCurrentUserId(userId);
 
       const profileRes = await api.get("/mypage/full", {
         headers: { access: token },
@@ -216,7 +215,7 @@ const MyPage = () => {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   if (loading) {
     return (
@@ -266,7 +265,7 @@ const MyPage = () => {
                 <li key={`${meeting.postId}-${meeting.title}`}>
                   <MeetingItem
                     to={
-                      meeting.userId === currentUserId.userId
+                      meeting.userId === currentUserId
                         ? `/mypostdetail/${meeting.postId}`
                         : `/postdetail/${meeting.postId}`
                     }

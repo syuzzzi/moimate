@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { AlertModal } from "../components";
 import api from "../api/api";
-import EncryptedStorage from "localforage";
 import { Link } from "react-router-dom";
 
 const Container = styled.div`
@@ -124,7 +123,7 @@ const ChatListPage = () => {
     try {
       setLoading(true);
 
-      const accessToken = await EncryptedStorage.getItem("accessToken");
+      const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
         console.warn("⚠️ accessToken 없음");
         return;
