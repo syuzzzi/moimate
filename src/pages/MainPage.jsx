@@ -286,9 +286,9 @@ const MainPage = () => {
     },
     {
       id: "6",
-      name: "게임",
-      code: "GAME",
-      image: "../../assets/icons/categoriGame.png",
+      name: "취업",
+      code: "JOB",
+      image: "../../assets/icons/categoriJob.png",
     },
   ];
   /*
