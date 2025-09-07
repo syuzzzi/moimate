@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
-import styled, { ThemeContext } from "styled-components";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { AiFillHeart } from "react-icons/ai";
+import styled, { ThemeContext } from "styled-components";
 import {
   FiHeart,
   FiDollarSign,
@@ -9,97 +8,93 @@ import {
   FiUsers,
   FiCalendar,
   FiClock,
-  FiMoreHorizontal,
 } from "react-icons/fi";
-import { MdOutlineAttachMoney } from "react-icons/md";
+import { AiFillHeart } from "react-icons/ai";
+import { ChevronLeft } from "react-feather";
 import api from "../api/api";
-import theme from "../theme";
-//import LoginModal from "../components/LoginModal";
-import AlertModal from "../components/AlertModal";
 import Button from "../components/Button";
 
+// Styled-components
 const Container = styled.div`
   flex: 1;
   padding: 20px;
+  padding-top: 15px;
   background-color: #fff;
-  min-height: 100vh;
+`;
+const HeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
   position: relative;
 `;
 
-const Section = styled.div`
-  min-height: 100px;
-  margin-bottom: 10px;
+const BackButton = styled.button`
+  position: absolute;
+  left: -10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
-
+const Section = styled.div`
+  min-height: 50px;
+  margin-bottom: 5px;
+`;
 const Title = styled.h1`
   font-size: 24px;
   font-family: ${({ theme }) => theme.fonts.extraBold};
-  margin-top: 40px;
+  margin-top: 20px;
 `;
-
-const MoreMenu = styled.div`
-  position: absolute;
-  top: 40px;
-  right: 10px;
-  background-color: #fff;
-  border: 1px solid ${({ theme }) => theme.colors.grey};
-  border-radius: 8px;
-  padding: 5px;
-  z-index: 15;
-`;
-
-const MenuItem = styled.div`
-  padding: 5px 10px;
-  cursor: pointer;
-  justify-content: center;
-  align-items: center;
-`;
-
-const MenuText = styled.span`
-  font-size: 14px;
-  font-family: ${({ theme }) => theme.fonts.regular};
-  color: ${({ danger }) => (danger ? "red" : "#000")};
-`;
-
-const DateText = styled.span`
-  display: block;
-  margin-top: -20px;
-  font-size: 14px;
+const DateText = styled.p`
   color: ${({ theme }) => theme.colors.grey};
   font-family: ${({ theme }) => theme.fonts.regular};
+  font-size: 14px;
+  margin-top: -20px;
 `;
-
 const Content = styled.p`
   font-size: 18px;
   font-family: ${({ theme }) => theme.fonts.regular};
   line-height: 30px;
-  margin-top: 15px;
+  margin-top: 20px;
   margin-bottom: 20px;
 `;
-
 const Info = styled.span`
   font-size: 16px;
   font-family: ${({ theme }) => theme.fonts.regular};
 `;
-
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid ${({ theme }) => theme.colors.grey};
+const Divider = styled.div`
+  height: 1px;
+  background-color: ${({ theme }) => theme.colors.grey};
   margin-top: 15px;
 `;
-
+const RowContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+`;
+const Label = styled.span`
+  font-size: 16px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+  color: ${({ theme }) => theme.colors.grey};
+  margin: 0 5px;
+`;
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 10px;
+  margin-right: 10px;
+  cursor: pointer;
 `;
-
 const ProfileHeader = styled.div`
   display: flex;
+  flex-direction: row;
   align-items: center;
   margin-bottom: 5px;
 `;
-
 const ProfileImageContainer = styled.div`
   width: 50px;
   height: 50px;
@@ -108,33 +103,16 @@ const ProfileImageContainer = styled.div`
   background-color: #ddd;
   overflow: hidden;
 `;
-
 const ProfileImage = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 25px;
 `;
-
-const RowContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-`;
-
-const Label = styled.span`
-  font-size: 16px;
-  font-family: ${({ theme }) => theme.fonts.regular};
-  color: ${({ theme }) => theme.colors.grey};
-  margin-right: 5px;
-  margin-left: 5px;
-`;
-
 const ProfileName = styled.span`
   font-size: 18px;
   font-family: ${({ theme }) => theme.fonts.bold};
   color: #000;
 `;
-
 const ProfileIntro = styled.p`
   font-size: 16px;
   font-family: ${({ theme }) => theme.fonts.bold};
@@ -143,7 +121,6 @@ const ProfileIntro = styled.p`
   margin-left: 10px;
   margin-top: 15px;
 `;
-
 const Footer = styled.div`
   position: fixed;
   bottom: 0;
@@ -156,25 +133,22 @@ const Footer = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-
 const LikeButton = styled.button`
   display: flex;
   align-items: center;
+  margin-left: 5px;
   background: none;
   border: none;
   cursor: pointer;
-  margin-left: 7px;
 `;
-
 const LikeText = styled.span`
-  margin-left: 7px;
-  margin-top: 2px;
+  margin-left: 5px;
   font-size: 18px;
+  font-family: ${({ theme }) => theme.fonts.regular};
   color: ${({ $liked, theme }) => ($liked ? "#FF6B6B" : theme.colors.grey)};
 `;
 
-// 모임 상세 페이지 (내 게시물)
-const MyPostDetail = () => {
+const PostDetailPage = () => {
   const theme = useContext(ThemeContext);
   const { postId } = useParams();
   const navigate = useNavigate();
@@ -182,12 +156,8 @@ const MyPostDetail = () => {
   const [meeting, setMeeting] = useState(null);
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [confirmVisible, setConfirmVisible] = useState(false);
-
   const [user, setUser] = useState(null);
+  const [isApplied, setIsApplied] = useState(false);
 
   // ✅ 더미데이터
   const dummyMeeting = {
@@ -216,24 +186,23 @@ const MyPostDetail = () => {
 
   const fetchDetail = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
-      const headers = token ? { access: token } : {};
+      const accessToken = localStorage.getItem("accessToken");
+      const headers = accessToken ? { access: accessToken } : {};
       const res = await api.get(`/posts/${postId}`, { headers });
       const data = res.data.data;
 
       setMeeting({
         postId: data.id,
         title: data.title,
-        createdAt: data.createdAt.split("T")[0].split("-").join("."),
+        createdAt: data.createdAt.split("T")[0].replace(/-/g, "."),
         content: data.content,
         location: data.location,
-        memberMax: data.membersMax,
+        maxParticipants: data.membersMax,
         recruitmentStart: data.createdAt.split("T")[0],
         recruitmentEnd: data.dueDate,
         activityStart: data.activityStartDate,
         activityEnd: data.activityEndDate,
         deposit: data.warranty,
-        category: data.category,
         tags: [`#${data.category}`],
         likes: data.likesCount,
       });
@@ -245,6 +214,7 @@ const MyPostDetail = () => {
       });
       setLikes(data.likesCount);
       setLiked(data.liked ?? false);
+      setIsApplied(!!data.formId);
     } catch (e) {
       console.error("상세 데이터 로딩 실패", e);
     }
@@ -256,16 +226,15 @@ const MyPostDetail = () => {
     setUser(dummyUser);
     setLikes(dummyMeeting.likes);
     setLiked(false);
-
+    setIsApplied(false);
     //fetchDetail();
   }, [postId]);
 
   const toggleLike = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        setAlertMessage("로그인이 필요합니다.");
-        setAlertVisible(true);
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        alert("로그인이 필요합니다.");
         return;
       }
 
@@ -273,7 +242,7 @@ const MyPostDetail = () => {
         const res = await api.post(
           `/posts/${postId}/likes`,
           {},
-          { headers: { access: token } }
+          { headers: { access: accessToken } }
         );
         if (res.status === 201) {
           setLiked(true);
@@ -281,77 +250,37 @@ const MyPostDetail = () => {
         }
       } else {
         const res = await api.delete(`/posts/${postId}/likes`, {
-          headers: { access: token },
+          headers: { access: accessToken },
         });
         if (res.status === 200) {
           setLiked(false);
           setLikes((prev) => prev - 1);
         }
       }
-    } catch (error) {
-      console.error("좋아요 처리 중 오류:", error);
-      setAlertMessage("좋아요 처리 중 문제가 발생했습니다.");
-      setAlertVisible(true);
+    } catch (err) {
+      console.error("좋아요 처리 오류", err);
     }
   };
 
-  const handleDelete = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        setAlertMessage("삭제를 위해 로그인해주세요.");
-        setAlertVisible(true);
-        return;
-      }
-      const response = await api.delete(`/posts/${postId}`, {
-        headers: { access: token },
-      });
-      if (response.status === 200) {
-        setAlertMessage("게시글이 삭제되었습니다.");
-        setAlertVisible(true);
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("게시글 삭제 실패", error);
-      setAlertMessage("게시글 삭제 중 오류가 발생했습니다.");
-      setAlertVisible(true);
-    }
-  };
-
-  if (!meeting || !user) return <div>불러오는 중...</div>;
+  if (!meeting || !user) return <p>불러오는 중...</p>;
 
   const recruitmentDeadline = new Date(`${meeting.recruitmentEnd}T23:59:59`);
   const isRecruitmentClosed = recruitmentDeadline < new Date();
 
   return (
     <Container>
+      <HeaderContainer>
+        <BackButton onClick={() => navigate(-1)}>
+          <ChevronLeft size={24} color="#333" />
+        </BackButton>
+      </HeaderContainer>
       <Section>
         <RowContainer style={{ justifyContent: "space-between" }}>
           <Title>{meeting.title}</Title>
-          <RowContainer>
-            <FiMoreHorizontal
-              name="more-horizontal"
-              size={22}
-              onClick={() => setMenuVisible(!menuVisible)}
-              style={{ cursor: "pointer" }}
-            />
-          </RowContainer>
         </RowContainer>
-
-        {menuVisible && (
-          <MoreMenu>
-            <MenuItem onClick={() => navigate(`/edit/${meeting.postId}`)}>
-              <MenuText>수정</MenuText>
-            </MenuItem>
-            <Divider style={{ marginTop: "3px", marginBottom: "3px" }} />
-            <MenuItem onClick={handleDelete}>
-              <MenuText danger>삭제</MenuText>
-            </MenuItem>
-          </MoreMenu>
-        )}
-
         <DateText>{meeting.createdAt}</DateText>
         <Content>{meeting.content}</Content>
+
         <RowContainer>
           <FiMapPin size={20} color={theme.colors.grey} />
           <Label>지역</Label>
@@ -386,22 +315,21 @@ const MyPostDetail = () => {
           <Info>{meeting.deposit}</Info>
         </RowContainer>
 
-        <Info style={{ color: theme.colors.mainBlue, marginTop: 10 }}>
+        <Info style={{ color: "#3386CA", marginTop: 10 }}>
           {meeting.tags.join("  ")}
         </Info>
+
         <Divider />
       </Section>
 
-      {/* 작성자 정보 */}
-      <ProfileContainer>
+      <ProfileContainer onClick={() => navigate(`/profile/${user.userId}`)}>
         <ProfileHeader>
           <ProfileImageContainer>
             <ProfileImage
               src={
-                user.image ||
+                user?.image ||
                 "https://ssl.pstatic.net/static/pwe/address/img_profile.png"
               }
-              alt="profile"
             />
           </ProfileImageContainer>
           <RowContainer>
@@ -412,46 +340,40 @@ const MyPostDetail = () => {
         <ProfileIntro>{user.career}</ProfileIntro>
       </ProfileContainer>
 
-      {/* 하단 고정 */}
       <Footer>
         <LikeButton onClick={toggleLike}>
           {liked ? (
-            <AiFillHeart size={24} color="#FF6B6B" />
+            <AiFillHeart size={28} color="#FF6B6B" />
           ) : (
-            <FiHeart size={24} color={theme.colors.grey} />
+            <FiHeart size={28} color={theme.colors.grey} />
           )}
           <LikeText $liked={liked}>{likes}</LikeText>
         </LikeButton>
         <Button
-          title={isRecruitmentClosed ? "모임 재생성하기" : "신청 목록 확인"}
-          onClick={() =>
-            navigate(
-              isRecruitmentClosed
-                ? `/recreate/${meeting.postId}`
-                : `/applications/${meeting.postId}`
-            )
+          title={
+            isRecruitmentClosed
+              ? "모집마감"
+              : isApplied
+              ? "신청완료"
+              : "신청하기"
           }
-          style={{ height: 50, width: 280 }}
-        />
-      </Footer>
+          onClick={() => {
+            if (!isRecruitmentClosed && !isApplied) {
+              navigate(`/apply/${postId}`);
+            }
+          }}
+          disabled={isRecruitmentClosed || isApplied}
+          style={{
+            height: 50,
+            width: 280,
 
-      {/*<LoginModal /> */}
-      <AlertModal
-        visible={alertVisible}
-        message={alertMessage}
-        onConfirm={() => setAlertVisible(false)}
-        onCancel={() => setAlertVisible(false)}
-      />
-      {confirmVisible && (
-        <AlertModal
-          visible={confirmVisible}
-          message="정말 삭제하시겠습니까?"
-          onConfirm={handleDelete}
-          onCancel={() => setConfirmVisible(false)}
-        />
-      )}
+            cursor:
+              isRecruitmentClosed || isApplied ? "not-allowed" : "pointer",
+          }}
+        ></Button>
+      </Footer>
     </Container>
   );
 };
 
-export default MyPostDetail;
+export default PostDetailPage;

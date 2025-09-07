@@ -101,7 +101,7 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `;
 
-const EditProfile = () => {
+const EditProfilePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = location.state || {};
@@ -262,4 +262,4 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default EditProfilePage;

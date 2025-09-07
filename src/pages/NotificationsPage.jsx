@@ -140,7 +140,7 @@ const CancelButton = styled.button`
   cursor: pointer;
 `;
 
-const Notification = () => {
+const NotificationsPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -360,4 +360,4 @@ const Notification = () => {
   );
 };
 
-export default Notification;
+export default NotificationsPage;

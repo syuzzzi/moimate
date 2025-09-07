@@ -179,7 +179,7 @@ const ReviewComponent = ({ star, sentence, createdAt }) => (
   </div>
 );
 
-const Profile = () => {
+const ProfilePage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { userId } = useParams(); // useParams 훅으로 userId를 가져옵니다.
@@ -375,4 +375,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfilePage;

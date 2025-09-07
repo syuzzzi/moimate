@@ -100,7 +100,7 @@ const ResultDate = styled.p`
   margin: 0;
 `;
 
-const Search = () => {
+const SearchPage = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -219,4 +219,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default SearchPage;

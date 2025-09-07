@@ -8,21 +8,21 @@ import SignupDonePage from "./SignupDonePage";
 import Hing from "./Hing";
 import SignupPage from "./SignupPage";
 import MainPage from "./MainPage";
-import Search from "./Search";
-import ChatList from "./ChatList";
-import Notifications from "./Notifications";
+import SearchPage from "./SearchPage";
+import ChatListPage from "./ChatListPage";
+import NotificationsPage from "./NotificationsPage";
 import MyPage from "./MyPage";
-import AllPosts from "./AllPosts";
-import CreatePost from "./CreatePost";
-import Profile from "./Profile";
-import EditProfile from "./EditProfile";
+import AllPostsPage from "./AllPostsPage";
+import CreatePostPage from "./CreatePostPage";
+import ProfilePage from "./ProfilePage";
+import EditProfilePage from "./EditProfilePage";
 import { TabBar } from "../components";
 import SigninPage from "./SigninPage";
 import SigninWithEmailPage from "./SigninWithEmailPage";
 import FindPwPage from "./FindPwPage";
 import Layout from "../components/Layout";
-import PostDetail from "./PostDetail";
-import MyPostDetail from "./MyPostDetail";
+import PostDetailPage from "./PostDetailPage";
+import MyPostDetailPage from "./MyPostDetailPage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -58,16 +58,16 @@ const App = () => {
       <div style={{ paddingBottom: "20px" }}>
         <Routes>
           <Route path="/main" element={<MainPage />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/chatls" element={<ChatList />} />
-          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/chatls" element={<ChatListPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route path="/allposts" element={<AllPosts />} />
-          <Route path="/createpost" element={<CreatePost />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/editprofile" element={<EditProfile />} />
-          <Route path="/postdetail/:postId" element={<PostDetail />} />
-          <Route path="/mypostdetail/:postId" element={<MyPostDetail />} />
+          <Route path="/allposts" element={<AllPostsPage />} />
+          <Route path="/createpost" element={<CreatePostPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/editprofile" element={<EditProfilePage />} />
+          <Route path="/postdetail/:postId" element={<PostDetailPage />} />
+          <Route path="/mypostdetail/:postId" element={<MyPostDetailPage />} />
           <Route path="/done" element={<SignupDonePage />} />
           <Route path="/hing" element={<Hing />} />
           <Route path="/signup" element={<SignupPage />} />

@@ -408,7 +408,7 @@ export const districtData = {
   제주도: ["서귀포시", "제주시"],
 };
 
-const CreatePost = () => {
+const CreatePostPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -710,4 +710,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default CreatePostPage;

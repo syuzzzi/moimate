@@ -113,7 +113,7 @@ const RightColumn = styled.div`
   align-items: flex-end;
 `;
 
-const ChatList = () => {
+const ChatListPage = () => {
   const navigate = useNavigate();
   const [chatRooms, setChatRooms] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -213,4 +213,4 @@ const ChatList = () => {
   );
 };
 
-export default ChatList;
+export default ChatListPage;

@@ -117,7 +117,7 @@ const EmptyList = styled.div`
   color: #888;
 `;
 
-const AllPosts = ({ route }) => {
+const AllPostsPage = ({ route }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -299,4 +299,4 @@ const AllPosts = ({ route }) => {
   );
 };
 
-export default AllPosts;
+export default AllPostsPage;
