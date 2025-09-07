@@ -12,6 +12,7 @@ const Container = styled.div`
   flex: 1;
   background-color: white;
   padding: 10px 20px 0 20px;
+  min-height: 80vh;
 `;
 
 const Header = styled.h1`
@@ -61,6 +62,7 @@ const EmptyText = styled.p`
   font-size: 16px;
   color: ${({ theme }) => theme.colors.grey};
   font-family: ${({ theme }) => theme.fonts.bold};
+  text-align: center;
 `;
 
 const StyledModal = styled.div`

@@ -12,6 +12,7 @@ const Container = styled.div`
   background-color: white;
   padding: 5px;
   margin-top: 15px;
+  min-height: 100vh;
 `;
 
 const Header = styled.h1`
@@ -70,13 +71,14 @@ const EmptyContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1; /* 부모 컨테이너의 남은 공간을 모두 차지하도록 flex-grow 추가 */
+  flex: 1; /* 부모 컨테이너의 남은 공간을 모두 차지하도록 flex-grow 추가 */
 `;
 
 const EmptyText = styled.p`
   font-size: 16px;
   color: ${({ theme }) => theme.colors.grey};
   font-family: ${({ theme }) => theme.fonts.bold};
+  text-align: center;
 `;
 
 const UnreadBadge = styled.div`
