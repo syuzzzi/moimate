@@ -104,9 +104,9 @@ const DateInputContainer = styled.div`
   display: flex;
   align-items: center;
   width: 160px;
-  padding: 10px 12px;
+  padding: 15px 12px;
   border: 1px solid ${({ theme }) => theme.colors.grey};
-  border-radius: 8px;
+  border-radius: 5px;
   background-color: ${({ theme }) => theme.colors.white};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   box-sizing: border-box;
