@@ -3,6 +3,7 @@ import styled, { useTheme } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { Feather } from "react-feather";
 import api from "../api/api";
+import { ChevronRight } from "react-feather";
 import { AlertModal } from "../components";
 
 const Container = styled.div`
@@ -18,12 +19,12 @@ const Header = styled.h1`
   text-align: center;
   font-family: ${({ theme }) => theme.fonts.extraBold};
   padding: 5px;
-  margin-bottom: 10px;
+
   padding-top: 10px; /* 웹 환경에 맞게 상단 패딩 조정 */
 `;
 
 const NotificationItem = styled.div`
-  padding: 15px;
+  padding: 5px 0 10px 0;
   border-bottom: 1px solid #eee;
   display: flex;
   flex-direction: row;
@@ -308,7 +309,7 @@ const NotificationsPage = () => {
                   <PostTitle>{item.title}</PostTitle>
                   <MessageText>{item.body}</MessageText>
                 </MessageBox>
-                <Feather name="chevron-right" size={20} color="#999" />
+                <ChevronRight size={20} color="#999" />
               </NotificationItem>
             </li>
           ))}
