@@ -65,38 +65,27 @@ const Label = styled.label`
   font-family: ${({ theme }) => theme.fonts.bold};
 `;
 
-const DateInputContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border-width: 1px;
-  border-color: ${({ theme }) => theme.colors.grey};
-  padding: 12px;
-  width: 150px;
-  border-radius: 8px;
-  justify-content: space-between;
-  background-color: ${({ theme }) => theme.colors.white};
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
-`;
-
 const DateText = styled.span`
   font-size: 16px;
   color: ${({ theme }) => theme.colors.black};
 `;
 
-// `inputHeight` props를 `$inputHeight`로 변경
 const StyledTextInput = styled.textarea`
-  height: ${({ $inputHeight }) => $inputHeight}px;
+  display: block;
+  width: 100%;
+  height: ${({ $inputHeight }) => $inputHeight || 100}px; /* 기본값 높이 */
   padding: 10px;
-  border-color: ${({ theme }) => theme.colors.grey};
-  border-width: 1px;
+  border: 1px solid ${({ theme }) => theme.colors.grey};
   border-radius: 5px;
   font-size: 16px;
+  line-height: 1.5; /* input과 통일 */
   color: ${({ theme }) => theme.colors.black};
   background-color: ${({ theme }) => theme.colors.white};
   font-family: ${({ theme }) => theme.fonts.regular};
   resize: none;
   margin-bottom: 20px;
+  box-sizing: border-box;
+  vertical-align: middle;
 `;
 
 const FooterButtonContainer = styled.div`
@@ -111,6 +100,29 @@ const InputComponent = styled.div`
   margin-bottom: 20px;
 `;
 
+const DateInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 160px;
+  padding: 10px 12px;
+  border: 1px solid ${({ theme }) => theme.colors.grey};
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.colors.white};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  box-sizing: border-box;
+`;
+
+const DateInput = styled.input`
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+  color: ${({ theme }) => theme.colors.black};
+  cursor: pointer;
+`;
+
 // 웹 환경에 맞게 Dropdown과 DateTimePicker를 대체합니다.
 const WebCalendarPicker = ({ date, setDate, minDate, disabled }) => {
   const handleDateChange = (e) => {
@@ -119,29 +131,23 @@ const WebCalendarPicker = ({ date, setDate, minDate, disabled }) => {
 
   return (
     <DateInputContainer disabled={disabled}>
-      <input
+      <DateInput
         type="date"
         value={date.toISOString().split("T")[0]}
         onChange={handleDateChange}
         min={minDate?.toISOString().split("T")[0]}
         disabled={disabled}
-        style={{
-          border: "none",
-          background: "none",
-          padding: 0,
-          fontSize: "16px",
-        }}
       />
     </DateInputContainer>
   );
 };
 
 export const categoryData = [
+  { label: "언어", value: "언어" },
+  { label: "문화", value: "문화" },
+  { label: "맛집", value: "맛집" },
+  { label: "KPOP", value: "KPOP" },
   { label: "취미", value: "취미" },
-  { label: "운동", value: "운동" },
-  { label: "또래", value: "또래" },
-  { label: "공부", value: "공부" },
-  { label: "음악", value: "음악" },
   { label: "게임", value: "게임" },
 ];
 
@@ -440,11 +446,11 @@ const CreatePostPage = () => {
   const [onConfirmAction, setOnConfirmAction] = useState(null);
 
   const categoryCodeMap = {
+    언어: "LANGUAGE",
+    문화: "CULTURE",
+    맛집: "FOOD",
     취미: "HOBBY",
-    운동: "EXERCISE",
-    또래: "FRIEND",
-    공부: "STUDY",
-    음악: "MUSIC",
+    KPOP: "KPOP",
     게임: "GAME",
   };
 
@@ -491,7 +497,8 @@ const CreatePostPage = () => {
 
       setAlertMessage("게시글과 채팅방이\n성공적으로 생성되었습니다.");
       setOnConfirmAction(
-        () => () => navigate(`/mypostdetail/${postIdFromHeader}`)
+        () => () =>
+          navigate(`/mypostdetail/${postIdFromHeader}`, { replace: true })
       );
       setAlertVisible(true);
     } catch (error) {
@@ -549,7 +556,8 @@ const CreatePostPage = () => {
     control: (provided) => ({
       ...provided,
       borderColor: theme.colors.grey,
-      borderRadius: "8px",
+      borderRadius: "5px",
+      height: "50px",
       fontSize: "16px",
       backgroundColor: theme.colors.white,
       fontFamily: theme.fonts.regular,
@@ -570,7 +578,14 @@ const CreatePostPage = () => {
       </HeaderContainer>
       <ScrollableContainer>
         <Label>카테고리</Label>
-        <div style={{ width: "45%", zIndex: 3000, marginBottom: "20px" }}>
+        <div
+          style={{
+            width: "45%",
+            zIndex: 3000,
+            marginBottom: "20px",
+            marginTop: "5px",
+          }}
+        >
           <Select
             options={categoryData}
             value={categoryData.find((opt) => opt.value === category)}
@@ -598,11 +613,12 @@ const CreatePostPage = () => {
             onChange={(e) => setDescription(e.target.value)}
             placeholder={`어떤 모임인지 자유롭게 설명해주세요!\n(ex. 주 몇회, 초보자 환영, 필요물품 ...)`}
             $inputHeight={inputHeight}
+            style={{ marginTop: "5px" }}
           />
         </InputComponent>
 
         <Label>지역</Label>
-        <RowContainer style={{ zIndex: 2000 }}>
+        <RowContainer style={{ zIndex: 2000, marginTop: "5px" }}>
           <div style={{ width: "40%", marginBottom: "20px" }}>
             <Select
               options={cityData}
@@ -628,7 +644,7 @@ const CreatePostPage = () => {
           </div>
         </RowContainer>
 
-        <InputComponent>
+        <InputComponent style={{ marginTop: -20 }}>
           <Label>모임 최대 인원</Label>
           <Input
             ref={maxRef}
@@ -639,7 +655,7 @@ const CreatePostPage = () => {
         </InputComponent>
 
         <Label>모집 기간</Label>
-        <RowContainer>
+        <RowContainer style={{ marginTop: "5px" }}>
           <WebCalendarPicker
             date={recruitmentStart}
             setDate={setRecruitmentStart}
@@ -655,7 +671,7 @@ const CreatePostPage = () => {
         </RowContainer>
 
         <Label>활동 기간</Label>
-        <RowContainer>
+        <RowContainer style={{ marginTop: "5px" }}>
           <WebCalendarPicker date={activityStart} setDate={setActivityStart} />
           <span>~</span>
           <WebCalendarPicker
@@ -673,6 +689,7 @@ const CreatePostPage = () => {
             value={deposit}
             onChange={(e) => setDeposit(e.target.value)}
             placeholder="₩ 999,999,999"
+            style={{ marginBottom: "20px" }}
           />
         </InputComponent>
 
@@ -692,7 +709,12 @@ const CreatePostPage = () => {
             title="생성하기"
             onClick={handleSubmit}
             disabled={!isFormValid()}
-            style={{ width: "100%", height: "50px", padding: "0" }}
+            style={{
+              width: "100%",
+              height: "50px",
+              padding: "0",
+              marginBottom: "50px",
+            }}
           />
         </FooterButtonContainer>
 
