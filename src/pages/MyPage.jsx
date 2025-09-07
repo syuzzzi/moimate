@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled, { useTheme } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { Star, ChevronRight } from "react-feather"; // ChevronRight를 직접 import
+import { Star, ChevronRight } from "react-feather";
 import api from "../api/api";
 import { jwtDecode } from "jwt-decode";
 
@@ -69,8 +69,8 @@ const StarText = styled.p`
 
 const Section = styled.div`
   margin-top: 10px;
-  margin-left: 10px;
-  margin-bottom: 15px;
+  margin-left: 5px;
+  margin-bottom: 10px;
   min-height: 160px;
   display: flex;
   flex-direction: column;
@@ -80,12 +80,12 @@ const Section = styled.div`
 const SectionTitle = styled.h2`
   font-size: 18px;
   font-family: ${({ theme }) => theme.fonts.bold};
-  margin-bottom: 10px;
+  margin-bottom: 2px;
   color: #656565;
 `;
 
 const MeetingItem = styled(Link)`
-  padding: 8px 0;
+  padding: 5px 0;
   text-decoration: none;
   color: inherit;
   display: block;
@@ -94,15 +94,16 @@ const MeetingItem = styled(Link)`
 const MeetingTitle = styled.p`
   font-size: 16px;
   font-family: ${({ theme }) => theme.fonts.bold};
-  margin: 0;
+  margin-bottom: 7px;
+  margin-top: 10px;
 `;
 
 const MeetingDate = styled.p`
   font-size: 14px;
   color: ${(props) => props.theme.colors.grey};
-  font-family: ${({ theme }) => theme.fonts.bold};
-  margin-top: 4px;
-  margin: 0;
+  font-family: ${({ theme }) => theme.fonts.regular};
+  margin-bottom: 3px;
+  margin-top: 7px;
 `;
 
 const PlaceholderWrapper = styled.div`
@@ -246,7 +247,7 @@ const MyPage = () => {
           </UserRow>
         </UserInfo>
 
-        <Link to="/profile">
+        <Link to={`/profile/${currentUserId}`}>
           <ChevronRight size={24} color="#999" />
         </Link>
       </MyPageSection>
