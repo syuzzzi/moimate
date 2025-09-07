@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Heart } from "react-feather";
 import api from "../api/api";
 import { Button } from "../components";
-import useSWR from "swr";
+import { ChevronLeft } from "react-feather";
 import MoonLoader from "react-spinners/MoonLoader";
 import theme from "../theme.js";
 
@@ -12,7 +12,26 @@ import theme from "../theme.js";
 const Container = styled.div`
   background-color: #fff;
   padding: 20px;
-  margin-top: 20px;
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  position: relative;
+`;
+
+const BackButton = styled.button`
+  position: absolute;
+  left: -10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const SortContainer = styled.div`
@@ -96,7 +115,7 @@ const LikesText = styled.span`
 
 const ButtonContainer = styled.div`
   position: fixed;
-  bottom: 80px;
+  bottom: 30px;
   right: 20px;
   z-index: 999;
 `;
@@ -225,6 +244,11 @@ const AllPostsPage = ({ route }) => {
   return (
     <ThemeProvider theme={theme}>
       <Container onScroll={handleScroll}>
+        <HeaderContainer>
+          <BackButton onClick={() => navigate(-1)}>
+            <ChevronLeft size={24} color="#333" />
+          </BackButton>
+        </HeaderContainer>
         <div>
           <h2
             style={{
