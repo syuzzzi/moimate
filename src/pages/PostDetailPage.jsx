@@ -159,31 +159,6 @@ const PostDetailPage = () => {
   const [user, setUser] = useState(null);
   const [isApplied, setIsApplied] = useState(false);
 
-  // ✅ 더미데이터
-  const dummyMeeting = {
-    postId: postId || "1",
-    title: "React 스터디 모집",
-    createdAt: "2025.09.05",
-    content:
-      "React와 styled-components를 활용한 웹 개발 스터디원을 모집합니다!\n어쩌꾸어너ㅓ얼ㄴ러ㅏ\n어ㅓ라어러ㅏ어라어\n어라온ㅇ뢰ㅏㄴㅇ",
-    location: "서울 강남구",
-    maxParticipants: 10,
-    recruitmentStart: "2025-09-01",
-    recruitmentEnd: "2025-09-15",
-    activityStart: "2025-09-20",
-    activityEnd: "2025-10-30",
-    deposit: 50000,
-    tags: ["#스터디", "#React"],
-    likes: 7,
-  };
-
-  const dummyUser = {
-    userId: "u123",
-    name: "홍길동",
-    career: "프론트엔드 개발자 · 3년차",
-    image: null,
-  };
-
   const fetchDetail = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -221,13 +196,7 @@ const PostDetailPage = () => {
   };
 
   useEffect(() => {
-    // ✅ 더미데이터 주입
-    setMeeting(dummyMeeting);
-    setUser(dummyUser);
-    setLikes(dummyMeeting.likes);
-    setLiked(false);
-    setIsApplied(false);
-    //fetchDetail();
+    fetchDetail();
   }, [postId]);
 
   const toggleLike = async () => {
