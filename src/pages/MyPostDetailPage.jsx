@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import styled, { ThemeContext } from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
 import { AiFillHeart } from "react-icons/ai";
@@ -79,7 +79,7 @@ const MenuItem = styled.div`
 const MenuText = styled.span`
   font-size: 14px;
   font-family: ${({ theme }) => theme.fonts.regular};
-  color: ${({ danger }) => (danger ? "red" : "#000")};
+  color: ${({ $danger }) => ($danger ? "red" : "#000")};
 `;
 
 const DateText = styled.span`
@@ -199,6 +199,7 @@ const MyPostDetailPage = () => {
   const theme = useContext(ThemeContext);
   const { postId } = useParams();
   const navigate = useNavigate();
+  const menuRef = useRef(null);
 
   const [meeting, setMeeting] = useState(null);
   const [liked, setLiked] = useState(false);
@@ -249,6 +250,24 @@ const MyPostDetailPage = () => {
   useEffect(() => {
     fetchDetail();
   }, [postId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(false);
+      }
+    };
+
+    if (menuVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuVisible]);
 
   const toggleLike = async () => {
     try {
@@ -335,13 +354,13 @@ const MyPostDetailPage = () => {
         </RowContainer>
 
         {menuVisible && (
-          <MoreMenu>
+          <MoreMenu ref={menuRef}>
             <MenuItem onClick={() => navigate(`/editpost/${meeting.postId}`)}>
               <MenuText>수정</MenuText>
             </MenuItem>
             <Divider style={{ marginTop: "3px", marginBottom: "3px" }} />
             <MenuItem onClick={handleDelete}>
-              <MenuText danger>삭제</MenuText>
+              <MenuText $danger>삭제</MenuText>
             </MenuItem>
           </MoreMenu>
         )}
