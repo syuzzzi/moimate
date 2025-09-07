@@ -5,7 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import theme from "../theme";
 import SignupDonePage from "./SignupDonePage";
-import Hing from "./Hing";
+import Start from "./StartPage";
 import SignupPage from "./SignupPage";
 import MainPage from "./MainPage";
 import SearchPage from "./SearchPage";
@@ -22,7 +22,6 @@ import FindPwPage from "./FindPwPage";
 import Layout from "../components/Layout";
 import PostDetailPage from "./PostDetailPage";
 import MyPostDetailPage from "./MyPostDetailPage";
-import PublicProfilePage from "./PublicProfilePage";
 import ChatPage from "./ChatPage";
 import EditPostPage from "./EditPostPage";
 
@@ -70,13 +69,12 @@ const App = () => {
           <Route path="/editprofile" element={<EditProfilePage />} />
           <Route path="/postdetail/:postId" element={<PostDetailPage />} />
           <Route path="/mypostdetail/:postId" element={<MyPostDetailPage />} />
-          <Route path="/publicprofile" element={<PublicProfilePage />} />
           <Route path="/chat/:roomId" element={<ChatPage />} />
           <Route path="/editpost/:postId" element={<EditPostPage />} />
           <Route path="/done" element={<SignupDonePage />} />
-          <Route path="/hing" element={<Hing />} />
+          <Route path="/" element={<Start />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/" element={<SigninPage />} />
+          <Route path="/signin" element={<SigninPage />} />
           <Route path="/signinwithemail" element={<SigninWithEmailPage />} />
           <Route path="/findpw" element={<FindPwPage />} />
 
