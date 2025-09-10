@@ -108,8 +108,6 @@ const SigninWithEmail = () => {
         }
       );
 
-      console.log("로그인 성공");
-
       const accessToken = response.headers.access;
       const refreshToken = response.data.refresh_token;
 
@@ -129,7 +127,9 @@ const SigninWithEmail = () => {
       }
 
       // setUser(response.data); // AuthContext 주석 처리
-      navigate("/hing", { replace: true });
+
+      console.log("로그인 성공");
+      navigate("/main", { replace: true });
     } catch (error) {
       if (error.response) {
         console.error("서버 응답 상태 코드:", error.response.status);
