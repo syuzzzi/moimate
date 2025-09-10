@@ -101,9 +101,11 @@ const Signin = () => {
 
         const { kakao_account } = kakaoUserInfoRes.data;
 
+        console.log("카카오 사용자 정보:", kakaoUserInfoRes.data);
+
         const userData = {
           email: kakao_account?.email,
-          name: kakao_account?.profile?.nickname,
+          name: kakao_account?.name,
           gender: kakao_account?.gender?.toUpperCase(),
           id: kakaoUserInfoRes.data.id,
           phonenumber: kakao_account?.phone_number,

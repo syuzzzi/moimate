@@ -1,6 +1,6 @@
 // src/contexts/AuthProvider.jsx
 import React, { useState, useEffect } from "react";
-import { AuthContext } from "./auth-context";
+import { AuthContext } from "./AuthContext";
 import api from "../api/api";
 import { jwtDecode } from "jwt-decode";
 import { isTokenExpired } from "../utils/utils";
