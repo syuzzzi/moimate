@@ -101,8 +101,6 @@ const Signin = () => {
 
         const { kakao_account } = kakaoUserInfoRes.data;
 
-        console.log("카카오 사용자 정보:", kakaoUserInfoRes.data);
-
         const userData = {
           email: kakao_account?.email,
           name: kakao_account?.name,
@@ -141,6 +139,7 @@ const Signin = () => {
       setLoading,
       setModalMessage,
       setModalVisible,
+      login,
     ]
   );
 
@@ -201,6 +200,8 @@ const Signin = () => {
           localStorage.setItem("refreshToken", backendRefreshToken);
         }
 
+        login(backendAccessToken, backendRefreshToken, userData);
+
         navigate("/main");
       } catch (error) {
         console.error("네이버 로그인 실패:", error);
@@ -216,7 +217,14 @@ const Signin = () => {
         setLoading(false);
       }
     },
-    [NAVER_CLIENT_ID, navigate, setLoading, setModalMessage, setModalVisible]
+    [
+      NAVER_CLIENT_ID,
+      navigate,
+      setLoading,
+      setModalMessage,
+      setModalVisible,
+      login,
+    ]
   );
 
   const signinWithKakao = useCallback(() => {
