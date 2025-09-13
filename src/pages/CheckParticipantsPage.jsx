@@ -3,6 +3,7 @@ import styled, { ThemeContext } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ImCheckboxUnchecked, ImCheckboxChecked } from "react-icons/im";
 import api from "../api/api";
+import { Button } from "../components";
 
 const Wrapper = styled.div`
   flex: 1;
@@ -221,19 +222,7 @@ const CheckParticipantsPage = () => {
       </Container>
 
       <FooterContainer>
-        <button
-          style={{
-            width: "100%",
-            height: "50px",
-            backgroundColor: theme.colors.mainBlue,
-            color: "white",
-            fontFamily: theme.fonts.bold,
-            fontSize: "16px",
-          }}
-          onClick={handleSubmit}
-        >
-          확인
-        </button>
+        <Button onClick={handleSubmit} title="확인" />
       </FooterContainer>
     </Wrapper>
   );
