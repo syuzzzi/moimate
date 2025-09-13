@@ -158,7 +158,7 @@ const ProfileName = styled.span`
 
 const ProfileIntro = styled.p`
   font-size: 16px;
-  font-family: ${({ theme }) => theme.fonts.bold};
+  font-family: ${({ theme }) => theme.fonts.regular};
   color: #444;
   line-height: 22px;
   margin-left: 10px;
