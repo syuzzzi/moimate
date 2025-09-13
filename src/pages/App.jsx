@@ -25,6 +25,7 @@ import MyPostDetailPage from "./MyPostDetailPage";
 import PublicProfilePage from "./PublicProfilePage";
 import ChatPage from "./ChatPage";
 import EditPostPage from "./EditPostPage";
+import CheckParticipantsPage from "./CheckParticipantsPage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -50,6 +51,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     font-family: "NanumSquare_acR", sans-serif;
+    overflow: hidden; /*전체 화면 스크롤 막기*/ 
   }
 `;
 
@@ -70,9 +72,16 @@ const App = () => {
           <Route path="/editprofile" element={<EditProfilePage />} />
           <Route path="/postdetail/:postId" element={<PostDetailPage />} />
           <Route path="/mypostdetail/:postId" element={<MyPostDetailPage />} />
-          <Route path="/publicprofile" element={<PublicProfilePage />} />
+          <Route
+            path="/publicprofile/:userId"
+            element={<PublicProfilePage />}
+          />
           <Route path="/chat/:roomId" element={<ChatPage />} />
           <Route path="/editpost/:postId" element={<EditPostPage />} />
+          <Route
+            path="/checkparticipants/:roomId/:sessionId"
+            element={<CheckParticipantsPage />}
+          />
           <Route path="/done" element={<SignupDonePage />} />
           <Route path="/hing" element={<Hing />} />
           <Route path="/signup" element={<SignupPage />} />
