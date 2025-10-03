@@ -3,8 +3,8 @@ import styled, { useTheme } from "styled-components";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Star, ChevronLeft } from "react-feather";
 import api from "../api/api";
-import { Button, Review } from "../components";
-import { jwtDecode } from "jwt-decode";
+import { Button, Review, AlertModal } from "../components";
+import { useAuth } from "../contexts/useAuth";
 
 // 스타일
 const Container = styled.div`
@@ -178,11 +178,13 @@ const ProfilePage = () => {
   const { userId } = useParams(); // useParams 훅으로 userId를 가져옵니다.
   const location = useLocation();
 
-  const [user, setUser] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [isMyProfile, setIsMyProfile] = useState(false);
+
+  const { user, setAccessToken, setUser } = useAuth();
+
   // 수정된 데이터를 받아와서 user 상태를 업데이트하는 함수
   const handleUpdate = (updatedData) => {
     setUser((prev) => ({
@@ -277,7 +279,7 @@ const ProfilePage = () => {
     } catch (error) {
       console.warn("⚠️ 프로필 로딩 실패:", error.message);
       if (error.message === "토큰 없음") {
-        setIsModalVisible(true);
+        setModalVisible(true);
       } else {
         setUser({
           name: "사용자",
@@ -339,11 +341,6 @@ const ProfilePage = () => {
     load();
   }, [load, location.state]);
 
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-    navigate("/login");
-  };
-
   // '사진 / 경력 수정' 버튼 클릭 핸들러 수정
   const handleEdit = () => {
     navigate(`/editprofile`, { state: { user } });
@@ -351,11 +348,54 @@ const ProfilePage = () => {
 
   const handleSignout = async () => {
     try {
-      await localStorage.removeItem("accessToken");
-      navigate("/");
+      // 1. 웹소켓 연결 해제 (stompClient가 있다면)
+      if (window.stompClient && window.stompClient.connected) {
+        await new Promise((resolve) => {
+          window.stompClient.disconnect(() => {
+            console.log("✅ 1단계: 웹소켓 연결 해제 완료");
+            resolve();
+          });
+        });
+      }
+
+      // 2. 저장된 토큰 불러오기
+      const storedAccessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      // 3. 백엔드 로그아웃 요청
+      if (storedAccessToken && refreshToken) {
+        await api.post("/auth/logout", {
+          refresh_token: refreshToken,
+        });
+        console.log("✅ 2단계: 백엔드 로그아웃 요청 완료");
+      }
+
+      // 4. 로컬 토큰 삭제
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      console.log("✅ 3단계: 로컬 토큰 삭제 완료");
+
+      // 5. 앱 상태 변경
+      setAccessToken(null);
+      setUser(null);
+
+      setModalVisible(true);
+
+      console.log("✅ 4단계: 로그아웃 완료");
     } catch (error) {
-      console.error("로그아웃 에러 발생:", error);
+      console.error("❌ 로그아웃 처리 중 에러 발생:", error);
+
+      // 실패 시에도 안전하게 로컬 데이터 정리
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setAccessToken(null);
+      setUser(null);
+      navigate("/signin");
     }
+  };
+  const handleModalConfirm = () => {
+    setModalVisible(false);
+    navigate("/main");
   };
 
   const handleDeleteAccount = () => {
@@ -456,6 +496,11 @@ const ProfilePage = () => {
         </ButtonContainer>
       </Container>
       {/*<LoginModal visible={isModalVisible} onClose={handleModalClose} />*/}
+      <AlertModal
+        visible={modalVisible}
+        message="로그아웃이 완료되었습니다."
+        onConfirm={handleModalConfirm}
+      />
     </>
   );
 };

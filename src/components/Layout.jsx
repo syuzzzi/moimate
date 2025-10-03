@@ -3,6 +3,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { TabBar } from "./TabBar";
+import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   const location = useLocation();
@@ -20,7 +21,12 @@ const Layout = () => {
   // 이 방식이 '안 보이는 경로'를 나열하는 것보다 훨씬 직관적이고 효율적입니다.
   const isTabBarVisible = visiblePaths.includes(location.pathname);
 
-  return <>{isTabBarVisible && <TabBar />}</>;
+  return (
+    <>
+      <Outlet />
+      {isTabBarVisible && <TabBar />}
+    </>
+  );
 };
 
 export default Layout;
