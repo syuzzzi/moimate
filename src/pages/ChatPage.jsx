@@ -249,7 +249,7 @@ const StatusBadge = styled.div`
 `;
 
 const StatusDot = styled.span`
-  transform: translateY(-1px);
+  transform: translateY(0px);
 `;
 
 const DangerExit = styled(HeaderButton)`
@@ -352,10 +352,12 @@ const ChatPage = () => {
   // ───────── Session & payment status
   const fetchSessionStatus = useCallback(async () => {
     const token = localStorage.getItem("accessToken");
+
     try {
       const pRes = await api.get(`/chatroom/${roomId}/participants`, {
         headers: { access: token },
       });
+
       const list =
         (pRes?.data?.dtoList ?? []).map((p) => ({
           userId: p.userId ?? null,
@@ -368,6 +370,12 @@ const ChatPage = () => {
       const sRes = await api.get(`/sessions/chatroom/${roomId}/active`, {
         headers: { access: token },
       });
+
+      const ana = sRes.data.data;
+
+      console.log("active session", sRes);
+
+      console.log("active sessionzz", ana.id);
 
       if (!sRes.data.data) {
         setMeetingActive(false);
@@ -384,17 +392,23 @@ const ChatPage = () => {
 
       const payRes = await api.post(
         `/payments/status`,
-        { roomId, sessionId: s.id },
+        { roomId, sessionId: s.sessionNumber },
         { headers: { access: token } }
       );
 
+      console.log("payres", payRes);
+
       const map = {};
+
       const statuses = payRes?.data?.data?.userPaymentStatuses ?? [];
+
+      console.log("결제 상태:", statuses);
+
       statuses.forEach((u) => {
-        map[u.userId] = u.paid ? "참여" : "불참";
+        map[String(u.userId)] = u.paid ? "참여" : "불참";
       });
       list.forEach((p) => {
-        if (!map[p.userId]) map[p.userId] = "불참";
+        if (!map[String(p.userId)]) map[String(p.userId)] = "불참";
       });
       setParticipantStatus(map);
     } catch (e) {
@@ -756,7 +770,7 @@ const ChatPage = () => {
 
                     {meetingActive && (
                       <StatusBadge>
-                        <StatusDot style={{ color: "#ffd000" }}>
+                        <StatusDot style={{ color: "#1A4568" }}>
                           {status === "참여" ? "●" : "○"}
                         </StatusDot>
                         <span style={{ color: theme.colors.black }}>
