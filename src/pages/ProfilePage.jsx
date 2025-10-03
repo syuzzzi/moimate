@@ -421,7 +421,9 @@ const ProfilePage = () => {
           <SectionTitle>리뷰</SectionTitle>
           <ScrollArea>
             {reviews.length > 0 ? (
-              reviews.map((review) => <Review key={review.key} {...review} />)
+              reviews.map((review, idx) => (
+                <Review key={`${review.createdAt}-${idx}`} {...review} />
+              ))
             ) : (
               <PlaceholderWrapper>
                 <Placeholder>등록되지 않았습니다</Placeholder>
