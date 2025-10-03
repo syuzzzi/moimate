@@ -15,7 +15,7 @@ const LogoContainer = styled.div`
 `;
 
 const SectionContainer = styled.div`
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 `;
 
 const SectionHeader = styled.div`
@@ -27,7 +27,7 @@ const SectionHeader = styled.div`
 const SectionTitle = styled.h2`
   font-size: 20px;
   font-family: ${({ theme }) => theme.fonts.extraBold};
-  margin-top: 20px;
+  margin-top: 15px;
   margin-bottom: 5px;
   color: #656565;
 `;
@@ -153,14 +153,16 @@ const EmptyText = styled.span`
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 95vh;
   padding: 20px;
+
   box-sizing: border-box;
 `;
 
 const ScrollableContent = styled.div`
   flex: 1;
   overflow-y: auto;
+  min-height: 0;
   padding-right: 5px; /* 스크롤바 공간을 위한 패딩 */
 `;
 
@@ -257,25 +259,25 @@ const MainPage = () => {
     {
       id: "1",
       name: "언어",
-      code: "Language",
+      code: "LANGUAGE",
       image: "../../assets/icons/categoriLanguage.png",
     },
     {
       id: "2",
       name: "문화",
-      code: "Culture",
+      code: "CULTURE",
       image: "../../assets/icons/categoriCultures.png",
     },
     {
       id: "3",
       name: "맛집",
-      code: "Food",
+      code: "FOOD",
       image: "../../assets/icons/categoriFood.png",
     },
     {
       id: "4",
       name: "취미",
-      code: "Hobby",
+      code: "HOBBY",
       image: "../../assets/icons/categoriHobby.png",
     },
     {

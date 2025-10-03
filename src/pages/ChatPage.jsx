@@ -609,8 +609,8 @@ const ChatPage = () => {
         { headers: { access: token } }
       );
       const { impUid, amount } = res.data.data || {};
-      // 참여확인 화면으로 이동 (원하는 경로로 교체 가능)
-      navigate("/confirm", {
+      console.log(location.state);
+      navigate("/checkparticipants/:roomId/:sessionId", {
         state: {
           roomId,
           sessionId: currentSessionId,

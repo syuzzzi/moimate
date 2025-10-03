@@ -26,6 +26,7 @@ import PostDetailPage from "./PostDetailPage";
 import MyPostDetailPage from "./MyPostDetailPage";
 import ChatPage from "./ChatPage";
 import EditPostPage from "./EditPostPage";
+import CheckParticipantsPage from "./CheckParticipantsPage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -51,6 +52,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     font-family: "NanumSquare_acR", sans-serif;
+    overflow: hidden; /*전체 화면 스크롤 막기*/ 
   }
 `;
 
@@ -75,7 +77,10 @@ const App = () => {
         <Route path="/findpw" element={<FindPwPage />} />
         <Route path="/allposts" element={<AllPostsPage />} />
         <Route path="/postdetail/:postId" element={<PostDetailPage />} />
-
+        <Route
+            path="/publicprofile/:userId"
+            element={<PublicProfilePage />}
+        />
         {/* ✅ 로그인 여부와 상관없이 접근 가능 + Layout 적용 */}
         <Route element={<Layout />}>
           <Route path="/main" element={<MainPage />} />
@@ -99,6 +104,10 @@ const App = () => {
           <Route path="/mypostdetail/:postId" element={<MyPostDetailPage />} />
           <Route path="/chat/:roomId" element={<ChatPage />} />
           <Route path="/editpost/:postId" element={<EditPostPage />} />
+          <Route
+            path="/checkparticipants/:roomId/:sessionId"
+            element={<CheckParticipantsPage />}
+          />
         </Route>
       </Routes>
     </ThemeProvider>
