@@ -27,6 +27,7 @@ import MyPostDetailPage from "./MyPostDetailPage";
 import ChatPage from "./ChatPage";
 import EditPostPage from "./EditPostPage";
 import CheckParticipantsPage from "./CheckParticipantsPage";
+import PublicProfilePage from "./PublicProfilePage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -77,10 +78,7 @@ const App = () => {
         <Route path="/findpw" element={<FindPwPage />} />
         <Route path="/allposts" element={<AllPostsPage />} />
         <Route path="/postdetail/:postId" element={<PostDetailPage />} />
-        <Route
-            path="/publicprofile/:userId"
-            element={<PublicProfilePage />}
-        />
+        <Route path="/publicprofile/:userId" element={<PublicProfilePage />} />
         {/* ✅ 로그인 여부와 상관없이 접근 가능 + Layout 적용 */}
         <Route element={<Layout />}>
           <Route path="/main" element={<MainPage />} />
