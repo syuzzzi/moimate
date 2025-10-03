@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Feather, ChevronLeft } from "react-feather";
+import { ChevronLeft } from "react-feather";
+import { IoIosCamera } from "react-icons/io";
 import api from "../api/api";
 import theme from "../theme";
 import { Button, Input, AlertModal } from "../components";
@@ -84,7 +85,7 @@ const CameraIconContainer = styled.div`
   background-color: white;
   border-radius: 50%;
   padding: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.2);
 `;
 
 const Label = styled.label`
@@ -217,7 +218,7 @@ const EditProfilePage = () => {
             />
           )}
           <CameraIconContainer>
-            <Feather name="camera" size={14} color="#777" />
+            <IoIosCamera size={14} color="#777" />
           </CameraIconContainer>
         </label>
         <input
