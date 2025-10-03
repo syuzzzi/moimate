@@ -28,6 +28,7 @@ import ChatPage from "./ChatPage";
 import EditPostPage from "./EditPostPage";
 import CheckParticipantsPage from "./CheckParticipantsPage";
 import PublicProfilePage from "./PublicProfilePage";
+import ReviewFormPage from "./ReviewFormPage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -110,6 +111,7 @@ const App = () => {
             path="/publicprofile/:userId"
             element={<PublicProfilePage />}
           />
+          <Route path="/review" element={<ReviewFormPage />} />
         </Route>
       </Routes>
     </ThemeProvider>

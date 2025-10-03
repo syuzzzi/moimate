@@ -382,10 +382,33 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
 
   const handleModalConfirm = () => {
     setModalVisible(false);
-    if (modalType === "confirm") {
-      console.log("리뷰 작성 화면으로 이동 (웹에서는 라우팅 필요)");
-      window.location.href = `/review/write?name=${user.name}&userId=${userId}`;
+
+    // modalType이 'confirm'인 경우에만 리뷰 작성 페이지로 이동합니다.
+    if (modalType !== "confirm") {
+      return;
     }
+
+    // user와 userId가 유효한지 안전 장치를 통해 확인
+    if (!user || !userId) {
+      console.error("리뷰 작성에 필요한 사용자 데이터가 누락되었습니다.");
+      setModalMessage("리뷰 작성을 위한 필수 정보가 부족합니다.");
+      setModalType("alert");
+      setModalVisible(true);
+      return;
+    }
+
+    // ★★★ 수정: URL 쿼리 파라미터로 데이터를 전달합니다. ★★★
+    // 이름이나 이미지가 null인 경우를 대비해 안전하게 인코딩합니다.
+    const targetName = user.name || "";
+    const targetImage = user.image || "";
+
+    const encodedName = encodeURIComponent(targetName);
+    const encodedImage = encodeURIComponent(targetImage);
+
+    // "/review" 경로 뒤에 ?name=...&userId=... 형식으로 데이터를 붙입니다.
+    navigate(
+      `/review?name=${encodedName}&userId=${userId}&image=${encodedImage}`
+    );
   };
 
   const handleModalCancel = () => setModalVisible(false);
