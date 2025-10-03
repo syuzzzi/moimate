@@ -1,11 +1,13 @@
-// src/pages/App.jsx
-
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
+import ProtectedRoute from "../components/ProtectedRoute";
+import { useAuth } from "../contexts/useAuth";
+import { Navigate } from "react-router-dom";
+
 import theme from "../theme";
 import SignupDonePage from "./SignupDonePage";
-import Hing from "./Hing";
+import Start from "./StartPage";
 import SignupPage from "./SignupPage";
 import MainPage from "./MainPage";
 import SearchPage from "./SearchPage";
@@ -22,10 +24,10 @@ import FindPwPage from "./FindPwPage";
 import Layout from "../components/Layout";
 import PostDetailPage from "./PostDetailPage";
 import MyPostDetailPage from "./MyPostDetailPage";
-import PublicProfilePage from "./PublicProfilePage";
 import ChatPage from "./ChatPage";
 import EditPostPage from "./EditPostPage";
 import CheckParticipantsPage from "./CheckParticipantsPage";
+import PublicProfilePage from "./PublicProfilePage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -56,43 +58,56 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const App = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <div style={{ paddingBottom: "20px" }}>
-        <Routes>
+      <Routes>
+        {/* ✅ 로그인 상태와 관계없이 접근 가능한 라우트 */}
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? <Navigate to="/main" replace /> : <Start />
+          }
+        />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/done" element={<SignupDonePage />} />
+        <Route path="/signin" element={<SigninPage />} />
+        <Route path="/signinwithemail" element={<SigninWithEmailPage />} />
+        <Route path="/findpw" element={<FindPwPage />} />
+        <Route path="/allposts" element={<AllPostsPage />} />
+        <Route path="/postdetail/:postId" element={<PostDetailPage />} />
+        <Route path="/publicprofile/:userId" element={<PublicProfilePage />} />
+        {/* ✅ 로그인 여부와 상관없이 접근 가능 + Layout 적용 */}
+        <Route element={<Layout />}>
           <Route path="/main" element={<MainPage />} />
           <Route path="/search" element={<SearchPage />} />
+        </Route>
+
+        {/* ✅ 로그인 상태일 때만 접근 가능한 중첩 라우트 */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/chatls" element={<ChatListPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route path="/allposts" element={<AllPostsPage />} />
           <Route path="/createpost" element={<CreatePostPage />} />
           <Route path="/profile/:userId" element={<ProfilePage />} />
           <Route path="/editprofile" element={<EditProfilePage />} />
-          <Route path="/postdetail/:postId" element={<PostDetailPage />} />
           <Route path="/mypostdetail/:postId" element={<MyPostDetailPage />} />
-          <Route
-            path="/publicprofile/:userId"
-            element={<PublicProfilePage />}
-          />
           <Route path="/chat/:roomId" element={<ChatPage />} />
           <Route path="/editpost/:postId" element={<EditPostPage />} />
           <Route
             path="/checkparticipants/:roomId/:sessionId"
             element={<CheckParticipantsPage />}
           />
-          <Route path="/done" element={<SignupDonePage />} />
-          <Route path="/hing" element={<Hing />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/" element={<SigninPage />} />
-          <Route path="/signinwithemail" element={<SigninWithEmailPage />} />
-          <Route path="/findpw" element={<FindPwPage />} />
-
-          {/* 다른 라우트들을 여기에 추가하세요 */}
-        </Routes>
-      </div>
-      <Layout />
+        </Route>
+      </Routes>
     </ThemeProvider>
   );
 };

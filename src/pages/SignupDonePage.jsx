@@ -40,7 +40,7 @@ const SignupDonePage = () => {
   const navigate = useNavigate();
 
   const handleConfirm = () => {
-    navigate("/hing");
+    navigate("/signinwithemail");
   };
 
   return (
