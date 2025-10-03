@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Review, Button } from "../components";
+import { Review, Button, AlertModal } from "../components";
 import { Star, ChevronLeft } from "react-feather";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/api";
@@ -150,47 +150,6 @@ const Footer = styled.div`
   background-color: #fff;
   margin-bottom: 50px;
 `;
-
-// Alert Modal
-const AlertModal = ({ visible, message, onConfirm, onCancel }) => {
-  if (!visible) return null;
-
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0,0,0,0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: "20px",
-          borderRadius: "10px",
-          textAlign: "center",
-          maxWidth: "300px",
-        }}
-      >
-        <p>{message}</p>
-        <div style={{ marginTop: "20px" }}>
-          <Button onClick={onConfirm}>확인</Button>
-          {onCancel && (
-            <Button onClick={onCancel} style={{ marginLeft: "10px" }}>
-              취소
-            </Button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const PublicProfilePage = ({ userId: profileUserId }) => {
   const [user, setUser] = useState(null);
@@ -352,6 +311,7 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
   const getMyUserId = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
+
       if (!accessToken) return null;
 
       const res = await api.get("/mypage/me", {
@@ -359,10 +319,16 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
       });
 
       const data = res.data.data;
+
       setReviewerId(data);
+
+      console.log("✔️ 로그인 유저 ID:", data);
+      console.log("✔️ 프로필 유저 ID:", userId);
+
       return data;
     } catch (error) {
       console.error("❌ 로그인 유저 ID 가져오기 실패:", error);
+
       return null;
     }
   };
@@ -380,7 +346,7 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
         return;
       }
 
-      if (reviewerId === userId) {
+      if (Number(reviewerId) === Number(userId)) {
         setModalMessage("본인의 리뷰를 작성할 수 없습니다");
         setModalType("alert");
         setModalVisible(true);
@@ -416,10 +382,33 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
 
   const handleModalConfirm = () => {
     setModalVisible(false);
-    if (modalType === "confirm") {
-      console.log("리뷰 작성 화면으로 이동 (웹에서는 라우팅 필요)");
-      window.location.href = `/review/write?name=${user.name}&userId=${userId}`;
+
+    // modalType이 'confirm'인 경우에만 리뷰 작성 페이지로 이동합니다.
+    if (modalType !== "confirm") {
+      return;
     }
+
+    // user와 userId가 유효한지 안전 장치를 통해 확인
+    if (!user || !userId) {
+      console.error("리뷰 작성에 필요한 사용자 데이터가 누락되었습니다.");
+      setModalMessage("리뷰 작성을 위한 필수 정보가 부족합니다.");
+      setModalType("alert");
+      setModalVisible(true);
+      return;
+    }
+
+    // ★★★ 수정: URL 쿼리 파라미터로 데이터를 전달합니다. ★★★
+    // 이름이나 이미지가 null인 경우를 대비해 안전하게 인코딩합니다.
+    const targetName = user.name || "";
+    const targetImage = user.image || "";
+
+    const encodedName = encodeURIComponent(targetName);
+    const encodedImage = encodeURIComponent(targetImage);
+
+    // "/review" 경로 뒤에 ?name=...&userId=... 형식으로 데이터를 붙입니다.
+    navigate(
+      `/review?name=${encodedName}&userId=${userId}&image=${encodedImage}`
+    );
   };
 
   const handleModalCancel = () => setModalVisible(false);

@@ -10,7 +10,7 @@ import styled, { ThemeContext } from "styled-components";
 import Logo from "../../assets/logo.svg?react";
 import api from "../api/api";
 import { useNavigate } from "react-router-dom";
-//import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/useAuth";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid"; // uuid 라이브러리 추가
 import Spinner from "../components/Spinner";
@@ -61,7 +61,7 @@ const Signin = () => {
 
   const hasFetchedToken = useRef(false);
 
-  //const { setUser, setAccessToken } = useAuth();
+  const { login } = useAuth();
 
   const getKakaoToken = useCallback(
     async (code) => {
@@ -103,7 +103,7 @@ const Signin = () => {
 
         const userData = {
           email: kakao_account?.email,
-          name: kakao_account?.profile?.nickname,
+          name: kakao_account?.name,
           gender: kakao_account?.gender?.toUpperCase(),
           id: kakaoUserInfoRes.data.id,
           phonenumber: kakao_account?.phone_number,
@@ -113,16 +113,11 @@ const Signin = () => {
 
         const accessToken = response.headers.access;
         const backendRefreshToken = response.data.refresh_token;
+        const userProfile = response.data.data;
 
-        if (accessToken) {
-          localStorage.setItem("accessToken", accessToken);
-        }
+        login(accessToken, backendRefreshToken, userProfile);
 
-        if (backendRefreshToken) {
-          localStorage.setItem("refreshToken", backendRefreshToken);
-        }
-
-        navigate("/hing");
+        navigate("/main");
       } catch (error) {
         console.error("카카오 토큰/정보 발급 실패:", error);
         if (error?.response?.status === 409) {
@@ -144,6 +139,7 @@ const Signin = () => {
       setLoading,
       setModalMessage,
       setModalVisible,
+      login,
     ]
   );
 
@@ -204,7 +200,9 @@ const Signin = () => {
           localStorage.setItem("refreshToken", backendRefreshToken);
         }
 
-        navigate("/hing");
+        login(backendAccessToken, backendRefreshToken, userData);
+
+        navigate("/main");
       } catch (error) {
         console.error("네이버 로그인 실패:", error);
         if (error?.response?.status === 409) {
@@ -219,7 +217,14 @@ const Signin = () => {
         setLoading(false);
       }
     },
-    [NAVER_CLIENT_ID, navigate, setLoading, setModalMessage, setModalVisible]
+    [
+      NAVER_CLIENT_ID,
+      navigate,
+      setLoading,
+      setModalMessage,
+      setModalVisible,
+      login,
+    ]
   );
 
   const signinWithKakao = useCallback(() => {
@@ -230,7 +235,7 @@ const Signin = () => {
 
   const signinWithNaver = useCallback(() => {
     const state = uuidv4();
-    localStorage.setItem("naver_state", state); // CSRF 공격 방지를 위해 state를 localStorage에 저장
+    localStorage.setItem("naver_state", state);
     const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${state}&redirect_uri=${REDIRECT_URI}`;
 
     window.location.href = naverURL;
@@ -241,9 +246,17 @@ const Signin = () => {
   };
 
   useEffect(() => {
+    console.log("현재 URL:", window.location.href);
+    console.log("window.location.search:", window.location.search);
+
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     const state = urlParams.get("state");
+
+    console.log("URL Params:", window.location.search);
+    console.log("code 값:", code);
+    console.log("state 값:", state);
+
     const storedState = localStorage.getItem("naver_state");
 
     if (code && !hasFetchedToken.current) {
