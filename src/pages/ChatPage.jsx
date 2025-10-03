@@ -661,6 +661,10 @@ const ChatPage = () => {
     );
   };
 
+  const handleProfileView = (userId) => {
+    setSideOpen(false);
+    navigate(`/publicprofile/${userId}`);
+  };
   return (
     <Page>
       <ChatHeader>
@@ -739,7 +743,12 @@ const ChatPage = () => {
               {participants.map((p) => {
                 const status = participantStatus[p.userId] ?? "불참";
                 return (
-                  <ParticipantRow key={p.userId}>
+                  <ParticipantRow
+                    key={p.userId}
+                    onClick={() => {
+                      handleProfileView(p.userId);
+                    }}
+                  >
                     <ParticipantLeft>
                       <Avatar src={p.image || profileFallback} alt="" />
                       <PName>{p.name}</PName>
