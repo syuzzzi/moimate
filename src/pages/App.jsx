@@ -78,7 +78,7 @@ const App = () => {
         <Route path="/findpw" element={<FindPwPage />} />
         <Route path="/allposts" element={<AllPostsPage />} />
         <Route path="/postdetail/:postId" element={<PostDetailPage />} />
-        <Route path="/publicprofile/:userId" element={<PublicProfilePage />} />
+
         {/* ✅ 로그인 여부와 상관없이 접근 가능 + Layout 적용 */}
         <Route element={<Layout />}>
           <Route path="/main" element={<MainPage />} />
@@ -105,6 +105,10 @@ const App = () => {
           <Route
             path="/checkparticipants/:roomId/:sessionId"
             element={<CheckParticipantsPage />}
+          />{" "}
+          <Route
+            path="/publicprofile/:userId"
+            element={<PublicProfilePage />}
           />
         </Route>
       </Routes>
