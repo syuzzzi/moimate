@@ -24,7 +24,7 @@ const ProtectedRoute = ({ children }) => {
 
   const handleCloseModal = () => {
     setModalVisible(false); // 모달 닫기
-    navigate(-1); // ✅ 이전 페이지로 돌아가기
+    navigate("/main"); // ✅ 이전 페이지로 돌아가기
   };
 
   if (loading) {

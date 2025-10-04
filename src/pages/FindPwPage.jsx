@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, ErrorMessage, AlertModal, Input } from "../components";
 import api from "../api/api";
 import { validateEmail, removeWhitespace } from "../utils/utils";
+import { ChevronLeft } from "react-feather";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -13,7 +14,19 @@ const PageWrapper = styled.div`
   min-height: 100vh;
   padding: 0 30px;
 `;
-
+const BackButton = styled.button`
+  position: absolute;
+  top: 30px; /* 상단에서 30px만큼 떨어지도록 조정 */
+  left: 10px; /* 화면 왼쪽에서 10px만큼 떨어지도록 조정 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px; /* 클릭 영역 확보 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+`;
 const RowContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -22,7 +35,7 @@ const RowContainer = styled.div`
   width: 100%;
 `;
 
-const FindPw = () => {
+const FindPwPage = () => {
   const theme = useContext(ThemeContext);
   const navigate = useNavigate();
 
@@ -39,17 +52,21 @@ const FindPw = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [resendTimer, setResendTimer] = useState(0);
   const [isPwChanged, setIsPwChanged] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   useEffect(() => {
     setDisabled(
       !(
-        email &&
-        authNum &&
-        password &&
-        passwordConfirm &&
-        !emailErrorMessage &&
-        !passwordConfirmErrorMessage &&
-        isAuthVerified
+        (
+          email &&
+          authNum &&
+          password &&
+          passwordConfirm &&
+          !emailErrorMessage &&
+          !passwordConfirmErrorMessage &&
+          isAuthVerified &&
+          !passwordErrorMessage
+        ) // 비밀번호 유효성 검사 오류도 disabled 조건에 추가
       )
     );
   }, [
@@ -60,6 +77,7 @@ const FindPw = () => {
     emailErrorMessage,
     passwordConfirmErrorMessage,
     isAuthVerified,
+    passwordErrorMessage,
   ]);
 
   useEffect(() => {
@@ -90,12 +108,29 @@ const FindPw = () => {
   };
 
   const _handlePasswordChange = (e) => {
-    const changePassword = removeWhitespace(e.target.value);
+    // ⭐️ e (웹 이벤트 객체)를 인수로 받도록 수정
+    const changePassword = removeWhitespace(e.target.value); // ⭐️ e.target.value 사용
     setPassword(changePassword);
+
+    // 비밀번호 유효성 검사
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*[0-9]).{8,}$/;
+    if (!passwordRegex.test(changePassword)) {
+      setPasswordErrorMessage("비밀번호는 영어와 숫자 8자 이상이어야 합니다");
+    } else {
+      setPasswordErrorMessage("");
+    }
+
+    // 비밀번호 확인 필드 유효성 검사 (실시간으로 반영)
+    if (passwordConfirm) {
+      setPasswordConfirmErrorMessage(
+        changePassword !== passwordConfirm ? "비밀번호가 일치하지 않습니다" : ""
+      );
+    }
   };
 
   const _handlePasswordConfirmChange = (e) => {
-    const changePasswordConfirm = removeWhitespace(e.target.value);
+    // ⭐️ e (웹 이벤트 객체)를 인수로 받도록 수정
+    const changePasswordConfirm = removeWhitespace(e.target.value); // ⭐️ e.target.value 사용
     setPasswordConfirm(changePasswordConfirm);
     setPasswordConfirmErrorMessage(
       password !== changePasswordConfirm ? "비밀번호가 일치하지 않습니다" : ""
@@ -104,6 +139,9 @@ const FindPw = () => {
 
   return (
     <PageWrapper>
+      <BackButton onClick={() => navigate(-1)}>
+        <ChevronLeft size={24} color="#333" />
+      </BackButton>
       <RowContainer>
         <Input
           label="이메일"
@@ -215,18 +253,18 @@ const FindPw = () => {
       <Input
         label="비밀번호"
         value={password}
-        onChange={_handlePasswordChange}
+        onChange={_handlePasswordChange} // ⭐️ 수정된 핸들러 연결
         isPassword={true}
         disabled={!isAuthVerified}
         style={{
           width: "100%",
-          paddingBottom: 17,
         }}
       />
+      <ErrorMessage message={passwordErrorMessage} />
       <Input
         label="비밀번호 확인"
         value={passwordConfirm}
-        onChange={_handlePasswordConfirmChange}
+        onChange={_handlePasswordConfirmChange} // ⭐️ 수정된 핸들러 연결
         isPassword={true}
         disabled={!isAuthVerified}
         style={{
@@ -275,4 +313,4 @@ const FindPw = () => {
   );
 };
 
-export default FindPw;
+export default FindPwPage;
