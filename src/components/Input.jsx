@@ -47,7 +47,6 @@ const StyledInput = styled.input`
   `}
 `;
 
-// 웹 환경에서 multiline은 <textarea>로 처리하는 것이 일반적입니다.
 const StyledTextArea = styled.textarea`
   background-color: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.black};

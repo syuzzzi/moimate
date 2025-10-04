@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useEffect } from "react";
-import styled, { useTheme } from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import { Feather } from "react-feather";
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import { ChevronRight } from "react-feather";
 import { AlertModal } from "../components";
@@ -143,7 +142,6 @@ const CancelButton = styled.button`
 `;
 
 const NotificationsPage = () => {
-  const theme = useTheme();
   const navigate = useNavigate();
 
   const [notifications, setNotifications] = useState([]);
@@ -273,7 +271,8 @@ const NotificationsPage = () => {
           setAlertVisible(true);
           return;
         }
-        navigate(`/application-list/${item.postId}`);
+        // ✅ navigate의 두 번째 인자로 { state: { postId: item.postId } } 객체를 전달해야 합니다.
+        navigate("/applicationlist", { state: { postId: item.postId } });
         break;
       case "PAYMENT_COMPLETED":
         setAlertMessage("잊지 말고 꼭 참여해주세요!");

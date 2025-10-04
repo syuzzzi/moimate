@@ -14,7 +14,6 @@ import {
 import { ChevronLeft } from "react-feather";
 
 import api from "../api/api";
-import theme from "../theme";
 //import LoginModal from "../components/LoginModal";
 import AlertModal from "../components/AlertModal";
 import Button from "../components/Button";
@@ -332,6 +331,15 @@ const MyPostDetailPage = () => {
   const recruitmentDeadline = new Date(`${meeting.recruitmentEnd}T23:59:59`);
   const isRecruitmentClosed = recruitmentDeadline < new Date();
 
+  const handleFooterButtonClick = () => {
+    if (isRecruitmentClosed) {
+      navigate(`/recreate/${meeting.postId}`);
+    } else {
+      // ✅ navigate 함수를 직접 호출합니다.
+      navigate("/applicationlist", { state: { postId: meeting.postId } });
+    }
+  };
+
   return (
     <Container>
       <HeaderContainer>
@@ -439,13 +447,7 @@ const MyPostDetailPage = () => {
         </LikeButton>
         <Button
           title={isRecruitmentClosed ? "모임 재생성하기" : "신청 목록 확인"}
-          onClick={() =>
-            navigate(
-              isRecruitmentClosed
-                ? `/recreate/${meeting.postId}`
-                : `/applications/${meeting.postId}`
-            )
-          }
+          onClick={handleFooterButtonClick}
           style={{ height: 50, width: 280 }}
         />
       </Footer>

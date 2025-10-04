@@ -30,6 +30,9 @@ import CheckParticipantsPage from "./CheckParticipantsPage";
 import PublicProfilePage from "./PublicProfilePage";
 import ReviewFormPage from "./ReviewFormPage";
 import PaymentPage from "./PaymentPage";
+import ApplicationFormPage from "./ApplicationFormPage";
+import ApplicationListPage from "./ApplicationListPage";
+import ApplicationDecisionPage from "./ApplicationDecisionPage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -114,6 +117,12 @@ const App = () => {
           />
           <Route path="/review" element={<ReviewFormPage />} />
           <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/applicationform" element={<ApplicationFormPage />} />
+          <Route path="/applicationlist" element={<ApplicationListPage />} />
+          <Route
+            path="/applicationdecision"
+            element={<ApplicationDecisionPage />}
+          />
         </Route>
       </Routes>
     </ThemeProvider>
