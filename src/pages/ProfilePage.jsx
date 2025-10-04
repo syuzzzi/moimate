@@ -400,7 +400,7 @@ const ProfilePage = () => {
 
   const handleDeleteAccount = () => {
     // 회원탈퇴 로직 구현
-    navigate("/회원탈퇴");
+    navigate("/deleteaccount");
   };
 
   if (isLoading) {

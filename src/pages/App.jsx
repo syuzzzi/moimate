@@ -33,6 +33,7 @@ import PaymentPage from "./PaymentPage";
 import ApplicationFormPage from "./ApplicationFormPage";
 import ApplicationListPage from "./ApplicationListPage";
 import ApplicationDecisionPage from "./ApplicationDecisionPage";
+import DeleteAccountPage from "./DeleteAccountPage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -123,6 +124,7 @@ const App = () => {
             path="/applicationdecision"
             element={<ApplicationDecisionPage />}
           />
+          <Route path="/deleteaccount" element={<DeleteAccountPage />} />
         </Route>
       </Routes>
     </ThemeProvider>
