@@ -25,13 +25,6 @@ const HeaderContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-const HeaderTitle = styled.h1`
-  font-size: 16px;
-  font-weight: bold;
-  font-family: ${({ theme }) => theme.fonts.extraBold};
-  color: ${({ theme }) => theme.colors.black};
-`;
-
 const BackButton = styled.button`
   position: absolute;
   left: 0;
@@ -179,7 +172,6 @@ const ReviewForm = () => {
         <BackButton onClick={() => navigate(-1)}>
           <ChevronLeft size={24} color="#333" />
         </BackButton>
-        <HeaderTitle>프로필</HeaderTitle>
       </HeaderContainer>
       <ProfileContainer>
         <ProfileImage
