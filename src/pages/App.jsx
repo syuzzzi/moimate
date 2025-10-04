@@ -111,7 +111,7 @@ const App = () => {
           <Route
             path="/checkparticipants"
             element={<CheckParticipantsPage />}
-          />{" "}
+          />
           <Route
             path="/publicprofile/:userId"
             element={<PublicProfilePage />}
