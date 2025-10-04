@@ -105,7 +105,7 @@ const App = () => {
           <Route path="/chat/:roomId" element={<ChatPage />} />
           <Route path="/editpost/:postId" element={<EditPostPage />} />
           <Route
-            path="/checkparticipants/:roomId/:sessionId"
+            path="/checkparticipants"
             element={<CheckParticipantsPage />}
           />{" "}
           <Route
