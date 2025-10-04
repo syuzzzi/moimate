@@ -14,6 +14,7 @@ import { useAuth } from "../contexts/useAuth";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid"; // uuid 라이브러리 추가
 import Spinner from "../components/Spinner";
+import { ChevronLeft } from "react-feather";
 
 const Container = styled.div`
   display: flex;
@@ -24,7 +25,19 @@ const Container = styled.div`
   padding: 0 30px;
   min-height: 100vh;
 `;
-
+const BackButton = styled.button`
+  position: absolute;
+  top: 30px; /* 상단에서 30px만큼 떨어지도록 조정 */
+  left: 10px; /* 화면 왼쪽에서 10px만큼 떨어지도록 조정 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px; /* 클릭 영역 확보 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+`;
 const DividerContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -276,6 +289,10 @@ const Signin = () => {
   return (
     <Container>
       {loading && <Spinner fullscreen size="30px" thickness="4px" />}
+
+      <BackButton onClick={() => navigate(-1)}>
+        <ChevronLeft size={24} color="#333" />
+      </BackButton>
 
       <Logo style={{ marginBottom: 50 }} />
 
