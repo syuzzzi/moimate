@@ -29,6 +29,7 @@ import EditPostPage from "./EditPostPage";
 import CheckParticipantsPage from "./CheckParticipantsPage";
 import PublicProfilePage from "./PublicProfilePage";
 import ReviewFormPage from "./ReviewFormPage";
+import PaymentPage from "./PaymentPage";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -104,7 +105,7 @@ const App = () => {
           <Route path="/chat/:roomId" element={<ChatPage />} />
           <Route path="/editpost/:postId" element={<EditPostPage />} />
           <Route
-            path="/checkparticipants/:roomId/:sessionId"
+            path="/checkparticipants"
             element={<CheckParticipantsPage />}
           />{" "}
           <Route
@@ -112,6 +113,7 @@ const App = () => {
             element={<PublicProfilePage />}
           />
           <Route path="/review" element={<ReviewFormPage />} />
+          <Route path="/payment" element={<PaymentPage />} />
         </Route>
       </Routes>
     </ThemeProvider>

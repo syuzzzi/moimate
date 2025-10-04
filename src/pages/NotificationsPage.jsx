@@ -331,13 +331,19 @@ const NotificationsPage = () => {
               <ConfirmButton
                 onClick={() => {
                   setModalVisible(false);
-                  navigate(`/payment/${modalData.somoimId}`, {
-                    state: {
-                      amount: modalData.amount,
-                      title: modalData.title,
-                      somoimId: modalData.somoimId,
-                      sessionId: modalData.sessionId,
-                    },
+                  const paymentParams = {
+                    amount: modalData.amount,
+                    title: modalData.title,
+                    somoimId: modalData.somoimId,
+                    sessionId: modalData.sessionId,
+                  };
+
+                  console.log(
+                    "🚀 결제 페이지로 전송되는 데이터 (State):",
+                    paymentParams
+                  );
+                  navigate("/payment", {
+                    state: paymentParams,
                   });
                 }}
               >
