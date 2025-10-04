@@ -3,6 +3,7 @@ import styled, { ThemeContext } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Button, AlertModal } from "../components";
 import api from "../api/api";
+import { useAuth } from "../contexts/useAuth";
 
 const Container = styled.div`
   display: flex;
@@ -55,17 +56,27 @@ const DeleteAccountPage = () => {
   const navigate = useNavigate();
   const theme = useContext(ThemeContext);
 
+  const { setAccessToken, setUser } = useAuth();
+
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [onConfirmAction, setOnConfirmAction] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 💡 1차 확인 모달을 띄우는 함수 (탈퇴 실행 함수를 onConfirmAction에 저장)
+  const finalizeDeletion = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    setAccessToken(null);
+    setUser(null);
+
+    navigate("/main");
+  };
+
   const handleDeleteAccount = async () => {
     setAlertMessage(
-      "정말 회원 탈퇴를 진행하시겠습니까? \n 계정은 복구되지 않습니다"
+      "정말 회원 탈퇴를 진행하시겠습니까?\n 계정은 복구되지 않습니다"
     );
-    // onConfirmAction에 실제 삭제 함수를 저장
     setOnConfirmAction(() => confirmDeletion);
     setAlertVisible(true);
   };
@@ -77,14 +88,13 @@ const DeleteAccountPage = () => {
       const refreshToken = localStorage.getItem("refreshToken");
 
       if (!accessToken || !refreshToken) {
-        setAlertMessage("인증 정보가 부족합니다 \n 다시 로그인해주세요");
+        setAlertMessage("인증 정보가 부족합니다\n 다시 로그인해주세요");
         setOnConfirmAction(() => () => navigate("/login"));
         setAlertVisible(true);
         setIsLoading(false);
         return;
       }
 
-      // 백엔드의 요구사항에 맞춰 토큰을 body에 담아 DELETE 요청
       await api.delete("/auth/delete", {
         headers: {
           access: accessToken,
@@ -95,12 +105,8 @@ const DeleteAccountPage = () => {
         },
       });
 
-      // 성공 시 로컬 스토리지 데이터 삭제
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-
       setAlertMessage("회원 탈퇴가 완료되었습니다");
-      setOnConfirmAction(() => () => navigate("/")); // 홈으로 이동
+      setOnConfirmAction(() => finalizeDeletion);
       setAlertVisible(true);
     } catch (error) {
       console.error("❌ 탈퇴 실패:", error);
@@ -110,13 +116,13 @@ const DeleteAccountPage = () => {
         error.response?.status === 400 &&
         message.includes("refresh token removed")
       ) {
-        setAlertMessage("회원 탈퇴가 완료되었습니다");
-        setOnConfirmAction(() => () => navigate("/"));
+        setAlertMessage("회원 탈퇴가 완료되었습니다.");
+        setOnConfirmAction(() => finalizeDeletion);
       } else if (message.includes("토큰") || error.response?.status === 401) {
-        setAlertMessage("인증에 실패했습니다\n다시 로그인 후 시도해주세요");
+        setAlertMessage("인증에 실패했습니다\n 다시 로그인 후 시도해주세요");
         setOnConfirmAction(() => () => navigate("/login"));
       } else {
-        setAlertMessage(`탈퇴 중 오류가 발생했습니다 \n ${message}`);
+        setAlertMessage(`탈퇴 중 오류가 발생했습니다\n ${message}`);
         setOnConfirmAction(null);
       }
       setAlertVisible(true);
@@ -125,19 +131,16 @@ const DeleteAccountPage = () => {
     }
   };
 
-  // 💡 긍정적인 응답 (확인)을 처리하는 함수
   const handleAlertConfirm = () => {
     setAlertVisible(false);
     if (onConfirmAction) {
-      onConfirmAction(); // 저장된 탈퇴 함수(confirmDeletion) 실행
+      onConfirmAction();
       setOnConfirmAction(null);
     }
   };
 
-  // 💡 부정적인 응답 (취소)를 처리하는 함수 (버그 수정의 핵심)
   const handleAlertCancel = () => {
     setAlertVisible(false);
-    // ❌ 탈퇴 함수를 실행하지 않고, 저장된 액션만 지워서 탈퇴를 방지
     setOnConfirmAction(null);
   };
 
@@ -172,9 +175,8 @@ const DeleteAccountPage = () => {
       <AlertModal
         visible={alertVisible}
         message={alertMessage}
-        onConfirm={handleAlertConfirm} // 확인 버튼은 액션 실행 (긍정 경로)
-        // 💡 수정 완료: 취소 버튼은 액션 저장 여부에 따라 분기
-        onCancel={onConfirmAction ? handleAlertCancel : handleAlertConfirm} // 취소 버튼은 액션 실행 없이 닫기 (부정 경로)
+        onConfirm={handleAlertConfirm}
+        onCancel={onConfirmAction ? handleAlertCancel : handleAlertConfirm}
       />
     </Container>
   );
