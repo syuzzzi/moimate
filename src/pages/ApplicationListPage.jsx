@@ -15,6 +15,8 @@ const Container = styled.div`
   position: relative;
   margin: 0;
   width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
 `;
 
 const HeaderContainer = styled.div`
@@ -23,7 +25,7 @@ const HeaderContainer = styled.div`
   justify-content: center;
   height: 24px;
   position: relative;
-  margin-bottom: 25px;
+  margin-bottom: 26px;
   width: 100%;
 `;
 
@@ -43,6 +45,7 @@ const ListWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  padding: 0 5px;
   /* 목록이 많을 경우 스크롤을 위해 높이를 지정할 수 있음 */
 `;
 
@@ -75,8 +78,9 @@ const NameText = styled.span`
   flex: 1;
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: ${({ theme }) => theme.colors.black};
   text-align: left;
+  font-family: ${({ theme }) => theme.fonts.bold};
 `;
 
 const PlaceholderText = styled.div`

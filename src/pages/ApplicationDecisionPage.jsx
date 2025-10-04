@@ -12,11 +12,12 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
   background-color: ${({ theme }) => theme.colors.white};
-  padding: 0 30px;
+  padding: 30px 20px;
   min-height: 100vh;
   max-width: 600px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
 `;
 const HeaderContainer = styled.div`
   display: flex;
@@ -26,7 +27,6 @@ const HeaderContainer = styled.div`
   position: relative;
   margin-bottom: 25px;
   width: 100%;
-  padding-top: 30px;
 `;
 
 const BackButton = styled.button`
@@ -48,7 +48,8 @@ const ProfileContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   margin-top: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+  padding-left: 10px;
 `;
 const ProfileImage = styled.img`
   width: 40px;
@@ -59,7 +60,7 @@ const ProfileImage = styled.img`
   object-fit: cover;
 `;
 const NameText = styled.span`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.black};
 `;
@@ -71,7 +72,8 @@ const FormText = styled.p`
   line-height: 25px;
   padding-left: 15px;
   border-radius: 8px;
-  margin-bottom: 40px;
+  margin-bottom: 60px;
+  margin-left: 10px;
   white-space: pre-wrap; /* 줄 바꿈 유지 */
 `;
 const ButtonContainer = styled.div`

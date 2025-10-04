@@ -12,7 +12,11 @@ const Container = styled.div`
   background-color: #fff;
   padding: 30px 20px;
   height: 100vh;
-  overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
 `;
 
 const HeaderContainer = styled.div`
@@ -22,6 +26,7 @@ const HeaderContainer = styled.div`
   height: 20px;
   position: relative;
   margin-bottom: 30px;
+  box-sizing: border-box;
 `;
 
 const BackButton = styled.button`
@@ -46,6 +51,7 @@ const ApplicationInput = styled.textarea`
   font-family: ${({ theme }) => theme.fonts.regular};
   resize: none;
   outline: none;
+  box-sizing: border-box;
 `;
 
 const ApplicationFormPage = () => {
