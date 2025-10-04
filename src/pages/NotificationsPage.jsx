@@ -159,6 +159,7 @@ const NotificationsPage = () => {
 
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [currentUserName, setCurrentUserName] = useState("");
 
   // 유틸리티 함수를 인라인으로 재정의
   const formatDate = (dateString) => {
@@ -182,13 +183,41 @@ const NotificationsPage = () => {
         setLoading(false);
         return;
       }
+
+      // 1. 현재 사용자 이름 가져오기
+      try {
+        const userProfileRes = await api.get("/mypage/full", {
+          headers: { access: token },
+        }); // 가정: 프로필 API
+
+        console.log("프로필 확인", userProfileRes.data.data.name);
+        setCurrentUserName(userProfileRes.data.data || "사용자");
+      } catch (e) {
+        console.warn("사용자 이름 로드 실패, 기본값 사용:", e);
+        setCurrentUserName("사용자");
+      }
+
+      // 2. 알림 목록 가져오기
       const res = await api.get("/notifications", {
         headers: { access: token },
       });
       console.log("🔔 알림 조회 성공:", res.data.data);
-      setNotifications(res.data.data);
+
+      const responseData = res.data.data;
+
+      // ⭐ 알림 데이터 구조 안전하게 처리
+      let list = [];
+      if (Array.isArray(responseData)) {
+        list = responseData;
+      } else if (responseData && Array.isArray(responseData.notificationList)) {
+        // API 응답이 { data: { notificationList: [...] } } 형태일 경우 대비
+        list = responseData.notificationList;
+      }
+
+      setNotifications(list);
     } catch (error) {
       console.error("알림 조회 실패:", error);
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -343,26 +372,25 @@ const NotificationsPage = () => {
       return;
     }
 
-    // 1. 로딩 상태 표시 (필요하다면)
-
-    // 2. 결제 상태 확인
+    // 1. 결제 상태 확인
     const isPaid = await checkPaymentStatus(somoimId, sessionId);
 
     if (isPaid) {
-      // 3. 이미 결제를 완료했다면 알림 띄우고 종료
+      // 2. 이미 결제를 완료했다면 알림 띄우고 종료
       setModalVisible(false);
       setAlertMessage("이미 결제한 세션입니다");
       setAlertVisible(true);
       return;
     }
 
-    // 4. 결제 전이라면 결제 페이지로 이동
+    // 3. 결제 전이라면 결제 페이지로 이동
     setModalVisible(false);
     const paymentParams = {
       amount,
       title,
       somoimId,
       sessionId,
+      userName: currentUserName,
     };
 
     console.log("🚀 결제 페이지로 전송되는 데이터 (State):", paymentParams);
