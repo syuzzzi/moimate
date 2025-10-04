@@ -451,7 +451,7 @@ const CreatePostPage = () => {
     맛집: "FOOD",
     취미: "HOBBY",
     KPOP: "KPOP",
-    게임: "GAME",
+    취업: "JOB",
   };
 
   const handleSubmit = async () => {
