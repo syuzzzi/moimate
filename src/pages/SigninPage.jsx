@@ -15,6 +15,9 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid"; // uuid 라이브러리 추가
 import Spinner from "../components/Spinner";
 import { ChevronLeft } from "react-feather";
+import KakaoIcon from "../../assets/kakao.png";
+import NaverIcon from "../../assets/naver.png";
+import MailIcon from "../../assets/mail.png";
 
 const Container = styled.div`
   display: flex;
@@ -305,7 +308,7 @@ const Signin = () => {
       <Button
         title="카카오로 시작하기"
         onClick={signinWithKakao}
-        icon="../../assets/kakao.png"
+        icon={KakaoIcon}
         style={{
           width: "100%",
           backgroundColor: "#FFDE00",
@@ -322,7 +325,7 @@ const Signin = () => {
       <Button
         title="네이버로 시작하기"
         onClick={signinWithNaver}
-        icon="../../assets/naver.png"
+        icon={NaverIcon}
         style={{
           width: "100%",
           backgroundColor: "#00C73C",
@@ -339,7 +342,7 @@ const Signin = () => {
       <Button
         title="이메일로 시작하기"
         onClick={navigateToEmailSignup}
-        icon="../../assets/mail.png"
+        icon={MailIcon}
         style={{
           width: "100%",
           backgroundColor: "#E3F0FF",
