@@ -6,6 +6,12 @@ import { Heart, Search } from "react-feather";
 import api from "../api/api";
 import Logo from "../../assets/logo.svg";
 import useSWR from "swr";
+import LanguageIcon from "../../assets/icons/categoriLanguage.png";
+import CulturesIcon from "../../assets/icons/categoriCultures.png";
+import FoodIcon from "../../assets/icons/categoriFood.png";
+import HobbyIcon from "../../assets/icons/categoriHobby.png";
+import KPOPIcon from "../../assets/icons/categoriKPOP.png";
+import JobIcon from "../../assets/icons/categoriJob.png";
 
 const LogoContainer = styled.div`
   display: flex;
@@ -260,37 +266,37 @@ const MainPage = () => {
       id: "1",
       name: "언어",
       code: "LANGUAGE",
-      image: "../../assets/icons/categoriLanguage.png",
+      image: LanguageIcon,
     },
     {
       id: "2",
       name: "문화",
       code: "CULTURE",
-      image: "../../assets/icons/categoriCultures.png",
+      image: CulturesIcon,
     },
     {
       id: "3",
       name: "맛집",
       code: "FOOD",
-      image: "../../assets/icons/categoriFood.png",
+      image: FoodIcon,
     },
     {
       id: "4",
       name: "취미",
       code: "HOBBY",
-      image: "../../assets/icons/categoriHobby.png",
+      image: HobbyIcon,
     },
     {
       id: "5",
       name: "KPOP",
       code: "KPOP",
-      image: "../../assets/icons/categoriKPOP.png",
+      image: KPOPIcon,
     },
     {
       id: "6",
       name: "취업",
       code: "JOB",
-      image: "../../assets/icons/categoriJob.png",
+      image: JobIcon,
     },
   ];
   /*
