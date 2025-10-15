@@ -39,11 +39,13 @@ const PaymentPage = () => {
   const initialTitle = paymentState.title || "모임 참가비";
   const initialSomoimId = paymentState.somoimId;
   const initialSessionId = paymentState.sessionId;
+  const initialUserName = paymentState.userName || "사용자";
 
   const [amount, setAmount] = useState(initialAmount);
   const [title, setTitle] = useState(initialTitle);
   const [somoimId, setSomoimId] = useState(initialSomoimId);
   const [sessionId, setSessionId] = useState(initialSessionId);
+  const [userName, setUserName] = useState(initialUserName);
 
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
   const isProcessingRef = useRef(false);
@@ -160,11 +162,12 @@ const PaymentPage = () => {
         merchant_uid: `mid_${new Date().getTime()}`,
         name: title,
         amount: amount,
-        buyer_name: "홍길동",
+        buyer_name: userName.name,
         buyer_tel: "010-1234-5678",
         m_redirect_url: redirectUrl,
       },
       (rsp) => {
+        console.log("유저이름", userName);
         console.warn("아임포트 콜백 실행됨 (리다이렉션으로 처리)");
       }
     );
@@ -178,6 +181,7 @@ const PaymentPage = () => {
       setTitle(initialTitle);
       setSomoimId(initialSomoimId);
       setSessionId(initialSessionId);
+      setUserName(initialUserName);
     }
 
     const dataValid = amount > 0 && somoimId && sessionId;
@@ -194,7 +198,7 @@ const PaymentPage = () => {
       );
       setIsError(true);
     }
-  }, [isSdkLoaded, amount, somoimId, sessionId]);
+  }, [isSdkLoaded, amount, somoimId, sessionId, userName]);
 
   // ────────────────────────────── 2. 결제 결과 처리 useEffect
   useEffect(() => {
@@ -235,9 +239,8 @@ const PaymentPage = () => {
   return (
     <PageContainer>
       <h2>결제 처리 중</h2>
-      <Instruction>
-        잠시만 기다려주세요. 자동으로 결제 모듈로 이동합니다.
-      </Instruction>
+      <Instruction>잠시만 기다려주세요</Instruction>
+      <Instruction>자동으로 결제 모듈로 이동합니다</Instruction>
       <StatusMessage $isError={isError}>{statusMessage}</StatusMessage>
     </PageContainer>
   );

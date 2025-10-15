@@ -153,10 +153,13 @@ const NotificationsPage = () => {
     time: "",
     location: "",
     amount: 0,
+    somoimId: null,
+    sessionId: null,
   });
 
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [currentUserName, setCurrentUserName] = useState("");
 
   // 유틸리티 함수를 인라인으로 재정의
   const formatDate = (dateString) => {
@@ -180,13 +183,41 @@ const NotificationsPage = () => {
         setLoading(false);
         return;
       }
+
+      // 1. 현재 사용자 이름 가져오기
+      try {
+        const userProfileRes = await api.get("/mypage/full", {
+          headers: { access: token },
+        }); // 가정: 프로필 API
+
+        console.log("프로필 확인", userProfileRes.data.data.name);
+        setCurrentUserName(userProfileRes.data.data || "사용자");
+      } catch (e) {
+        console.warn("사용자 이름 로드 실패, 기본값 사용:", e);
+        setCurrentUserName("사용자");
+      }
+
+      // 2. 알림 목록 가져오기
       const res = await api.get("/notifications", {
         headers: { access: token },
       });
       console.log("🔔 알림 조회 성공:", res.data.data);
-      setNotifications(res.data.data);
+
+      const responseData = res.data.data;
+
+      // ⭐ 알림 데이터 구조 안전하게 처리
+      let list = [];
+      if (Array.isArray(responseData)) {
+        list = responseData;
+      } else if (responseData && Array.isArray(responseData.notificationList)) {
+        // API 응답이 { data: { notificationList: [...] } } 형태일 경우 대비
+        list = responseData.notificationList;
+      }
+
+      setNotifications(list);
     } catch (error) {
       console.error("알림 조회 실패:", error);
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -247,6 +278,42 @@ const NotificationsPage = () => {
     }
   };
 
+  const checkPaymentStatus = async (somoimId, sessionId) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("토큰 없음");
+
+      // 1. 현재 사용자 ID 획득 (API를 통해)
+      const userRes = await api.get("/mypage/me", {
+        headers: { access: token },
+      });
+      const currentUserId = userRes.data.data;
+
+      if (!currentUserId) throw new Error("사용자 ID를 찾을 수 없습니다.");
+
+      // 2. /payments/status (모든 참가자 상태 조회) POST 요청
+      const statusRes = await api.post(
+        `/payments/status`,
+        { roomId: somoimId, sessionId: sessionId },
+        { headers: { access: token, "Content-Type": "application/json" } }
+      );
+
+      const statuses = statusRes.data.data.userPaymentStatuses;
+
+      // 3. 현재 사용자 ID와 일치하는 항목을 찾아 결제 상태 확인
+      const currentUserStatus = statuses.find(
+        (status) => Number(status.userId) === Number(currentUserId)
+      );
+
+      // 해당 사용자의 상태가 있고, paid가 true이면 true 반환
+      return currentUserStatus && currentUserStatus.paid === true;
+    } catch (error) {
+      console.error("결제 상태 확인 실패:", error);
+      // API 실패 시 (예: 404, 서버 에러) 안전하게 false 반환
+      return false;
+    }
+  };
+
   useEffect(() => {
     fetchNotifications();
     markAllAsRead();
@@ -271,7 +338,6 @@ const NotificationsPage = () => {
           setAlertVisible(true);
           return;
         }
-        // ✅ navigate의 두 번째 인자로 { state: { postId: item.postId } } 객체를 전달해야 합니다.
         navigate("/applicationlist", { state: { postId: item.postId } });
         break;
       case "PAYMENT_COMPLETED":
@@ -286,10 +352,51 @@ const NotificationsPage = () => {
           setAlertVisible(true);
         }
         break;
+      case "REFUND_COMPLETED":
+        setAlertMessage("환불이 완료되었습니다");
+        setAlertVisible(true);
+        break;
       default:
         console.warn("알 수 없는 알림 타입:", item.type);
         break;
     }
+  };
+
+  const handleConfirmPayment = async () => {
+    const { somoimId, sessionId, amount, title } = modalData;
+
+    if (!somoimId || !sessionId) {
+      setModalVisible(false);
+      setAlertMessage("결제 정보가 부족합니다.");
+      setAlertVisible(true);
+      return;
+    }
+
+    // 1. 결제 상태 확인
+    const isPaid = await checkPaymentStatus(somoimId, sessionId);
+
+    if (isPaid) {
+      // 2. 이미 결제를 완료했다면 알림 띄우고 종료
+      setModalVisible(false);
+      setAlertMessage("이미 결제한 세션입니다");
+      setAlertVisible(true);
+      return;
+    }
+
+    // 3. 결제 전이라면 결제 페이지로 이동
+    setModalVisible(false);
+    const paymentParams = {
+      amount,
+      title,
+      somoimId,
+      sessionId,
+      userName: currentUserName,
+    };
+
+    console.log("🚀 결제 페이지로 전송되는 데이터 (State):", paymentParams);
+    navigate("/payment", {
+      state: paymentParams,
+    });
   };
 
   return (
@@ -327,27 +434,7 @@ const NotificationsPage = () => {
             <ModalInfoText>{modalData.location}</ModalInfoText>
             <ModalAmount>{modalData.amount.toLocaleString()}원</ModalAmount>
             <ButtonContainer>
-              <ConfirmButton
-                onClick={() => {
-                  setModalVisible(false);
-                  const paymentParams = {
-                    amount: modalData.amount,
-                    title: modalData.title,
-                    somoimId: modalData.somoimId,
-                    sessionId: modalData.sessionId,
-                  };
-
-                  console.log(
-                    "🚀 결제 페이지로 전송되는 데이터 (State):",
-                    paymentParams
-                  );
-                  navigate("/payment", {
-                    state: paymentParams,
-                  });
-                }}
-              >
-                수락
-              </ConfirmButton>
+              <ConfirmButton onClick={handleConfirmPayment}>수락</ConfirmButton>
               <CancelButton onClick={() => setModalVisible(false)}>
                 거절
               </CancelButton>
