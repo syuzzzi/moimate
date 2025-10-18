@@ -330,7 +330,11 @@ const PostDetailPage = () => {
           }
           onClick={() => {
             if (!isRecruitmentClosed && !isApplied) {
-              navigate(`/apply/${postId}`);
+              navigate("/applicationform", {
+                state: {
+                  postId,
+                },
+              });
             }
           }}
           disabled={isRecruitmentClosed || isApplied}

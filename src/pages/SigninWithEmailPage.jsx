@@ -7,6 +7,7 @@ import LostPw from "../components/LostPw";
 import Logo from "../../assets/logo.svg?react";
 import api from "../api/api";
 import { useAuth } from "../contexts/useAuth"; // AuthContext 복원
+import { ChevronLeft } from "react-feather";
 
 // 이메일 유효성 검사
 const validateEmail = (email) => {
@@ -28,6 +29,20 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   padding: 0 30px;
   min-height: 100vh;
+`;
+
+const BackButton = styled.button`
+  position: absolute;
+  top: 30px; /* 상단에서 30px만큼 떨어지도록 조정 */
+  left: 10px; /* 화면 왼쪽에서 10px만큼 떨어지도록 조정 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px; /* 클릭 영역 확보 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 `;
 const RightAlignedWrapper = styled.div`
   width: 100%;
@@ -126,6 +141,9 @@ const SigninWithEmail = () => {
   return (
     <PageWrapper>
       <Container>
+        <BackButton onClick={() => navigate(-1)}>
+          <ChevronLeft size={24} color="#333" />
+        </BackButton>
         <Logo style={{ marginBottom: 50 }} />
         <Input
           label="이메일"

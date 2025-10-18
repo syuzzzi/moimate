@@ -182,8 +182,24 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [isMyProfile, setIsMyProfile] = useState(false);
+  const [onConfirmAction, setOnConfirmAction] = useState(null);
 
   const { user, setAccessToken, setUser } = useAuth();
+
+  const handleClientCleanupAndNavigate = () => {
+    // 1. 로컬 토큰 삭제
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    console.log("✅ 3단계: 로컬 토큰 삭제 완료");
+
+    // 2. 앱 상태 변경
+    setAccessToken(null);
+    setUser(null);
+    console.log("✅ 4단계: 앱 상태 초기화 완료");
+
+    // 3. 메인 페이지로 이동
+    navigate("/main");
+  };
 
   // 수정된 데이터를 받아와서 user 상태를 업데이트하는 함수
   const handleUpdate = (updatedData) => {
@@ -370,37 +386,27 @@ const ProfilePage = () => {
         console.log("✅ 2단계: 백엔드 로그아웃 요청 완료");
       }
 
-      // 4. 로컬 토큰 삭제
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      console.log("✅ 3단계: 로컬 토큰 삭제 완료");
-
-      // 5. 앱 상태 변경
-      setAccessToken(null);
-      setUser(null);
-
       setModalVisible(true);
-
-      console.log("✅ 4단계: 로그아웃 완료");
+      setOnConfirmAction(() => handleClientCleanupAndNavigate);
     } catch (error) {
       console.error("❌ 로그아웃 처리 중 에러 발생:", error);
 
-      // 실패 시에도 안전하게 로컬 데이터 정리
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      setAccessToken(null);
-      setUser(null);
-      navigate("/signin");
+      setModalVisible(true);
+      setOnConfirmAction(() => handleClientCleanupAndNavigate);
     }
   };
   const handleModalConfirm = () => {
     setModalVisible(false);
-    navigate("/main");
+
+    if (onConfirmAction) {
+      onConfirmAction();
+      setOnConfirmAction(null); // 액션 실행 후 초기화
+    }
   };
 
   const handleDeleteAccount = () => {
     // 회원탈퇴 로직 구현
-    navigate("/회원탈퇴");
+    navigate("/deleteaccount");
   };
 
   if (isLoading) {

@@ -249,7 +249,7 @@ const StatusBadge = styled.div`
 `;
 
 const StatusDot = styled.span`
-  transform: translateY(-1px);
+  transform: translateY(0px);
 `;
 
 const DangerExit = styled(HeaderButton)`
@@ -287,6 +287,7 @@ const ChatPage = () => {
   const [sideOpen, setSideOpen] = useState(false);
   const [startModalOpen, setStartModalOpen] = useState(false);
   const [endConfirmOpen, setEndConfirmOpen] = useState(false);
+  const [failModalOpen, setFailModalOpen] = useState(false);
 
   // start form defaults
   const getToday = () => {
@@ -352,10 +353,12 @@ const ChatPage = () => {
   // ───────── Session & payment status
   const fetchSessionStatus = useCallback(async () => {
     const token = localStorage.getItem("accessToken");
+
     try {
       const pRes = await api.get(`/chatroom/${roomId}/participants`, {
         headers: { access: token },
       });
+
       const list =
         (pRes?.data?.dtoList ?? []).map((p) => ({
           userId: p.userId ?? null,
@@ -369,6 +372,12 @@ const ChatPage = () => {
         headers: { access: token },
       });
 
+      const ana = sRes.data.data;
+
+      console.log("active session", sRes);
+
+      console.log("active sessionzz", ana.id);
+
       if (!sRes.data.data) {
         setMeetingActive(false);
         setParticipantStatus({});
@@ -376,6 +385,9 @@ const ChatPage = () => {
       }
 
       const s = sRes.data.data;
+
+      console.log("현재 세션 아이디", s.id);
+
       setMeetingActive(true);
       setCurrentSessionId(s.id);
       setCurrentRound(s.sessionNumber);
@@ -384,17 +396,23 @@ const ChatPage = () => {
 
       const payRes = await api.post(
         `/payments/status`,
-        { roomId, sessionId: s.id },
+        { roomId, sessionId: s.sessionNumber },
         { headers: { access: token } }
       );
 
+      console.log("payres", payRes);
+
       const map = {};
+
       const statuses = payRes?.data?.data?.userPaymentStatuses ?? [];
+
+      console.log("결제 상태:", statuses);
+
       statuses.forEach((u) => {
-        map[u.userId] = u.paid ? "참여" : "불참";
+        map[String(u.userId)] = u.paid ? "참여" : "불참";
       });
       list.forEach((p) => {
-        if (!map[p.userId]) map[p.userId] = "불참";
+        if (!map[String(p.userId)]) map[String(p.userId)] = "불참";
       });
       setParticipantStatus(map);
     } catch (e) {
@@ -595,22 +613,26 @@ const ChatPage = () => {
 
   const handleEndMeeting = async () => {
     if (!currentSessionId) return;
+
     setEndConfirmOpen(false);
+
     try {
       setSideOpen(false);
+
       const token = localStorage.getItem("accessToken");
       const res = await api.post(
         "/payments/info",
         {
           userId: currentUserId,
-          sessionId: currentSessionId,
+          sessionId: currentRound,
           somoimId: roomId,
         },
         { headers: { access: token } }
       );
-      const { impUid, amount } = res.data.data || {};
-      console.log(location.state);
-      navigate("/checkparticipants/:roomId/:sessionId", {
+
+      const { impUid, amount } = res.data.data;
+
+      navigate("/checkparticipants", {
         state: {
           roomId,
           sessionId: currentSessionId,
@@ -627,8 +649,7 @@ const ChatPage = () => {
         "모임 종료/결제 정보 조회 실패:",
         e.response?.data ?? e.message
       );
-      // 프로젝트의 공통 Alert 사용 시 아래 교체
-      window.alert("결제 정보 조회에 실패했습니다. 다시 시도해주세요.");
+      setFailModalOpen(true);
     }
   };
 
@@ -756,7 +777,7 @@ const ChatPage = () => {
 
                     {meetingActive && (
                       <StatusBadge>
-                        <StatusDot style={{ color: "#ffd000" }}>
+                        <StatusDot style={{ color: "#1A4568" }}>
                           {status === "참여" ? "●" : "○"}
                         </StatusDot>
                         <span style={{ color: theme.colors.black }}>
@@ -839,6 +860,14 @@ const ChatPage = () => {
         message="모임을 종료하시겠습니까?"
         onConfirm={handleEndMeeting}
         onCancel={() => setEndConfirmOpen(false)}
+      />
+
+      {/* 종료 실패 모달 */}
+      <AlertModal
+        visible={failModalOpen}
+        message={"결제 정보 조회 실패"}
+        onConfirm={() => setFailModalOpen(false)}
+        onCancel={() => setFailModalOpen(false)}
       />
     </Page>
   );

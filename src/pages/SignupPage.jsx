@@ -1,19 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { Input, Button, ErrorMessage, AlertModal } from "../components"; // 웹용 AlertModal, Button, ErrorMessage 컴포넌트가 필요합니다.
-
+import { Input, Button, ErrorMessage, AlertModal } from "../components";
+import { validateEmail, removeWhitespace } from "../utils/utils";
 import api from "../api/api";
-
-// 웹에서 필요한 유틸리티 함수
-const validateEmail = (email) => {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-};
-const removeWhitespace = (text) => {
-  return text.replace(/\s/g, "");
-};
+import { ChevronLeft } from "react-feather";
 
 const Container = styled.div`
   display: flex;
@@ -23,6 +14,19 @@ const Container = styled.div`
   min-height: 100vh;
   background-color: ${({ theme }) => theme.colors.white};
   padding: 0 30px;
+`;
+const BackButton = styled.button`
+  position: absolute;
+  top: 30px; /* 상단에서 30px만큼 떨어지도록 조정 */
+  left: 10px; /* 화면 왼쪽에서 10px만큼 떨어지도록 조정 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px; /* 클릭 영역 확보 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 `;
 const EmailContainer = styled.div`
   display: flex;
@@ -81,7 +85,7 @@ const GenderLabel = styled.span`
   color: ${({ theme }) => theme.colors.black};
 `;
 
-const Signup = () => {
+const SignupPage = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -90,9 +94,12 @@ const Signup = () => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("");
+
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
     useState("");
+
   const [disabled, setDisabled] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -107,6 +114,7 @@ const Signup = () => {
         phone &&
         gender &&
         !emailErrorMessage &&
+        !passwordErrorMessage &&
         !passwordConfirmErrorMessage
       )
     );
@@ -118,6 +126,7 @@ const Signup = () => {
     phone,
     gender,
     emailErrorMessage,
+    passwordErrorMessage,
     passwordConfirmErrorMessage,
   ]);
 
@@ -158,8 +167,22 @@ const Signup = () => {
   };
 
   const _handlePasswordChange = (e) => {
-    const changePassword = removeWhitespace(e.target.value);
+    // ⭐️ e: 웹 표준 이벤트 객체
+    const changePassword = removeWhitespace(e.target.value); // ⭐️ e.target.value 사용
     setPassword(changePassword);
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*[0-9]).{8,}$/;
+    if (!passwordRegex.test(changePassword)) {
+      setPasswordErrorMessage("영어와 숫자를 혼합한 8자 이상이어야 합니다");
+    } else {
+      setPasswordErrorMessage("");
+    }
+
+    if (passwordConfirm) {
+      setPasswordConfirmErrorMessage(
+        changePassword !== passwordConfirm ? "비밀번호가 일치하지 않습니다" : ""
+      );
+    }
   };
 
   const _handlePasswordConfirmChange = (e) => {
@@ -193,7 +216,7 @@ const Signup = () => {
         gender,
       });
       console.log("회원가입 성공:", response.data);
-      navigate("/done"); // 웹 라우팅 경로로 변경
+      navigate("/done");
     } catch (error) {
       if (error.response) {
         console.error("서버 오류:", error.response.data);
@@ -208,6 +231,9 @@ const Signup = () => {
   return (
     <div style={{ display: "flex", flexGrow: 1, justifyContent: "center" }}>
       <Container>
+        <BackButton onClick={() => navigate(-1)}>
+          <ChevronLeft size={24} color="#333" />
+        </BackButton>
         <EmailContainer>
           <Input
             label="이메일"
@@ -239,10 +265,13 @@ const Signup = () => {
         <Input
           label="비밀번호"
           value={password}
-          onChange={_handlePasswordChange}
+          onChange={_handlePasswordChange} // ⭐️ 수정된 핸들러 연결
           isPassword={true}
-          style={{ width: "100%", paddingBottom: 20 }}
+          style={{ width: "100%", paddingBottom: 2 }}
         />
+        {/* 비밀번호 오류 메시지 위치 */}
+        <ErrorMessage message={passwordErrorMessage} />
+
         <Input
           label="비밀번호 확인"
           value={passwordConfirm}
@@ -293,4 +322,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignupPage;
