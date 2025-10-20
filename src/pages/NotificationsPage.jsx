@@ -24,7 +24,7 @@ const Header = styled.h1`
 `;
 
 const NotificationItem = styled.div`
-  padding: 5px 0 10px 0;
+  padding: 20px 0 10px 0;
   border-bottom: 1px solid #eee;
   display: flex;
   flex-direction: row;
