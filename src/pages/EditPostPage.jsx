@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Input, Button, AlertModal } from "../components";
 import { categoryData, cityData, districtData } from "./CreatePostPage";
 import api from "../api/api";
+import { ErrorMessage } from "../components";
 
 const Container = styled.div`
   display: flex;
@@ -124,17 +125,6 @@ const DateInput = styled.input`
   cursor: pointer;
 `;
 
-// 안전한 날짜 변환
-const safeParseDate = (value) => {
-  if (!value || typeof value !== "string") return new Date();
-  const [y, m, d] = value.split("-");
-  if (y && m && d) {
-    const date = new Date(Number(y), Number(m) - 1, Number(d));
-    return isNaN(date.getTime()) ? new Date() : date;
-  }
-  return new Date();
-};
-
 const WebCalendarPicker = ({ date, setDate, minDate, disabled }) => {
   const handleDateChange = (e) => {
     setDate(new Date(e.target.value));
@@ -159,18 +149,26 @@ const WebCalendarPicker = ({ date, setDate, minDate, disabled }) => {
   );
 };
 
+const categoryOptions = [
+  { label: "언어", value: "LANGUAGE" },
+  { label: "문화", value: "CULTURE" },
+  { label: "맛집", value: "FOOD" },
+  { label: "취미", value: "HOBBY" },
+  { label: "KPOP", value: "KPOP" },
+  { label: "취업", value: "JOB" },
+];
+
 const EditPostPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { postId } = useParams();
+  const params = location.state || {};
 
   const descriptionRef = useRef();
   const maxRef = useRef();
   const depositRef = useRef();
   const tagRef = useRef();
-
-  const location = useLocation();
-  const { postId } = useParams();
-  const params = location.state || {};
 
   const {
     title: initialTitle,
@@ -190,12 +188,25 @@ const EditPostPage = () => {
   const [inputHeight, setInputHeight] = useState(120);
   const [title, setTitle] = useState(initialTitle || "");
   const [description, setDescription] = useState(initialDesc || "");
-  const [category, setCategory] = useState(initialCategory || null);
+
+  const [category, setCategory] = useState(
+    initialCategory
+      ? categoryOptions.find((c) => c.value === initialCategory)?.value
+      : null
+  );
+
   const [selectedCity, setSelectedCity] = useState(initialCity || null);
   const [selectedDistrict, setSelectedDistrict] = useState(
     initialDistrict || null
   );
   const [districtList, setDistrictList] = useState([]);
+
+  const safeParseDate = (value) => {
+    if (!value) return new Date();
+    const [y, m, d] = value.split("-");
+    return new Date(Number(y), Number(m) - 1, Number(d));
+  };
+
   const [recruitStart, setRecruitStart] = useState(
     safeParseDate(recruitmentStart)
   );
@@ -206,11 +217,17 @@ const EditPostPage = () => {
   const [activityEndDate, setActivityEndDate] = useState(
     safeParseDate(activityEnd)
   );
+  const [originalRecruitEnd, setOriginalRecruitEnd] = useState(
+    safeParseDate(recruitmentEnd)
+  );
   const [max, setMax] = useState(maxParticipants || "");
   const [money, setMoney] = useState(deposit || "");
   const [tagText, setTagText] = useState(tags || "");
+
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (selectedCity) {
@@ -221,18 +238,20 @@ const EditPostPage = () => {
   }, [selectedCity]);
 
   const isFormValid = () => {
+    const today = new Date();
     return (
-      title &&
-      description &&
+      title.trim() &&
+      description.trim() &&
       selectedCity &&
       selectedDistrict &&
       category &&
-      max &&
-      money &&
+      Number(max) > 0 &&
+      Number(money) >= 0 &&
       tagText &&
       recruitEnd &&
       activityStartDate &&
-      activityEndDate
+      activityEndDate &&
+      recruitEnd >= today // 모집마감일은 오늘 이후여야 함
     );
   };
 
@@ -240,7 +259,7 @@ const EditPostPage = () => {
     const requestBody = {
       title,
       content: description,
-      category,
+      category: category,
       membersMax: Number(max),
       location: `${selectedCity} ${selectedDistrict}`,
       dueDate: recruitEnd.toISOString().split("T")[0],
@@ -277,14 +296,23 @@ const EditPostPage = () => {
         setTitle(data.title || "");
         setDescription(data.content || "");
         setCategory(data.category || null);
-        setMax(data.membersMax || "");
-        setMoney(data.warranty || "");
-        setTagText(""); // 태그 필드 없으면 빈값
+        setMax(data.membersMax?.toString() || "");
+        setMoney(data.warranty?.toString() || "");
+        setTagText(tags || "");
 
         setRecruitStart(safeParseDate(data.dueDate)); // 모집 종료 날짜
         setRecruitEnd(safeParseDate(data.dueDate)); // API에서는 모집 시작 날짜 없으면 동일하게
         setActivityStartDate(safeParseDate(data.activityStartDate));
         setActivityEndDate(safeParseDate(data.activityEndDate));
+        const formatDate = (date) => date.toISOString().split("T")[0];
+
+        if (
+          isRecreate &&
+          formatDate(originalRecruitEnd) === formatDate(recruitEnd)
+        ) {
+          setErrorMessage("모집 마감일을 변경해주세요.");
+          return;
+        }
 
         if (data.location) {
           const [city, district] = data.location.split(" ");
@@ -338,9 +366,9 @@ const EditPostPage = () => {
           }}
         >
           <Select
-            options={categoryData}
-            value={categoryData.find((opt) => opt.value === category)}
-            onChange={(selected) => setCategory(selected.value)}
+            options={categoryOptions}
+            value={categoryOptions.find((opt) => opt.value === category)}
+            onChange={(selected) => setCategory(selected?.value)}
             placeholder="카테고리 선택"
             styles={selectStyles}
           />
@@ -448,7 +476,22 @@ const EditPostPage = () => {
           style={{ marginBottom: "20px" }}
         />
 
-        <Button title="수정" onClick={handleUpdate} disabled={!isFormValid()} />
+        <FooterButtonContainer>
+          <div style={{ width: "100%", textAlign: "center" }}>
+            <ErrorMessage message={errorMessage} />
+          </div>
+          <Button
+            title="수정"
+            onClick={handleUpdate}
+            disabled={!isFormValid()}
+            style={{
+              width: "100%",
+              height: "50px",
+              padding: "20px",
+              marginBottom: "100px",
+            }}
+          />
+        </FooterButtonContainer>
 
         <AlertModal
           visible={alertVisible}
