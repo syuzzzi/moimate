@@ -60,7 +60,9 @@ const UnreadBadge = styled.div`
 export const TabBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0); //알림 안읽은 수
+  const [chatUnreadCount, setChatUnreadCount] = useState(0);
+  const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
 
   const checkLogin = useCallback(
     async (screenPath) => {
@@ -76,6 +78,31 @@ export const TabBar = () => {
     [navigate]
   );
 
+  //모든 채팅 안 읽은 수 가져오기
+  const fetchUnreadChats = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setChatUnreadCount(0);
+      return;
+    }
+
+    try {
+      const { data } = await api.get("/chatroom", {
+        headers: { access: token },
+      });
+
+      const list = Array.isArray(data?.dtoList) ? data.dtoList : [];
+      const totalUnread = list.reduce(
+        (sum, room) => sum + (room.unread || 0),
+        0
+      );
+      setChatUnreadCount(totalUnread);
+    } catch (e) {
+      console.log("❌ 채팅방 안읽은 수 가져오기 실패", e);
+      setChatUnreadCount(0);
+    }
+  };
+  //🔔 알림 안 읽은 수 가져오기
   const fetchUnreadNotifications = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -96,6 +123,7 @@ export const TabBar = () => {
 
   useEffect(() => {
     fetchUnreadNotifications();
+    fetchUnreadChats();
   }, [location.pathname]);
 
   return (
@@ -121,14 +149,21 @@ export const TabBar = () => {
         />
       </TabItem>
       <TabItem to="/chatls" $active={location.pathname === "/" || undefined}>
-        <MessageSquare
-          size={25}
-          color={
-            location.pathname === "/chatls"
-              ? theme.colors.mainBlue
-              : theme.colors.grey
-          }
-        />
+        <div style={{ position: "relative" }}>
+          <MessageSquare
+            size={25}
+            color={
+              location.pathname === "/chatls"
+                ? theme.colors.mainBlue
+                : theme.colors.grey
+            }
+          />
+          {chatUnreadCount > 0 && (
+            <UnreadBadge>
+              {chatUnreadCount > 99 ? "99+" : chatUnreadCount}
+            </UnreadBadge>
+          )}
+        </div>
       </TabItem>
       <TabItem
         to="/notifications"
