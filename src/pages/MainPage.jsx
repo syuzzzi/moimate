@@ -358,7 +358,7 @@ const MainPage = () => {
       <ButtonContainer>
         <Button
           title="FAQ"
-          onClick={() => navigate("/createpost")} //이동경로 수정 필요
+          onClick={() => navigate("/FAQ")}
           style={{
             height: "40px",
             width: "70px",

@@ -34,6 +34,7 @@ import ApplicationFormPage from "./ApplicationFormPage";
 import ApplicationListPage from "./ApplicationListPage";
 import ApplicationDecisionPage from "./ApplicationDecisionPage";
 import DeleteAccountPage from "./DeleteAccountPage";
+import FAQPage from "./FAQPage";
 import { NotificationOverlayProvider } from "../components/NotificationOverlay.jsx";
 import WebSocketManager from "../components/WebSocketManager.jsx";
 
@@ -132,6 +133,7 @@ const App = () => {
               element={<ApplicationDecisionPage />}
             />
             <Route path="/deleteaccount" element={<DeleteAccountPage />} />
+            <Route path="FAQ" element={<FAQPage />} />
           </Route>
         </Routes>
       </NotificationOverlayProvider>
