@@ -244,54 +244,7 @@ const ProfilePage = () => {
         createdAt: r.createdAt?.split("T")[0].split("-").join("."),
       }));
 
-      setReviews(
-        mapped.length > 0
-          ? mapped
-          : [
-              {
-                index: 1,
-                star: 5,
-                sentence: "모임 진행이 매끄럽고 친절해서 좋았어요!",
-                createdAt: "2023.10.26",
-              },
-              {
-                index: 2,
-                star: 4,
-                sentence: "대화가 잘 통하고 분위기를 잘 이끌어주셨어요.",
-                createdAt: "2023.10.25",
-              },
-              {
-                index: 3,
-                star: 5,
-                sentence: "약속 시간을 잘 지켜주시고 매너가 좋으세요.",
-                createdAt: "2023.10.24",
-              },
-              {
-                index: 4,
-                star: 3,
-                sentence: "좋은 분이지만 대화가 조금 부족했어요.",
-                createdAt: "2023.10.23",
-              },
-              {
-                index: 5,
-                star: 5,
-                sentence: "다음에 또 같이 모임하고 싶어요!",
-                createdAt: "2023.10.22",
-              },
-              {
-                index: 6,
-                star: 4,
-                sentence: "새로운 경험을 하게 되어 즐거웠습니다.",
-                createdAt: "2023.10.21",
-              },
-              {
-                index: 7,
-                star: 5,
-                sentence: "시간 가는 줄 모르고 즐겁게 놀았어요!",
-                createdAt: "2023.10.20",
-              },
-            ]
-      );
+      setReviews(mapped.length > 0 ? mapped : []);
     } catch (error) {
       console.warn("⚠️ 프로필 로딩 실패:", error.message);
       if (error.message === "토큰 없음") {
@@ -303,50 +256,7 @@ const ProfilePage = () => {
           career: "",
           totalStar: "0.0",
         });
-        setReviews([
-          {
-            index: 1,
-            star: 5,
-            sentence: "모임 진행이 매끄럽고 친절해서 좋았어요!",
-            createdAt: "2023.10.26",
-          },
-          {
-            index: 2,
-            star: 4,
-            sentence: "대화가 잘 통하고 분위기를 잘 이끌어주셨어요.",
-            createdAt: "2023.10.25",
-          },
-          {
-            index: 3,
-            star: 5,
-            sentence: "약속 시간을 잘 지켜주시고 매너가 좋으세요.",
-            createdAt: "2023.10.24",
-          },
-          {
-            index: 4,
-            star: 3,
-            sentence: "좋은 분이지만 대화가 조금 부족했어요.",
-            createdAt: "2023.10.23",
-          },
-          {
-            index: 5,
-            star: 5,
-            sentence: "다음에 또 같이 모임하고 싶어요!",
-            createdAt: "2023.10.22",
-          },
-          {
-            index: 6,
-            star: 4,
-            sentence: "새로운 경험을 하게 되어 즐거웠습니다.",
-            createdAt: "2023.10.21",
-          },
-          {
-            index: 7,
-            star: 5,
-            sentence: "시간 가는 줄 모르고 즐겁게 놀았어요!",
-            createdAt: "2023.10.20",
-          },
-        ]);
+        setReviews([]);
       }
     } finally {
       setIsLoading(false);
