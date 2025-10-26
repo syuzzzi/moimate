@@ -5,7 +5,7 @@ const isDevelopment = import.meta.env.DEV;
 const PROD_ROOT_URL = "https://api.moamoa.com";
 
 // 개발 환경에서는 localhost 주소를 사용합니다.
-const DEV_ROOT_URL = "http://localhost:8080";
+const DEV_ROOT_URL = "http://localhost:5173";
 
 // 개발/운영 환경에 따라 올바른 URL을 선택합니다.
 const ROOT_URL = isDevelopment ? DEV_ROOT_URL : PROD_ROOT_URL;

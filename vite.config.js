@@ -22,7 +22,8 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/naver-api/, ""),
       },
       "/api": {
-        target: "http://localhost:8080",
+        target:
+          "http://ingress-ngi-ingress-ngin-f0790-110513573-2018eab2a2ae.kr.lb.naverncp.com",
         changeOrigin: true,
         secure: false,
       },
