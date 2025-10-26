@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled, { useTheme } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { Star, ChevronRight } from "react-feather";
+import { ChevronRight } from "react-feather";
+import { FaStar } from "react-icons/fa";
 import api from "../api/api";
 import { jwtDecode } from "jwt-decode";
 
@@ -193,12 +194,14 @@ const MyPage = () => {
         {
           title: "내가 만든 모임",
           data:
-            resData.createdPosts?.map((post) => ({
-              ...post,
-              postId: post.id,
-              createdAt: formatDate(post.createdAt),
-              userId: userId,
-            })) || [],
+            resData.createdPosts?.map((post) => {
+              return {
+                ...post,
+                postId: post.postId,
+                createdAt: formatDate(post.createdAt),
+                userId: userId,
+              };
+            }) || [],
         },
       ]);
     } catch (e) {
@@ -241,7 +244,11 @@ const MyPage = () => {
           <UserRow>
             <UserName>{user?.name || "사용자"}</UserName>
             <StarContainer>
-              <Star size={18} color="#FFC107" style={{ marginRight: "5px" }} />
+              <FaStar
+                size={18}
+                color="#FFC107"
+                style={{ marginRight: "5px" }}
+              />
               <StarText>{user?.totalStar?.toFixed(1) || 0.0}</StarText>
             </StarContainer>
           </UserRow>

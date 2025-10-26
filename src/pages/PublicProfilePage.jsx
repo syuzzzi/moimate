@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Review, Button, AlertModal } from "../components";
-import { Star, ChevronLeft } from "react-feather";
+import { ChevronLeft } from "react-feather";
+import { FaStar } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/api";
 
@@ -359,7 +360,7 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
         <UserInfo>
           <UserName>{user?.name}</UserName>
           <StarContainer>
-            <Star size={18} color="#FFC107" />
+            <FaStar size={18} color="#FFC107" />
             <StarText>{user?.totalStar || "0.0"}</StarText>
           </StarContainer>
         </UserInfo>
