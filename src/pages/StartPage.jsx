@@ -49,6 +49,10 @@ const Start = () => {
         iPhone 12 pro로 설정 후<br />
         확인을 눌러주세요!
       </Text>
+      <Text>
+        번역이 필요한 외국인분들은 <br />
+        브라우저 자체 번역 기능을 사용해주세요!
+      </Text>
       <FooterContainer>
         <Button title="확인" onClick={handleConfirm} />
       </FooterContainer>
