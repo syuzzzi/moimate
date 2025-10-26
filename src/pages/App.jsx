@@ -18,7 +18,6 @@ import AllPostsPage from "./AllPostsPage";
 import CreatePostPage from "./CreatePostPage";
 import ProfilePage from "./ProfilePage";
 import EditProfilePage from "./EditProfilePage";
-import SigninPage from "./SigninPage";
 import SigninWithEmailPage from "./SigninWithEmailPage";
 import FindPwPage from "./FindPwPage";
 import Layout from "../components/Layout";
@@ -84,7 +83,6 @@ const App = () => {
           />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/done" element={<SignupDonePage />} />
-          <Route path="/signin" element={<SigninPage />} />
           <Route path="/signinwithemail" element={<SigninWithEmailPage />} />
           <Route path="/findpw" element={<FindPwPage />} />
           <Route path="/allposts" element={<AllPostsPage />} />

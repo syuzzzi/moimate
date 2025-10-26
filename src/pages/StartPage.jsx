@@ -41,12 +41,13 @@ const Start = () => {
       <Logo style={{ marginBottom: 50 }} />
       <Text>moimate에 오신 것을 환영합니다!</Text>
       <Text>
-        모바일 화면을 기준으로 제작 되었으니 <br />
-        크롬 브라우저에서 진행해주세요
+        모바일 화면을 기준으로 제작 되었습니다 <br />
+        pc - 크롬 브라우저에서 진행해주세요
       </Text>
       <Text>
         개발자 도구 - 기기 툴바 전환 - <br />
-        iphone 12 pro 로 크기를 맞춰주세요!
+        iPhone 12 pro로 설정 후<br />
+        확인을 눌러주세요!
       </Text>
       <FooterContainer>
         <Button title="확인" onClick={handleConfirm} />
