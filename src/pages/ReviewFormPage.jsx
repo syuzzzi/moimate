@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button, AlertModal } from "../components";
 import styled, { ThemeContext } from "styled-components";
-import { Star, ChevronLeft } from "react-feather";
+import { ChevronLeft } from "react-feather";
+import { FaStar } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import api from "../api/api";
 
@@ -113,7 +114,7 @@ const ReviewForm = () => {
     return (
       <StarRow>
         {[1, 2, 3, 4, 5].map((num) => (
-          <Star
+          <FaStar
             key={num}
             fill={rating >= num ? "#FFD000" : "none"}
             stroke="#FFD000"

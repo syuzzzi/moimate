@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled, { useTheme } from "styled-components";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { Star, ChevronLeft } from "react-feather";
+import { ChevronLeft } from "react-feather";
+import { FaStar } from "react-icons/fa";
 import api from "../api/api";
 import { Button, Review, AlertModal } from "../components";
 import { useAuth } from "../contexts/useAuth";
@@ -347,7 +348,7 @@ const ProfilePage = () => {
           <UserInfo>
             <UserName>{user?.name || "사용자"}</UserName>
             <StarContainer>
-              <Star size={18} color="#FFC107" />
+              <FaStar size={18} color="#FFC107" />
               <StarText>{user?.totalStar || "0.0"}</StarText>
             </StarContainer>
           </UserInfo>
