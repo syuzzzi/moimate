@@ -141,6 +141,9 @@ const ApplicationListPage = () => {
       });
 
       const formList = response.data.data.forms;
+
+      console.log("신청서 목록:", formList);
+
       setApplications(formList);
     } catch (error) {
       console.error("신청서 불러오기 실패: ", error);

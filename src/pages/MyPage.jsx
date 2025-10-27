@@ -154,6 +154,8 @@ const MyPage = () => {
         headers: { access: token },
       });
 
+      console.log("📒 마이페이지 데이터:", profileRes.data);
+
       const resData = profileRes.data.data;
       const formatDate = (isoDate) => {
         const date = new Date(isoDate);
@@ -173,7 +175,7 @@ const MyPage = () => {
         {
           title: "신청한 모임",
           data:
-            resData.joinedPosts?.map((post) => ({
+            resData.appliedPosts?.map((post) => ({
               ...post,
               postId: post.id,
               createdAt: formatDate(post.createdAt),
