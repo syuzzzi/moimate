@@ -22,9 +22,18 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/naver-api/, ""),
       },
       "/api": {
-        target: "http://localhost:8080",
+        target:
+          "http://ingress-ngi-ingress-ngin-f0790-110513573-2018eab2a2ae.kr.lb.naverncp.com",
         changeOrigin: true,
         secure: false,
+      },
+      // ✅ WebSocket 프록시 (SockJS 포함)
+      "/api/ws": {
+        target:
+          "http://ingress-ngi-ingress-ngin-f0790-110513573-2018eab2a2ae.kr.lb.naverncp.com",
+        changeOrigin: true,
+        secure: false,
+        ws: true, // 💡 중요! 이게 있어야 웹소켓 프록시가 작동
       },
     },
   },
