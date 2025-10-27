@@ -2,7 +2,7 @@
 const isDevelopment = import.meta.env.DEV;
 
 // 🚨 여기에 실제 운영 서버 주소를 입력해주세요.
-const PROD_ROOT_URL = "https://api.moamoa.com";
+const PROD_ROOT_URL = "https://moimate.vercel.app";
 
 // 개발 환경에서는 localhost 주소를 사용합니다.
 
