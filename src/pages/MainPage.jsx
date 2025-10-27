@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import theme from "../theme.js";
+import { Button } from "../components";
 import { Heart, Search } from "react-feather";
 import api from "../api/api";
 import Logo from "../../assets/logo.svg";
@@ -154,6 +155,13 @@ const EmptyText = styled.span`
   font-size: 16px;
   color: #888;
   font-family: ${({ theme }) => theme.fonts.bold};
+`;
+
+const ButtonContainer = styled.div`
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  z-index: 999;
 `;
 
 const PageContainer = styled.div`
@@ -346,6 +354,18 @@ const MainPage = () => {
           <PostList data={popularMeetings} currentUserId={currentUserId} />
         </Section>
       </ScrollableContent>
+
+      <ButtonContainer>
+        <Button
+          title="FAQ"
+          onClick={() => navigate("/FAQ")}
+          style={{
+            height: "40px",
+            width: "70px",
+          }}
+          textStyle={{ fontSize: 16, fontFamily: theme.fonts.bold }}
+        />
+      </ButtonContainer>
     </PageContainer>
   );
 };

@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children }) => {
 
   const handleLoginPress = () => {
     setModalVisible(false); // 모달 닫기
-    navigate("/signin", { replace: true }); // ✅ 로그인 페이지로 이동
+    navigate("/signinwithemail", { replace: true }); // ✅ 로그인 페이지로 이동
   };
 
   const handleCloseModal = () => {

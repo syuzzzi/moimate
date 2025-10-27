@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled, { useTheme } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { Star, ChevronRight } from "react-feather";
+import { ChevronRight } from "react-feather";
+import { FaStar } from "react-icons/fa";
 import api from "../api/api";
 import { jwtDecode } from "jwt-decode";
 
-// 스타일 정의
+// 스타일 정의 (변경 없음)
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -138,7 +139,8 @@ const MyPage = () => {
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
 
-  const load = async () => {
+  // 🐛 무한 로딩 문제 해결: useCallback 적용 🐛
+  const load = useCallback(async () => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("토큰 없음");
@@ -153,6 +155,8 @@ const MyPage = () => {
       const profileRes = await api.get("/mypage/full", {
         headers: { access: token },
       });
+
+      console.log("📒 마이페이지 데이터:", profileRes.data);
 
       const resData = profileRes.data.data;
       const formatDate = (isoDate) => {
@@ -173,7 +177,7 @@ const MyPage = () => {
         {
           title: "신청한 모임",
           data:
-            resData.joinedPosts?.map((post) => ({
+            resData.appliedPosts?.map((post) => ({
               ...post,
               postId: post.id,
               createdAt: formatDate(post.createdAt),
@@ -193,12 +197,15 @@ const MyPage = () => {
         {
           title: "내가 만든 모임",
           data:
-            resData.createdPosts?.map((post) => ({
-              ...post,
-              postId: post.id,
-              createdAt: formatDate(post.createdAt),
-              userId: userId,
-            })) || [],
+            resData.createdPosts?.map((post) => {
+              // postId가 없는 경우를 대비해 post.id를 사용
+              return {
+                ...post,
+                postId: post.id, // postId 대신 post.id를 사용하도록 수정
+                createdAt: formatDate(post.createdAt),
+                userId: userId,
+              };
+            }) || [],
         },
       ]);
     } catch (e) {
@@ -212,11 +219,11 @@ const MyPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []); // **의존성 배열을 비워 최초 렌더링 시 한 번만 함수가 생성되도록 합니다.**
 
   useEffect(() => {
     load();
-  }, [load]);
+  }, [load]); // **load가 변경되지 않으므로 useEffect는 마운트 시 한 번만 실행됩니다.**
 
   if (loading) {
     return (
@@ -241,7 +248,11 @@ const MyPage = () => {
           <UserRow>
             <UserName>{user?.name || "사용자"}</UserName>
             <StarContainer>
-              <Star size={18} color="#FFC107" style={{ marginRight: "5px" }} />
+              <FaStar
+                size={18}
+                color="#FFC107"
+                style={{ marginRight: "5px" }}
+              />
               <StarText>{user?.totalStar?.toFixed(1) || 0.0}</StarText>
             </StarContainer>
           </UserRow>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Review, Button, AlertModal } from "../components";
-import { Star, ChevronLeft } from "react-feather";
+import { ChevronLeft } from "react-feather";
+import { FaStar } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/api";
 
@@ -207,100 +208,10 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
         createdAt: item.createdAt?.split("T")[0].split("-").join("."),
       }));
 
-      setReviews(
-        mapped.length > 0
-          ? mapped
-          : [
-              {
-                index: 1,
-                star: 5,
-                sentence: "모임 진행이 매끄럽고 친절해서 좋았어요!",
-                createdAt: "2023.10.26",
-              },
-              {
-                index: 2,
-                star: 4,
-                sentence: "대화가 잘 통하고 분위기를 잘 이끌어주셨어요.",
-                createdAt: "2023.10.25",
-              },
-              {
-                index: 3,
-                star: 5,
-                sentence: "약속 시간을 잘 지켜주시고 매너가 좋으세요.",
-                createdAt: "2023.10.24",
-              },
-              {
-                index: 4,
-                star: 3,
-                sentence: "좋은 분이지만 대화가 조금 부족했어요.",
-                createdAt: "2023.10.23",
-              },
-              {
-                index: 5,
-                star: 5,
-                sentence: "다음에 또 같이 모임하고 싶어요!",
-                createdAt: "2023.10.22",
-              },
-              {
-                index: 6,
-                star: 4,
-                sentence: "새로운 경험을 하게 되어 즐거웠습니다.",
-                createdAt: "2023.10.21",
-              },
-              {
-                index: 7,
-                star: 5,
-                sentence: "시간 가는 줄 모르고 즐겁게 놀았어요!",
-                createdAt: "2023.10.20",
-              },
-            ] /*mapped*/
-      );
+      setReviews(mapped.length > 0 ? mapped : [] /*mapped*/);
     } catch (error) {
       console.error("❌ 리뷰 불러오기 실패:", error);
-      setReviews([
-        {
-          index: 1,
-          star: 5,
-          sentence: "모임 진행이 매끄럽고 친절해서 좋았어요!",
-          createdAt: "2023.10.26",
-        },
-        {
-          index: 2,
-          star: 4,
-          sentence: "대화가 잘 통하고 분위기를 잘 이끌어주셨어요.",
-          createdAt: "2023.10.25",
-        },
-        {
-          index: 3,
-          star: 5,
-          sentence: "약속 시간을 잘 지켜주시고 매너가 좋으세요.",
-          createdAt: "2023.10.24",
-        },
-        {
-          index: 4,
-          star: 3,
-          sentence: "좋은 분이지만 대화가 조금 부족했어요.",
-          createdAt: "2023.10.23",
-        },
-        {
-          index: 5,
-          star: 5,
-          sentence: "다음에 또 같이 모임하고 싶어요!",
-          createdAt: "2023.10.22",
-        },
-        {
-          index: 6,
-          star: 4,
-          sentence: "새로운 경험을 하게 되어 즐거웠습니다.",
-          createdAt: "2023.10.21",
-        },
-        {
-          index: 7,
-          star: 5,
-          sentence: "시간 가는 줄 모르고 즐겁게 놀았어요!",
-          createdAt: "2023.10.20",
-        },
-      ]);
+      setReviews([]);
       {
         /*더미 제거시 제거*/
       }
@@ -449,7 +360,7 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
         <UserInfo>
           <UserName>{user?.name}</UserName>
           <StarContainer>
-            <Star size={18} color="#FFC107" />
+            <FaStar size={18} color="#FFC107" />
             <StarText>{user?.totalStar || "0.0"}</StarText>
           </StarContainer>
         </UserInfo>

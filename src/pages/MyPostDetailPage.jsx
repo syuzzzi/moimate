@@ -217,6 +217,13 @@ const MyPostDetailPage = () => {
       const res = await api.get(`/posts/${postId}`, { headers });
       const data = res.data.data;
 
+      console.log("상세 데이터:", data);
+
+      const userData = await api.get(`/profile/${data.userId}`, { headers });
+      const userInfo = userData.data.data;
+
+      console.log("유저 데이터:", userInfo);
+
       setMeeting({
         postId: data.id,
         title: data.title,
@@ -235,9 +242,9 @@ const MyPostDetailPage = () => {
       });
       setUser({
         userId: data.userId,
-        name: data.userName,
-        career: data.userCareer,
-        image: data.userImage,
+        name: userInfo.name,
+        career: userInfo.career,
+        image: userInfo.image,
       });
       setLikes(data.likesCount);
       setLiked(data.liked ?? false);
@@ -333,7 +340,23 @@ const MyPostDetailPage = () => {
 
   const handleFooterButtonClick = () => {
     if (isRecruitmentClosed) {
-      navigate(`/recreate/${meeting.postId}`);
+      navigate(`/editpost/${meeting.postId}`, {
+        state: {
+          title: meeting.title,
+          description: meeting.content,
+          selectedCity: meeting.location?.split(" ")[0] || null,
+          selectedDistrict: meeting.location?.split(" ")[1] || null,
+          category: meeting.category, // ← 여기 추가
+          maxParticipants: meeting.memberMax,
+          deposit: meeting.deposit,
+          tags: meeting.tags.join(" "), // 또는 필요에 따라
+          recruitmentStart: meeting.recruitmentStart,
+          recruitmentEnd: meeting.recruitmentEnd,
+          activityStart: meeting.activityStart,
+          activityEnd: meeting.activityEnd,
+          isRecreate: true,
+        },
+      });
     } else {
       // ✅ navigate 함수를 직접 호출합니다.
       navigate("/applicationlist", { state: { postId: meeting.postId } });
@@ -363,7 +386,26 @@ const MyPostDetailPage = () => {
 
         {menuVisible && (
           <MoreMenu ref={menuRef}>
-            <MenuItem onClick={() => navigate(`/editpost/${meeting.postId}`)}>
+            <MenuItem
+              onClick={() =>
+                navigate(`/editpost/${meeting.postId}`, {
+                  state: {
+                    title: meeting.title,
+                    description: meeting.content,
+                    selectedCity: meeting.location?.split(" ")[0] || null,
+                    selectedDistrict: meeting.location?.split(" ")[1] || null,
+                    category: meeting.category, // ← 여기 추가
+                    maxParticipants: meeting.memberMax,
+                    deposit: meeting.deposit,
+                    tags: meeting.tags.join(" "), // 또는 필요에 따라
+                    recruitmentStart: meeting.recruitmentStart,
+                    recruitmentEnd: meeting.recruitmentEnd,
+                    activityStart: meeting.activityStart,
+                    activityEnd: meeting.activityEnd,
+                  },
+                })
+              }
+            >
               <MenuText>수정</MenuText>
             </MenuItem>
             <Divider style={{ marginTop: "3px", marginBottom: "3px" }} />
