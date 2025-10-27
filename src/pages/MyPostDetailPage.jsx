@@ -217,6 +217,13 @@ const MyPostDetailPage = () => {
       const res = await api.get(`/posts/${postId}`, { headers });
       const data = res.data.data;
 
+      console.log("상세 데이터:", data);
+
+      const userData = await api.get(`/profile/${data.userId}`, { headers });
+      const userInfo = userData.data.data;
+
+      console.log("유저 데이터:", userInfo);
+
       setMeeting({
         postId: data.id,
         title: data.title,
@@ -235,9 +242,9 @@ const MyPostDetailPage = () => {
       });
       setUser({
         userId: data.userId,
-        name: data.userName,
-        career: data.userCareer,
-        image: data.userImage,
+        name: userInfo.name,
+        career: userInfo.career,
+        image: userInfo.image,
       });
       setLikes(data.likesCount);
       setLiked(data.liked ?? false);

@@ -5,9 +5,8 @@ const isDevelopment = import.meta.env.DEV;
 const PROD_ROOT_URL = "https://api.moamoa.com";
 
 // 개발 환경에서는 localhost 주소를 사용합니다.
-// 이 변수를 다시 정의하여 API_BASE_URL에서 사용하도록 합니다.
-const DEV_ROOT_URL =
-  "http://ingress-ngi-ingress-ngin-f0790-110513573-2018eab2a2ae.kr.lb.naverncp.com";
+
+const DEV_ROOT_URL = "http://localhost:5173";
 
 // **ROOT_URL 변수 정의를 복구합니다.**
 const ROOT_URL = isDevelopment ? DEV_ROOT_URL : PROD_ROOT_URL;
