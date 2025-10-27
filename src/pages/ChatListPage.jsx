@@ -128,6 +128,9 @@ const ChatListPage = () => {
       setLoading(true);
 
       const accessToken = localStorage.getItem("accessToken");
+
+      console.log("🔑 accessToken:", accessToken);
+
       if (!accessToken) {
         console.warn("⚠️ accessToken 없음");
         return;
@@ -166,7 +169,7 @@ const ChatListPage = () => {
 
   useEffect(() => {
     fetchChatRooms();
-  }, []);
+  }, [fetchChatRooms]);
 
   const renderItem = (item) => (
     <React.Fragment key={item.id}>

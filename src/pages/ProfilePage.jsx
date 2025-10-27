@@ -227,6 +227,7 @@ const ProfilePage = () => {
       });
 
       const { name, image, career, ratingAverage } = profileRes.data.data;
+
       setUser({
         name,
         image,
