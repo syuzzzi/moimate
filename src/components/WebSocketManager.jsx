@@ -69,11 +69,11 @@ export default function WebSocketManager() {
           );
         });
       },
+      //debug: (msg) => console.log("[🐞STOMP DEBUG]", msg),
 
       onWebSocketError: (error) => console.error("❌ WebSocket 에러:", error),
       onStompError: (frame) => console.error("❌ STOMP 에러:", frame),
       onWebSocketClose: () => console.warn("🔌 WebSocket 연결 종료"),
-      // debug: console.log, // 디버깅이 너무 많으면 주석 처리 가능
     });
 
     clientRef.current = client;
