@@ -100,64 +100,25 @@ export default function FaqPage() {
   const [faqs, setFaqs] = useState([]);
   const [openId, setOpenId] = useState(null);
   const [selectedFaq, setSelectedFaq] = useState(null);
-
+  const [isDummy, setIsDummy] = useState(false); // 더미 데이터 사용 여부
   const navigate = useNavigate();
-  /*
+
   // 🧩 더미 데이터
   const dummyFaqs = [
     {
       id: 1,
-      question: "회원가입은 어떻게 하나요?",
+      question: "외국인 근로자 여권정보 변경",
       answer:
-        "홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.\n홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.\n홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.\n홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.",
+        "외국인근로자 여권정보 변경 후 하이코리아 신고 와는 별도로\n추가로 관할 지청에 외국인근로자 여권정보 변경 신청을 하셔야 합니다.\n관할 지청은 홈페이지 > 유관기관 찾기 > 고용노동부(고용센터) > 지청업무: 수행 를 통해 확인 가능합니다.",
     },
     {
       id: 2,
-      question: "비밀번호를 잊어버렸어요.",
-      answer: "로그인 페이지에서 '비밀번호 찾기'를 통해 재설정할 수 있습니다.",
-    },
-    {
-      id: 3,
-      question: "문의는 어디로 하면 되나요?",
+      question: "태국인이 한국에 여행가려고 하는데 비자를 신청해야 하나요?",
       answer:
-        "고객센터 이메일 <strong>support@moamoa.com</strong> 로 문의해주세요.",
-    },
-    {
-      id: 4,
-      question: "회원가입은 어떻게 하나요?",
-      answer:
-        "홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.\n홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.\n홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.\n홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.",
-    },
-    {
-      id: 5,
-      question: "비밀번호를 잊어버렸어요.",
-      answer: "로그인 페이지에서 '비밀번호 찾기'를 통해 재설정할 수 있습니다.",
-    },
-    {
-      id: 6,
-      question: "문의는 어디로 하면 되나요?",
-      answer:
-        "고객센터 이메일 <strong>support@moamoa.com</strong> 로 문의해주세요.",
-    },
-    {
-      id: 7,
-      question: "회원가입은 어떻게 하나요?",
-      answer:
-        "홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.\n홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.\n홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.\n홈페이지 우측 상단의 회원가입 버튼을 클릭하시면 됩니다.",
-    },
-    {
-      id: 8,
-      question: "비밀번호를 잊어버렸어요.",
-      answer: "로그인 페이지에서 '비밀번호 찾기'를 통해 재설정할 수 있습니다.",
-    },
-    {
-      id: 9,
-      question: "문의는 어디로 하면 되나요?\n문의는 어디로 하면 되나요?",
-      answer:
-        "고객센터 이메일 <strong>support@moamoa.com</strong> 로 문의해주세요.",
+        " 태국 등 무비자 입국이 가능한 국가(지역) 국민은 관광/친지방문/회의참가 등의 목적으로 한국을 방문하는 경우 사전에 전자여행허가(K-ETA) 허가를 받아야 합니다. K-ETA가 불허된 경우 우리 대사관에서 비자를 신청하셔야 합니다.\n※ K-ETA 신청 대상국가 확인 및 신청 홈페이지: www.k-eta.go.kr",
     },
   ];
-
+  /*
   // 초기 로드 시 더미데이터 세팅
   useEffect(() => {
     setFaqs(dummyFaqs);
@@ -180,9 +141,21 @@ export default function FaqPage() {
     const fetchFaqs = async () => {
       try {
         const res = await api.get("/faqs");
-        setFaqs(res.data.faqs || []);
+        const fetchedFaqs = res.data.faqs || [];
+
+        if (fetchedFaqs.length === 0) {
+          // API 응답에 데이터가 없거나 비어있을 경우 더미 데이터 사용
+          console.warn("API 데이터가 없어 더미 데이터를 로드합니다.");
+          setFaqs(dummyFaqs);
+          setIsDummy(true);
+        } else {
+          setFaqs(fetchedFaqs);
+          setIsDummy(false);
+        }
       } catch (err) {
         console.error("❌ FAQ 목록 조회 실패:", err);
+        setFaqs(dummyFaqs);
+        setIsDummy(true);
       }
     };
     fetchFaqs();
@@ -192,6 +165,15 @@ export default function FaqPage() {
   const handleToggle = async (faqId) => {
     if (openId === faqId) {
       setOpenId(null);
+      setSelectedFaq(null);
+      return;
+    }
+
+    if (isDummy) {
+      // 더미 데이터를 사용하는 경우: 목록에서 상세 정보를 찾아서 바로 표시
+      const faq = dummyFaqs.find((f) => f.id === faqId);
+      setSelectedFaq(faq);
+      setOpenId(faqId);
       return;
     }
 
@@ -201,6 +183,9 @@ export default function FaqPage() {
       setOpenId(faqId);
     } catch (err) {
       console.error("❌ FAQ 상세 조회 실패:", err);
+      // 상세 조회 실패 시에도 열리지 않도록 처리
+      setOpenId(null);
+      setSelectedFaq(null);
     }
   };
 
