@@ -9,18 +9,6 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/naver-token": {
-        target: "https://nid.naver.com",
-        changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/naver-token/, ""),
-      },
-      "/naver-api": {
-        target: "https://openapi.naver.com",
-        changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/naver-api/, ""),
-      },
       "/api": {
         target:
           "http://ingress-ngi-ingress-ngin-f0790-110513573-2018eab2a2ae.kr.lb.naverncp.com",
@@ -35,6 +23,16 @@ export default defineConfig({
         secure: false,
         ws: true, // 💡 중요! 이게 있어야 웹소켓 프록시가 작동
       },
+    },
+  },
+  // 빌드 설정 추가
+  build: {
+    // 💡 큰 청크 파일에 대한 경고 제한을 1600kB로 상향 조정
+    chunkSizeWarningLimit: 1600,
+    // 💡 매니페스트 파일 생성 활성화 (백엔드 통합에 유용)
+    manifest: true,
+    rollupOptions: {
+      input: "src/main.jsx",
     },
   },
 });
