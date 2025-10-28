@@ -230,7 +230,7 @@ const MyPostDetailPage = () => {
         createdAt: data.createdAt.split("T")[0].split("-").join("."),
         content: data.content,
         location: data.location,
-        memberMax: data.membersMax,
+        maxParticipants: data.membersMax,
         recruitmentStart: data.createdAt.split("T")[0],
         recruitmentEnd: data.dueDate,
         activityStart: data.activityStartDate,
@@ -347,7 +347,7 @@ const MyPostDetailPage = () => {
           selectedCity: meeting.location?.split(" ")[0] || null,
           selectedDistrict: meeting.location?.split(" ")[1] || null,
           category: meeting.category, // ← 여기 추가
-          maxParticipants: meeting.memberMax,
+          maxParticipants: meeting.membersMax,
           deposit: meeting.deposit,
           tags: meeting.tags.join(" "), // 또는 필요에 따라
           recruitmentStart: meeting.recruitmentStart,
@@ -395,7 +395,7 @@ const MyPostDetailPage = () => {
                     selectedCity: meeting.location?.split(" ")[0] || null,
                     selectedDistrict: meeting.location?.split(" ")[1] || null,
                     category: meeting.category, // ← 여기 추가
-                    maxParticipants: meeting.memberMax,
+                    maxParticipants: meeting.membersMax,
                     deposit: meeting.deposit,
                     tags: meeting.tags.join(" "), // 또는 필요에 따라
                     recruitmentStart: meeting.recruitmentStart,
