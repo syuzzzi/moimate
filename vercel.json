@@ -8,6 +8,10 @@
     {
       "source": "/api/ws/:path*",
       "destination": "http://ingress-ngi-ingress-ngin-f0790-110513573-2018eab2a2ae.kr.lb.naverncp.com/api/ws/:path*"
+    },
+    {
+      "source": "/:path((?!api).*)",
+      "destination": "/index.html"
     }
   ]
 }
