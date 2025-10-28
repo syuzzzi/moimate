@@ -1,7 +1,21 @@
 {
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/:path*",
+      "destination": "http://ingress-ngi-ingress-ngin-f0790-110513573-2018eab2a2ae.kr.lb.naverncp.com/api/:path*"
+    },
+    {
+      "source": "/:path((?!api).*)",
       "destination": "/index.html"
     }
   ]
