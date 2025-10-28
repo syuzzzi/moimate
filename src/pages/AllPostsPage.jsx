@@ -12,6 +12,17 @@ import theme from "../theme.js";
 const Container = styled.div`
   background-color: #fff;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+`;
+
+const ScrollableContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding-bottom: 30px; /* 버튼 때문에 여백 확보 */
 `;
 
 const HeaderContainer = styled.div`
@@ -215,13 +226,23 @@ const AllPostsPage = ({ route }) => {
     fetchMeetings(true);
   }, [selectedSort, category]);
 
-  const handleScroll = (e) => {
-    const bottom =
-      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom) {
-      fetchMeetings();
-    }
-  };
+  const handleScroll = useCallback(
+    (e) => {
+      const target = e.target;
+      const scrollHeight = target.scrollHeight;
+      const scrollTop = target.scrollTop;
+      const clientHeight = target.clientHeight;
+
+      if (
+        scrollTop + clientHeight >= scrollHeight - 5 &&
+        hasNextPage &&
+        !loading
+      ) {
+        fetchMeetings();
+      }
+    },
+    [loading, hasNextPage, fetchMeetings]
+  );
 
   const renderPost = (item) => {
     const isMine = String(item.userId) === String(currentUserId);
@@ -291,23 +312,25 @@ const AllPostsPage = ({ route }) => {
           </SortButton>
         </SortContainer>
 
-        {loading && meetings.length === 0 ? (
-          <LoaderContainer>
-            <MoonLoader size={20} color={theme.colors.mainBlue} />
-          </LoaderContainer>
-        ) : meetings.length === 0 ? (
-          <EmptyList>
-            <span>모아모아의 첫 모임을 생성해보세요!</span>
-          </EmptyList>
-        ) : (
-          <PostListContainer>{meetings.map(renderPost)}</PostListContainer>
-        )}
+        <ScrollableContent>
+          {loading && meetings.length === 0 ? (
+            <LoaderContainer>
+              <MoonLoader size={20} color={theme.colors.mainBlue} />
+            </LoaderContainer>
+          ) : meetings.length === 0 ? (
+            <EmptyList>
+              <span>모아모아의 첫 모임을 생성해보세요!</span>
+            </EmptyList>
+          ) : (
+            <PostListContainer>{meetings.map(renderPost)}</PostListContainer>
+          )}
 
-        {loading && meetings.length > 0 && (
-          <LoaderContainer>
-            <MoonLoader size={20} color={theme.colors.mainBlue} />
-          </LoaderContainer>
-        )}
+          {loading && meetings.length > 0 && (
+            <LoaderContainer>
+              <MoonLoader size={20} color={theme.colors.mainBlue} />
+            </LoaderContainer>
+          )}
+        </ScrollableContent>
 
         <ButtonContainer>
           <Button
