@@ -230,7 +230,7 @@ const MyPostDetailPage = () => {
         createdAt: data.createdAt.split("T")[0].split("-").join("."),
         content: data.content,
         location: data.location,
-        memberMax: data.membersMax,
+        maxParticipants: data.membersMax,
         recruitmentStart: data.createdAt.split("T")[0],
         recruitmentEnd: data.dueDate,
         activityStart: data.activityStartDate,
