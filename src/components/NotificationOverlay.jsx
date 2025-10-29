@@ -163,7 +163,7 @@ export const NotificationOverlayProvider = ({ children }) => {
             <div onClick={message.onPress}>
               <Row>
                 {/* 웹 환경에 맞는 이미지 경로 사용 */}
-                <Icon src="assets/images/favicon.png" alt="App Icon" />
+                <Icon src="../assets/images/favicon.png" alt="App Icon" />
                 <TextContainer>
                   <Title>{message.roomName}</Title>
                   <Message>
