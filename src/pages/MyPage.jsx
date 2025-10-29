@@ -76,7 +76,7 @@ const StarText = styled.p`
 `;
 
 const Section = styled.div`
-  margin-left: 5px;
+  margin-left: 6px;
   margin-bottom: 10px;
   min-height: 180px;
 
@@ -90,14 +90,12 @@ const SectionTitle = styled.h2`
   padding-top: ${({ $addTopPadding }) => ($addTopPadding ? "20px" : "10px")};
   color: #656565;
   padding-bottom: 0;
-  padding-left: 10px;
   margin: 0;
 `;
 
 const MeetingItem = styled(Link)`
   padding-top: -10px;
-  padding-left: 10px;
-  padding-right: 10px;
+
   margin: 0;
   text-decoration: none;
   color: inherit;
