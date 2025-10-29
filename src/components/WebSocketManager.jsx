@@ -64,7 +64,7 @@ export default function WebSocketManager() {
             // 5. 알림 클릭 시 실행될 콜백 함수 (웹 페이지 이동)
             () => {
               // React Router의 navigate 함수를 사용하여 채팅 페이지로 이동
-              navigate(`/chat/${payload.id}`);
+              navigate(`/chat/${payload.roomId}`);
             }
           );
         });
