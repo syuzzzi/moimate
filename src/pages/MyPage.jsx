@@ -6,14 +6,21 @@ import { FaStar } from "react-icons/fa";
 import api from "../api/api";
 import { jwtDecode } from "jwt-decode";
 
-// 스타일 정의 (변경 없음)
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1;
+  height: 100vh;
   background-color: #fff;
   padding: 20px;
+  box-sizing: border-box;
   padding-top: 0;
+`;
+
+const ScrollableContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 0px;
+  padding-bottom: 50px; /* 버튼 때문에 여백 확보 */
 `;
 
 const MyPageSection = styled.div`
@@ -22,7 +29,7 @@ const MyPageSection = styled.div`
   align-items: center;
   margin-top: 50px;
   margin-bottom: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 `;
 
@@ -69,11 +76,10 @@ const StarText = styled.p`
 `;
 
 const Section = styled.div`
-  margin-top: 10px;
   margin-left: 5px;
   margin-bottom: 10px;
-  min-height: 160px;
-  display: flex;
+  min-height: 180px;
+
   flex-direction: column;
   justify-content: center;
 `;
@@ -81,22 +87,21 @@ const Section = styled.div`
 const SectionTitle = styled.h2`
   font-size: 18px;
   font-family: ${({ theme }) => theme.fonts.bold};
-  margin-bottom: 2px;
+  padding-top: ${({ $addTopPadding }) => ($addTopPadding ? "20px" : "10px")};
   color: #656565;
+  padding-bottom: 0;
 `;
 
 const MeetingItem = styled(Link)`
-  padding: 5px 0;
+  padding: 10px 0;
   text-decoration: none;
   color: inherit;
-  display: block;
 `;
 
 const MeetingTitle = styled.p`
   font-size: 16px;
   font-family: ${({ theme }) => theme.fonts.bold};
   margin-bottom: 7px;
-  margin-top: 10px;
 `;
 
 const MeetingDate = styled.p`
@@ -137,6 +142,8 @@ const MyPage = () => {
   const [user, setUser] = useState(null);
   const [meetings, setMeetings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [cursor, setCursor] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
 
   // 🐛 무한 로딩 문제 해결: useCallback 적용 🐛
@@ -202,13 +209,15 @@ const MyPage = () => {
               // postId가 없는 경우를 대비해 post.id를 사용
               return {
                 ...post,
-                postId: post.postId, // postId 대신 post.id를 사용하도록 수정
+                postId: post.postId,
                 createdAt: formatDate(post.createdAt),
                 userId: userId,
               };
             }) || [],
         },
       ]);
+      setHasNextPage(false);
+      setCursor(null);
     } catch (e) {
       console.warn("📛 마이페이지 정보 로딩 실패:", e);
       setUser({ name: "사용자", totalStar: 0 });
@@ -225,6 +234,23 @@ const MyPage = () => {
   useEffect(() => {
     load();
   }, [load]); // **load가 변경되지 않으므로 useEffect는 마운트 시 한 번만 실행됩니다.**
+
+  const handleScroll = useCallback(
+    (e) => {
+      const target = e.target;
+      const scrollHeight = target.scrollHeight;
+      const scrollTop = target.scrollTop;
+      const clientHeight = target.clientHeight;
+
+      if (
+        scrollTop + clientHeight >= scrollHeight - 5 &&
+        hasNextPage &&
+        !loading
+      ) {
+      }
+    },
+    [loading, hasNextPage]
+  );
 
   if (loading) {
     return (
@@ -264,34 +290,46 @@ const MyPage = () => {
         </Link>
       </MyPageSection>
 
-      {/* 모임 리스트 */}
-      {meetings.map((section) => (
-        <Section key={section.title}>
-          <SectionTitle>{section.title}</SectionTitle>
-          {section.data.length === 0 ? (
-            <PlaceholderWrapper>
-              <Placeholder>모임이 없습니다</Placeholder>
-            </PlaceholderWrapper>
-          ) : (
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              {section.data.map((meeting) => (
-                <li key={`${meeting.postId}-${meeting.title}`}>
-                  <MeetingItem
-                    to={
-                      meeting.userId === currentUserId
-                        ? `/mypostdetail/${meeting.postId}`
-                        : `/postdetail/${meeting.postId}`
-                    }
-                  >
-                    <MeetingTitle>{meeting.title}</MeetingTitle>
-                    <MeetingDate>{meeting.createdAt}</MeetingDate>
-                  </MeetingItem>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Section>
-      ))}
+      <ScrollableContent onScroll={handleScroll}>
+        {/* 모임 리스트 */}
+        {meetings.map((section, index) => {
+          const shouldAddPadding = section.title !== "신청한 모임";
+          return (
+            <Section key={section.title}>
+              <SectionTitle $addTopPadding={shouldAddPadding}>
+                {section.title}
+              </SectionTitle>
+              {section.data.length === 0 ? (
+                <PlaceholderWrapper>
+                  <Placeholder>모임이 없습니다</Placeholder>
+                </PlaceholderWrapper>
+              ) : (
+                <ul style={{ listStyle: "none", padding: 0 }}>
+                  {section.data.map(
+                    (meeting) => (
+                      console.log(meeting),
+                      (
+                        <li key={`${meeting.postId}-${meeting.title}`}>
+                          <MeetingItem
+                            to={
+                              meeting.userId === currentUserId
+                                ? `/mypostdetail/${meeting.postId}`
+                                : `/postdetail/${meeting.postId}`
+                            }
+                          >
+                            <MeetingTitle>{meeting.title}</MeetingTitle>
+                            <MeetingDate>{meeting.createdAt}</MeetingDate>
+                          </MeetingItem>
+                        </li>
+                      )
+                    )
+                  )}
+                </ul>
+              )}
+            </Section>
+          );
+        })}
+      </ScrollableContent>
     </Container>
   );
 };
