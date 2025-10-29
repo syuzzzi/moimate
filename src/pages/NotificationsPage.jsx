@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import { ChevronRight } from "react-feather";
+import { FaStar, FaSpinner } from "react-icons/fa";
 import { AlertModal } from "../components";
 
 const Container = styled.div`
@@ -139,6 +140,30 @@ const CancelButton = styled.button`
   color: ${({ theme }) => theme.colors.mainBlue};
   font-family: ${({ theme }) => theme.fonts.bold};
   cursor: pointer;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column; /* 아이콘과 텍스트가 세로로 정렬되도록 */
+  justify-content: center;
+  align-items: center;
+  height: 70vh; /* 전체 화면을 채우도록 */
+  color: ${({ theme }) => theme.colors.mainBlue}; /* 아이콘 색상 */
+  font-size: 0.9em; /* 로딩 텍스트 크기 */
+`;
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const LoadingIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em; /* 아이콘 크기 */
+  animation: ${spin} 1.5s linear infinite; /* 스핀 애니메이션 적용 */
+  margin-bottom: 10px; /* 아이콘과 텍스트 사이 간격 */
 `;
 
 const NotificationsPage = () => {
@@ -403,7 +428,12 @@ const NotificationsPage = () => {
     <Container>
       <Header>알림</Header>
       {loading ? (
-        <p>로딩 중...</p>
+        <LoadingContainer>
+          <LoadingIcon>
+            <FaSpinner />
+          </LoadingIcon>
+          <p>알림을 불러오는 중입니다...</p>
+        </LoadingContainer>
       ) : notifications.length === 0 ? (
         <EmptyContainer>
           <EmptyText>알림이 존재하지 않습니다</EmptyText>

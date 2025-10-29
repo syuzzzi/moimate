@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
-import styled, { useTheme } from "styled-components";
+import styled, { useTheme, keyframes } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronRight } from "react-feather";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaSpinner } from "react-icons/fa";
 import api from "../api/api";
 import { jwtDecode } from "jwt-decode";
 
@@ -90,11 +90,15 @@ const SectionTitle = styled.h2`
   padding-top: ${({ $addTopPadding }) => ($addTopPadding ? "20px" : "10px")};
   color: #656565;
   padding-bottom: 0;
+  padding-left: 10px;
   margin: 0;
 `;
 
 const MeetingItem = styled(Link)`
-  padding: 10px 0;
+  padding-top: -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 0;
   text-decoration: none;
   color: inherit;
   display: block;
@@ -130,10 +134,27 @@ const Placeholder = styled.p`
 `;
 
 const LoadingContainer = styled.div`
-  flex: 1;
+  display: flex;
+  flex-direction: column; /* 아이콘과 텍스트가 세로로 정렬되도록 */
+  justify-content: center;
+  align-items: center;
+  height: 0vh; /* 전체 화면을 채우도록 */
+  color: ${({ theme }) => theme.colors.mainBlue}; /* 아이콘 색상 */
+  font-size: 0.9em; /* 로딩 텍스트 크기 */
+`;
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const LoadingIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 3em; /* 아이콘 크기 */
+  animation: ${spin} 1.5s linear infinite; /* 스핀 애니메이션 적용 */
+  margin-bottom: 10px; /* 아이콘과 텍스트 사이 간격 */
 `;
 
 const MyPage = () => {
@@ -257,7 +278,10 @@ const MyPage = () => {
   if (loading) {
     return (
       <LoadingContainer>
-        <p>로딩 중...</p>
+        <LoadingIcon>
+          <FaSpinner />
+        </LoadingIcon>
+        <p>데이터를 불러오는 중입니다...</p>
       </LoadingContainer>
     );
   }
