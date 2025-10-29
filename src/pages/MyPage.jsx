@@ -90,12 +90,14 @@ const SectionTitle = styled.h2`
   padding-top: ${({ $addTopPadding }) => ($addTopPadding ? "20px" : "10px")};
   color: #656565;
   padding-bottom: 0;
+  margin: 0;
 `;
 
 const MeetingItem = styled(Link)`
   padding: 10px 0;
   text-decoration: none;
   color: inherit;
+  display: block;
 `;
 
 const MeetingTitle = styled.p`
