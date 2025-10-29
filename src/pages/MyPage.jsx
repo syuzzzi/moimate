@@ -136,7 +136,7 @@ const LoadingContainer = styled.div`
   flex-direction: column; /* 아이콘과 텍스트가 세로로 정렬되도록 */
   justify-content: center;
   align-items: center;
-  height: 0vh; /* 전체 화면을 채우도록 */
+  height: 90vh; /* 전체 화면을 채우도록 */
   color: ${({ theme }) => theme.colors.mainBlue}; /* 아이콘 색상 */
   font-size: 0.9em; /* 로딩 텍스트 크기 */
 `;
