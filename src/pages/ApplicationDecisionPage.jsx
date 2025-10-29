@@ -134,29 +134,9 @@ const ApplicationDecisionPage = () => {
           {},
           {
             headers: { access: token },
+            timeout: 15000,
           }
         );
-
-        // 수락일 경우 채팅방 초대
-        if (status === "accept") {
-          try {
-            await api.post(
-              "/chatroom/invite",
-              {
-                postId,
-                username: formData.username, // API 호출 시 userImage가 아닌 userName 사용
-              },
-              { headers: { access: token } }
-            );
-          } catch (inviteErr) {
-            console.error("채팅방 초대 실패", inviteErr);
-            // 웹 환경에서는 Alert.alert 대신 AlertModal 상태를 사용하여 처리
-            setAlertMessage("수락은 완료됐지만 채팅방 초대에 실패했습니다.");
-            setOnConfirmAction(() => () => navigate(-1));
-            setAlertVisible(true);
-            return; // 실패 후 바로 함수 종료
-          }
-        }
 
         setAlertMessage(
           `신청서가 ${status === "accept" ? "수락" : "거절"}되었습니다.`

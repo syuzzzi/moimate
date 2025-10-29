@@ -225,6 +225,7 @@ const NotificationsPage = () => {
       // 2. 알림 목록 가져오기
       const res = await api.get("/notifications", {
         headers: { access: token },
+        timeout: 5000, // 5초 타임아웃 설정
       });
       console.log("🔔 알림 조회 성공:", res.data.data);
 
