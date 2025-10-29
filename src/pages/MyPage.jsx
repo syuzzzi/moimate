@@ -209,7 +209,7 @@ const MyPage = () => {
               // postId가 없는 경우를 대비해 post.id를 사용
               return {
                 ...post,
-                postId: post.postId, // postId 대신 post.id를 사용하도록 수정
+                postId: post.postId,
                 createdAt: formatDate(post.createdAt),
                 userId: userId,
               };

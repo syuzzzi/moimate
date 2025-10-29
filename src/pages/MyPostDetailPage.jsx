@@ -214,15 +214,10 @@ const MyPostDetailPage = () => {
     try {
       const token = localStorage.getItem("accessToken");
       const headers = token ? { access: token } : {};
-      const res = await api.get(`/posts/${postId}`, { headers });
+      const res = await api.get(`/posts/${postId}`);
       const data = res.data.data;
 
       console.log("상세 데이터:", data);
-
-      const userData = await api.get(`/profile/${data.userId}`, { headers });
-      const userInfo = userData.data.data;
-
-      console.log("유저 데이터:", userInfo);
 
       setMeeting({
         postId: data.id,
@@ -242,9 +237,9 @@ const MyPostDetailPage = () => {
       });
       setUser({
         userId: data.userId,
-        name: userInfo.name,
-        career: userInfo.career,
-        image: userInfo.image,
+        name: data.userName,
+        career: data.userCareer,
+        image: data.userImage,
       });
       setLikes(data.likesCount);
       setLiked(data.liked ?? false);

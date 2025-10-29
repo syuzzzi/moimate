@@ -163,7 +163,7 @@ const PostDetailPage = () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
       const headers = accessToken ? { access: accessToken } : {};
-      const res = await api.get(`/posts/${postId}`, { headers });
+      const res = await api.get(`/posts/${postId}`);
       const data = res.data.data;
 
       console.log("상세 데이터:", data);
