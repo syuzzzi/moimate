@@ -111,7 +111,7 @@ const ApplicationFormPage = () => {
         setAlertMessage("로그인이 필요합니다.");
         setOnConfirmAction(() => () => navigate("/login"));
       } else {
-        setAlertMessage(`제출 중 문제가 발생했습니다. (${message})`);
+        setAlertMessage(`제출 중 문제가 발생했습니다. \n (${message})`);
         setOnConfirmAction(() => () => setAlertVisible(false));
       }
       setAlertVisible(true);

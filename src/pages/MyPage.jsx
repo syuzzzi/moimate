@@ -156,9 +156,10 @@ const MyPage = () => {
         headers: { access: token },
       });
 
-      console.log("📒 마이페이지 데이터:", profileRes.data);
-
       const resData = profileRes.data.data;
+
+      console.log("마이페이지 데이터:", resData);
+
       const formatDate = (isoDate) => {
         const date = new Date(isoDate);
         return `${date.getFullYear()}.${(date.getMonth() + 1)
@@ -179,7 +180,7 @@ const MyPage = () => {
           data:
             resData.appliedPosts?.map((post) => ({
               ...post,
-              postId: post.id,
+              postId: post.postId,
               createdAt: formatDate(post.createdAt),
               userId: post.userId,
             })) || [],
@@ -189,7 +190,7 @@ const MyPage = () => {
           data:
             resData.likedPosts?.map((post) => ({
               ...post,
-              postId: post.id,
+              postId: post.postId,
               createdAt: formatDate(post.createdAt),
               userId: myPostIds.includes(post.id) ? userId : post.userId,
             })) || [],
@@ -201,7 +202,7 @@ const MyPage = () => {
               // postId가 없는 경우를 대비해 post.id를 사용
               return {
                 ...post,
-                postId: post.id, // postId 대신 post.id를 사용하도록 수정
+                postId: post.postId, // postId 대신 post.id를 사용하도록 수정
                 createdAt: formatDate(post.createdAt),
                 userId: userId,
               };
@@ -273,20 +274,25 @@ const MyPage = () => {
             </PlaceholderWrapper>
           ) : (
             <ul style={{ listStyle: "none", padding: 0 }}>
-              {section.data.map((meeting) => (
-                <li key={`${meeting.postId}-${meeting.title}`}>
-                  <MeetingItem
-                    to={
-                      meeting.userId === currentUserId
-                        ? `/mypostdetail/${meeting.postId}`
-                        : `/postdetail/${meeting.postId}`
-                    }
-                  >
-                    <MeetingTitle>{meeting.title}</MeetingTitle>
-                    <MeetingDate>{meeting.createdAt}</MeetingDate>
-                  </MeetingItem>
-                </li>
-              ))}
+              {section.data.map(
+                (meeting) => (
+                  console.log(meeting),
+                  (
+                    <li key={`${meeting.postId}-${meeting.title}`}>
+                      <MeetingItem
+                        to={
+                          meeting.userId === currentUserId
+                            ? `/mypostdetail/${meeting.postId}`
+                            : `/postdetail/${meeting.postId}`
+                        }
+                      >
+                        <MeetingTitle>{meeting.title}</MeetingTitle>
+                        <MeetingDate>{meeting.createdAt}</MeetingDate>
+                      </MeetingItem>
+                    </li>
+                  )
+                )
+              )}
             </ul>
           )}
         </Section>
