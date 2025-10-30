@@ -289,6 +289,8 @@ const NotificationsPage = () => {
 
       console.log(`✅ 세션 정보 조회 성공 (roomId: ${roomId}):`, sessionInfo);
 
+      console.log("세션 날짜", sessionInfo.sessionDate);
+
       setModalData({
         title: item.title,
         date: sessionInfo.sessionDate || "날짜 정보 없음",
@@ -296,8 +298,9 @@ const NotificationsPage = () => {
         location: sessionInfo.location || "장소 정보 없음",
         amount: sessionInfo.price || 0,
         somoimId: sessionInfo.somoimId || roomId,
-        sessionId: sessionInfo.sessionNumber,
+        sessionId: sessionInfo.id,
       });
+
       setModalVisible(true);
     } catch (error) {
       console.error(`❌ 세션 정보 조회 실패 (roomId: ${item.postId}):`, error);
@@ -305,6 +308,14 @@ const NotificationsPage = () => {
       setAlertVisible(true);
     }
   };
+
+  useEffect(() => {
+    // modalData가 유효하고, 특히 sessionNumber(sessionId)가 설정되었을 때만 모달을 엽니다.
+    if (modalData && modalData.sessionId) {
+      console.log("🔥 useEffect: 업데이트된 modalData 확인:", modalData); // 확인용 로그
+      setModalVisible(true);
+    }
+  }, [modalData]); // modalData가 변경될 때마다 실행
 
   const checkPaymentStatus = async (somoimId, sessionId) => {
     try {
