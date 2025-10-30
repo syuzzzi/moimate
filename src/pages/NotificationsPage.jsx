@@ -270,9 +270,11 @@ const NotificationsPage = () => {
         setAlertVisible(true);
         return;
       }
-      const roomId = item.postId;
+      const roomId = item.roomId;
       const url = `/sessions/chatroom/${roomId}/active`;
+
       console.log(`📡 세션 정보 요청 URL: ${url}`);
+
       const res = await api.get(url, {
         headers: { access: token },
       });
@@ -371,7 +373,7 @@ const NotificationsPage = () => {
         setAlertVisible(true);
         break;
       case "PAYMENT_REQUESTED":
-        if (item.postId) {
+        if (item.id) {
           fetchSessionInfo(item);
         } else {
           setAlertMessage("모임 정보를 찾을 수 없습니다");

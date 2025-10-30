@@ -368,15 +368,11 @@ const ChatPage = () => {
         })) || [];
       setParticipants(list);
 
+      console.log("채팅방 참가자 불러오기 까지는 됨");
+
       const sRes = await api.get(`/sessions/chatroom/${roomId}/active`, {
         headers: { access: token },
       });
-
-      const ana = sRes.data.data;
-
-      console.log("active session", sRes);
-
-      console.log("active sessionzz", ana.id);
 
       if (!sRes.data.data) {
         setMeetingActive(false);
@@ -386,6 +382,7 @@ const ChatPage = () => {
 
       const s = sRes.data.data;
 
+      console.log("활성 세션 정보:", s);
       console.log("현재 세션 아이디", s.id);
 
       setMeetingActive(true);
@@ -394,13 +391,13 @@ const ChatPage = () => {
       setSessionDate(s.sessionDate);
       setSessionTime(s.sessionTime);
 
+      console.log("세션 상태 불러오기 까지는 됨");
+
       const payRes = await api.post(
         `/payments/status`,
-        { roomId, sessionId: s.sessionNumber },
+        { roomId, sessionId: s.id },
         { headers: { access: token } }
       );
-
-      console.log("payres", payRes);
 
       const map = {};
 
@@ -813,7 +810,7 @@ const ChatPage = () => {
                       onClick={() => {
                         setFormDate(getToday());
                         setFormTime(getNow());
-                        setFormPrice("10000");
+                        setFormPrice("100");
                         setFormLocation("");
                         setStartModalOpen(true);
                       }}
