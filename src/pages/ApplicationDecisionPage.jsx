@@ -134,7 +134,6 @@ const ApplicationDecisionPage = () => {
           {},
           {
             headers: { access: token },
-            timeout: 15000,
           }
         );
 
