@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import styled, { ThemeContext } from "styled-components";
+import styled, { ThemeContext, keyframes } from "styled-components";
 import {
   FiHeart,
   FiDollarSign,
@@ -13,6 +13,7 @@ import { AiFillHeart } from "react-icons/ai";
 import { ChevronLeft } from "react-feather";
 import api from "../api/api";
 import Button from "../components/Button";
+import { FaStar, FaSpinner } from "react-icons/fa";
 
 // Styled-components
 const Container = styled.div`
@@ -148,6 +149,30 @@ const LikeText = styled.span`
   color: ${({ $liked, theme }) => ($liked ? "#FF6B6B" : theme.colors.grey)};
 `;
 
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column; /* 아이콘과 텍스트가 세로로 정렬되도록 */
+  justify-content: center;
+  align-items: center;
+  height: 90vh; /* 전체 화면을 채우도록 */
+  color: ${({ theme }) => theme.colors.mainBlue}; /* 아이콘 색상 */
+  font-size: 0.9em; /* 로딩 텍스트 크기 */
+`;
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const LoadingIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em; /* 아이콘 크기 */
+  animation: ${spin} 1.5s linear infinite; /* 스핀 애니메이션 적용 */
+  margin-bottom: 10px; /* 아이콘과 텍스트 사이 간격 */
+`;
+
 const PostDetailPage = () => {
   const theme = useContext(ThemeContext);
   const { postId } = useParams();
@@ -238,7 +263,16 @@ const PostDetailPage = () => {
     }
   };
 
-  if (!meeting || !user) return <p>불러오는 중...</p>;
+  if (!meeting || !user) {
+    return (
+      <LoadingContainer>
+        <LoadingIcon>
+          <FaSpinner />
+        </LoadingIcon>
+        <p>데이터를 불러오는 중입니다...</p>
+      </LoadingContainer>
+    );
+  }
 
   const recruitmentDeadline = new Date(`${meeting.recruitmentEnd}T23:59:59`);
   const isRecruitmentClosed = recruitmentDeadline < new Date();
