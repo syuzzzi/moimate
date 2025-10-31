@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import { ChevronRight } from "react-feather";
+import { FaStar, FaSpinner } from "react-icons/fa";
 import { AlertModal } from "../components";
 
 const Container = styled.div`
@@ -141,6 +142,30 @@ const CancelButton = styled.button`
   cursor: pointer;
 `;
 
+const LoadingContainer = styled.div`
+  display: flex;
+  flex-direction: column; /* 아이콘과 텍스트가 세로로 정렬되도록 */
+  justify-content: center;
+  align-items: center;
+  height: 70vh; /* 전체 화면을 채우도록 */
+  color: ${({ theme }) => theme.colors.mainBlue}; /* 아이콘 색상 */
+  font-size: 0.9em; /* 로딩 텍스트 크기 */
+`;
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const LoadingIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em; /* 아이콘 크기 */
+  animation: ${spin} 1.5s linear infinite; /* 스핀 애니메이션 적용 */
+  margin-bottom: 10px; /* 아이콘과 텍스트 사이 간격 */
+`;
+
 const NotificationsPage = () => {
   const navigate = useNavigate();
 
@@ -200,6 +225,7 @@ const NotificationsPage = () => {
       // 2. 알림 목록 가져오기
       const res = await api.get("/notifications", {
         headers: { access: token },
+        timeout: 5000, // 5초 타임아웃 설정
       });
       console.log("🔔 알림 조회 성공:", res.data.data);
 
@@ -244,9 +270,11 @@ const NotificationsPage = () => {
         setAlertVisible(true);
         return;
       }
-      const roomId = item.postId;
+      const roomId = item.roomId;
       const url = `/sessions/chatroom/${roomId}/active`;
+
       console.log(`📡 세션 정보 요청 URL: ${url}`);
+
       const res = await api.get(url, {
         headers: { access: token },
       });
@@ -261,6 +289,8 @@ const NotificationsPage = () => {
 
       console.log(`✅ 세션 정보 조회 성공 (roomId: ${roomId}):`, sessionInfo);
 
+      console.log("세션 날짜", sessionInfo.sessionDate);
+
       setModalData({
         title: item.title,
         date: sessionInfo.sessionDate || "날짜 정보 없음",
@@ -268,8 +298,9 @@ const NotificationsPage = () => {
         location: sessionInfo.location || "장소 정보 없음",
         amount: sessionInfo.price || 0,
         somoimId: sessionInfo.somoimId || roomId,
-        sessionId: sessionInfo.sessionNumber,
+        sessionId: sessionInfo.id,
       });
+
       setModalVisible(true);
     } catch (error) {
       console.error(`❌ 세션 정보 조회 실패 (roomId: ${item.postId}):`, error);
@@ -277,6 +308,14 @@ const NotificationsPage = () => {
       setAlertVisible(true);
     }
   };
+
+  useEffect(() => {
+    // modalData가 유효하고, 특히 sessionNumber(sessionId)가 설정되었을 때만 모달을 엽니다.
+    if (modalData && modalData.sessionId) {
+      console.log("🔥 useEffect: 업데이트된 modalData 확인:", modalData); // 확인용 로그
+      setModalVisible(true);
+    }
+  }, [modalData]); // modalData가 변경될 때마다 실행
 
   const checkPaymentStatus = async (somoimId, sessionId) => {
     try {
@@ -345,7 +384,7 @@ const NotificationsPage = () => {
         setAlertVisible(true);
         break;
       case "PAYMENT_REQUESTED":
-        if (item.postId) {
+        if (item.id) {
           fetchSessionInfo(item);
         } else {
           setAlertMessage("모임 정보를 찾을 수 없습니다");
@@ -403,7 +442,12 @@ const NotificationsPage = () => {
     <Container>
       <Header>알림</Header>
       {loading ? (
-        <p>로딩 중...</p>
+        <LoadingContainer>
+          <LoadingIcon>
+            <FaSpinner />
+          </LoadingIcon>
+          <p>알림을 불러오는 중입니다...</p>
+        </LoadingContainer>
       ) : notifications.length === 0 ? (
         <EmptyContainer>
           <EmptyText>알림이 존재하지 않습니다</EmptyText>

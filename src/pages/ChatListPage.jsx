@@ -140,6 +140,8 @@ const ChatListPage = () => {
         headers: { access: accessToken },
       });
 
+      console.log("✅ 채팅방 목록 조회 성공:", res.data.dtoList);
+
       const list = Array.isArray(res.data?.dtoList) ? res.data.dtoList : [];
 
       const uniqueList = Array.from(new Map(list.map((c) => [c.id, c]))).map(

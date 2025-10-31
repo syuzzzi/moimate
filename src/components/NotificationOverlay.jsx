@@ -6,6 +6,7 @@ import React, {
   useRef,
 } from "react";
 import styled, { keyframes, css } from "styled-components";
+import { useLocation } from "react-router-dom";
 
 // --------------------------------------------------
 // 1. 애니메이션 정의 (Keyframes)
@@ -109,10 +110,15 @@ export const NotificationOverlayProvider = ({ children }) => {
   const [message, setMessage] = useState(null);
   const [isExiting, setIsExiting] = useState(false); // 애니메이션 상태 추적
 
+  const location = useLocation();
+
   const showNotification = (
     { roomName, senderName, message: msgText },
     onPress = null
   ) => {
+    if (location.pathname.startsWith("/chat/")) {
+      return;
+    }
     // 이미 표시 중이면 기존 애니메이션 중단하고 새 알림 표시
     if (visible) {
       clearTimeout(window.notificationTimeout);
@@ -163,7 +169,7 @@ export const NotificationOverlayProvider = ({ children }) => {
             <div onClick={message.onPress}>
               <Row>
                 {/* 웹 환경에 맞는 이미지 경로 사용 */}
-                <Icon src="assets/images/favicon.png" alt="App Icon" />
+                <Icon src="../assets/images/favicon.png" alt="App Icon" />
                 <TextContainer>
                   <Title>{message.roomName}</Title>
                   <Message>

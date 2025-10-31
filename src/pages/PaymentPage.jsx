@@ -87,6 +87,7 @@ const PaymentPage = () => {
     setStatusMessage("결제 정보를 서버에 전송 중..."); // 상태 업데이트
 
     const currentParams = new URLSearchParams(window.location.search);
+    console.log("현재 URL 파라미터:", currentParams.toString());
     const somoimIdFromUrl = currentParams.get("somoimId");
     const sessionIdFromUrl = currentParams.get("sessionId");
 
@@ -120,7 +121,7 @@ const PaymentPage = () => {
         somoimId: parsedSomoimId,
         sessionId: parsedSessionId,
       };
-      console.log("📤 최종 Payload 전송:", payload);
+      console.log("📤 전송할 결제 아이디들", payload);
 
       const response = await api.post("/payments/verify", payload, {
         headers: { access: accessToken },
@@ -134,7 +135,9 @@ const PaymentPage = () => {
     } catch (err) {
       const errorMsg =
         err.response?.data?.message || err.message || "알 수 없는 오류";
+
       console.error("❌ 서버 전송 실패/오류:", errorMsg);
+
       setStatusMessage(`결제 승인 오류: ${errorMsg}`);
       setIsError(true);
       // 실패 시 잠시 메시지를 보여준 후 이전 페이지로 이동 (사용자 경험 개선)
@@ -189,6 +192,8 @@ const PaymentPage = () => {
 
     if (isSdkLoaded && dataValid && isInitialLoad) {
       console.log("💰 자동 결제 요청 시작...");
+
+      console.log("유저 이름", userName.name);
       requestPay();
     }
 

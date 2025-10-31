@@ -322,6 +322,9 @@ const ChatPage = () => {
           headers: { access: token },
         });
         setCurrentUserId(Number(data.data));
+
+        console.log("data", data);
+        console.log("내 유저 아이디:", data.data);
       } catch (e) {
         console.error("유저 정보 가져오기 실패", e);
       }
@@ -368,15 +371,11 @@ const ChatPage = () => {
         })) || [];
       setParticipants(list);
 
+      console.log("채팅방 참가자 불러오기 까지는 됨");
+
       const sRes = await api.get(`/sessions/chatroom/${roomId}/active`, {
         headers: { access: token },
       });
-
-      const ana = sRes.data.data;
-
-      console.log("active session", sRes);
-
-      console.log("active sessionzz", ana.id);
 
       if (!sRes.data.data) {
         setMeetingActive(false);
@@ -386,6 +385,7 @@ const ChatPage = () => {
 
       const s = sRes.data.data;
 
+      console.log("활성 세션 정보:", s);
       console.log("현재 세션 아이디", s.id);
 
       setMeetingActive(true);
@@ -394,14 +394,15 @@ const ChatPage = () => {
       setSessionDate(s.sessionDate);
       setSessionTime(s.sessionTime);
 
+      console.log("세션 상태 불러오기 까지는 됨");
+
       const payRes = await api.post(
         `/payments/status`,
-        { roomId, sessionId: s.sessionNumber },
+        { roomId, sessionId: s.id },
         { headers: { access: token } }
       );
 
-      console.log("payres", payRes);
-
+      console.log("결제 상태 응답도 옴");
       const map = {};
 
       const statuses = payRes?.data?.data?.userPaymentStatuses ?? [];
@@ -620,6 +621,10 @@ const ChatPage = () => {
       setSideOpen(false);
 
       const token = localStorage.getItem("accessToken");
+
+      console.log("currentRound:", currentRound);
+      console.log("roomId:", roomId);
+
       const res = await api.post(
         "/payments/info",
         {
@@ -629,6 +634,8 @@ const ChatPage = () => {
         },
         { headers: { access: token } }
       );
+
+      console.log("결제 정보 조회 성공:", res.data);
 
       const { impUid, amount } = res.data.data;
 
@@ -813,7 +820,7 @@ const ChatPage = () => {
                       onClick={() => {
                         setFormDate(getToday());
                         setFormTime(getNow());
-                        setFormPrice("10000");
+                        setFormPrice("100");
                         setFormLocation("");
                         setStartModalOpen(true);
                       }}
