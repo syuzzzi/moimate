@@ -284,6 +284,8 @@ const ChatPage = () => {
   const [hostExists, setHostExists] = useState(true);
   const [myRole, setMyRole] = useState();
 
+  const [sessionId, setSessionId] = useState(null);
+
   const [sideOpen, setSideOpen] = useState(false);
   const [startModalOpen, setStartModalOpen] = useState(false);
   const [endConfirmOpen, setEndConfirmOpen] = useState(false);
@@ -378,6 +380,7 @@ const ChatPage = () => {
       });
 
       if (!sRes.data.data) {
+        console.log("활성 세션 없음");
         setMeetingActive(false);
         setParticipantStatus({});
         return;
@@ -394,6 +397,8 @@ const ChatPage = () => {
       setSessionDate(s.sessionDate);
       setSessionTime(s.sessionTime);
 
+      setSessionId(s.id);
+
       console.log("세션 상태 불러오기 까지는 됨");
 
       const payRes = await api.post(
@@ -401,6 +406,8 @@ const ChatPage = () => {
         { roomId, sessionId: s.id },
         { headers: { access: token } }
       );
+
+      console.log("결제상태?", payRes.data.data);
 
       console.log("결제 상태 응답도 옴");
       const map = {};
@@ -410,7 +417,7 @@ const ChatPage = () => {
       console.log("결제 상태:", statuses);
 
       statuses.forEach((u) => {
-        map[String(u.userId)] = u.paid ? "참여" : "불참";
+        map[String(u.userId)] = u.isPaid ? "참여" : "불참";
       });
       list.forEach((p) => {
         if (!map[String(p.userId)]) map[String(p.userId)] = "불참";
@@ -625,19 +632,27 @@ const ChatPage = () => {
       console.log("currentRound:", currentRound);
       console.log("roomId:", roomId);
 
-      const res = await api.post(
-        "/payments/info",
-        {
-          userId: currentUserId,
-          sessionId: currentRound,
-          somoimId: roomId,
-        },
+      const mypageMe = await api.get("/mypage/me", {
+        headers: { access: token },
+      });
+
+      const userId = mypageMe.data.data;
+
+      const idid = await api.get(`/users/${userId}`);
+
+      console.log("내 유저 이메일:", idid.data.username);
+
+      console.log("세션 전체 아이디", sessionId);
+
+      const payRes = await api.post(
+        `/payments/status`,
+        { roomId, sessionId: sessionId },
         { headers: { access: token } }
       );
 
-      console.log("결제 정보 조회 성공:", res.data);
+      console.log("결제 정보 조회 성공:", payRes.data.data);
 
-      const { impUid, amount } = res.data.data;
+      const { impUid, amount } = payRes.data.data;
 
       navigate("/checkparticipants", {
         state: {

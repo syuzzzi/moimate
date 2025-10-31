@@ -217,6 +217,7 @@ const ProfilePage = () => {
       const myUserIdRes = await api.get("/mypage/me", {
         headers: { access: token },
       });
+
       const myUserId = myUserIdRes.data.data;
       setIsMyProfile(String(userId) === String(myUserId));
 
@@ -225,6 +226,8 @@ const ProfilePage = () => {
       const profileRes = await api.get(`/profile/${userId}`, {
         headers: { access: token },
       });
+
+      console.log("프로필 데이터:", profileRes.data.data);
 
       const { name, image, career, ratingAverage } = profileRes.data.data;
 
