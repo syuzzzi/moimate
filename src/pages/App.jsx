@@ -137,6 +137,7 @@ const App = () => {
           <Route path="/findpw" element={<FindPwPage />} />
           <Route path="/allposts" element={<AllPostsPage />} />
           <Route path="/postdetail/:postId" element={<PostDetailPage />} />
+          <Route path="FAQ" element={<FAQPage />} />
 
           {/* ✅ 로그인 여부와 상관없이 접근 가능 + Layout 적용 */}
           <Route element={<Layout />}>
@@ -181,7 +182,6 @@ const App = () => {
               element={<ApplicationDecisionPage />}
             />
             <Route path="/deleteaccount" element={<DeleteAccountPage />} />
-            <Route path="FAQ" element={<FAQPage />} />
           </Route>
         </Routes>
       </NotificationOverlayProvider>

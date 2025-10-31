@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ChevronDown, ChevronLeft } from "react-feather";
-//import api from "../api/api";
+import api from "../api/api";
 
 const Container = styled.div`
   display: flex;
@@ -10,8 +10,8 @@ const Container = styled.div`
   flex: 1;
   background-color: #fff;
   padding: 30px 20px;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-y: auto;
   position: relative;
 `;
 
@@ -139,8 +139,13 @@ export default function FaqPage() {
   // FAQ 목록 조회
   useEffect(() => {
     const fetchFaqs = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+
       try {
         const res = await api.get("/faqs");
+
+        console.log("✔️ FAQ 목록 조회 응답:", res.data);
+
         const fetchedFaqs = res.data.faqs || [];
 
         if (fetchedFaqs.length === 0) {

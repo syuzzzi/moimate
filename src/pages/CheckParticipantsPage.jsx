@@ -1,29 +1,47 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
 import styled, { useTheme } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CheckSquare, Square, LogOut } from "react-feather";
+import { ChevronLeft } from "react-feather";
 import { v4 as uuid } from "uuid"; // uuid는 예시로 추가, 실제 구현에 따라 필요 없을 수도 있습니다.
 
 import api from "../api/api";
 import { Button, AlertModal } from "../components";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
 
-const PageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #fff;
-  padding-bottom: 120px;
-`;
-
 const Container = styled.main`
-  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 40px 30px 0;
+  flex: 1;
+  background-color: #fff;
+  padding: 30px 20px;
+  height: 100vh;
+  position: relative;
+  width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  box-sizing: border-box;
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  position: relative;
+  margin-bottom: 30px;
+  box-sizing: border-box;
+`;
+
+const BackButton = styled.button`
+  position: absolute;
+  left: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const HeaderTitle = styled.h1`
@@ -32,6 +50,7 @@ const HeaderTitle = styled.h1`
   color: #000;
   font-size: 28px;
   font-weight: bold;
+  text-align: center;
 `;
 
 const RoundText = styled.span`
@@ -54,6 +73,8 @@ const ParticipantListContainer = styled.div`
   max-height: 400px;
   overflow-y: auto;
   padding-top: 20px;
+  padding-left: 40px;
+  align-items: center;
 `;
 
 const ParticipantList = styled.div`
@@ -113,16 +134,11 @@ const ParticipantName = styled.span`
 `;
 
 const FooterContainer = styled.footer`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-top: 1px solid #eee;
-  z-index: 10;
-  display: flex;
-  justify-content: center;
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 60px); // 좌우 패딩 고려
 `;
 
 const EmptyText = styled.p`
@@ -212,7 +228,7 @@ const CheckParticipants = () => {
 
       console.log(
         "최종 환불 대상자:",
-        refundTargets.map((p) => p.name)
+        refundTargets.map((p) => p.userId)
       );
 
       // 1. 환불 대상자에 대한 환불 처리
@@ -224,12 +240,17 @@ const CheckParticipants = () => {
               "/payments/info",
               {
                 userId: p.userId,
-                sessionId: currentRound,
+                sessionId: sessionId,
                 somoimId: roomId,
               },
               {
                 headers: { access: token, "Content-Type": "application/json" },
               }
+            );
+
+            console.log(
+              `- ${p.name}의 결제 정보 조회 응답:`,
+              refundInfoResponse.data
             );
 
             const { amount, impUid } = refundInfoResponse.data.data;
@@ -278,61 +299,63 @@ const CheckParticipants = () => {
   };
 
   return (
-    <PageWrapper>
-      <Container>
-        {/* 헤더 역할 (뒤로가기 등)은 생략하고 내용만 구성 */}
-        <HeaderTitle>{sessionDate || "날짜 정보 없음"}</HeaderTitle>
-        <MessageText>
-          <RoundText>{currentRound}회차</RoundText> 모임이 종료되었습니다!
-        </MessageText>
+    <Container>
+      <HeaderContainer>
+        <BackButton onClick={() => navigate(-1)}>
+          <ChevronLeft size={24} color="#333" />
+        </BackButton>
+      </HeaderContainer>
+      {/* 헤더 역할 (뒤로가기 등)은 생략하고 내용만 구성 */}
+      <HeaderTitle>{sessionDate || "날짜 정보 없음"}</HeaderTitle>
+      <MessageText>
+        <RoundText>{currentRound}회차</RoundText> 모임이 종료되었습니다!
+      </MessageText>
 
-        {paidParticipants.length === 0 ? (
-          <EmptyText>결제한 사람이 없습니다.</EmptyText>
-        ) : (
-          <>
-            <MessageText>
-              모임에{" "}
-              <span
-                style={{
-                  color: theme.colors.mainBlue,
-                  fontSize: 20,
-                }}
-              >
-                참여한 사람
-              </span>
-              을 선택해 주세요.
-            </MessageText>
-            <ParticipantListContainer>
-              <ParticipantList>
-                {Status.map((p) => (
-                  <ParticipantRow key={p.key}>
-                    <IconBox
-                      onClick={() => toggleCheck(p.userId)}
-                      type="button"
-                      aria-label={`환불 대상 선택: ${p.name}`}
-                      $checked={p.attended}
-                    >
-                      {p.attended ? (
-                        <ImCheckboxChecked />
-                      ) : (
-                        <ImCheckboxUnchecked />
-                      )}
-                    </IconBox>
-                    <AvatarBox>
-                      <ParticipantImage
-                        src={p.image || profileFallback}
-                        alt={`${p.name} 프로필`}
-                      />
-                    </AvatarBox>
-                    <ParticipantName>{p.name}</ParticipantName>
-                  </ParticipantRow>
-                ))}
-              </ParticipantList>
-            </ParticipantListContainer>
-          </>
-        )}
-      </Container>
-
+      {paidParticipants.length === 0 ? (
+        <EmptyText>결제한 사람이 없습니다.</EmptyText>
+      ) : (
+        <>
+          <MessageText>
+            모임에{" "}
+            <span
+              style={{
+                color: theme.colors.mainBlue,
+                fontSize: 20,
+              }}
+            >
+              참여한 사람
+            </span>
+            을 선택해 주세요.
+          </MessageText>
+          <ParticipantListContainer>
+            <ParticipantList>
+              {Status.map((p) => (
+                <ParticipantRow key={p.key}>
+                  <IconBox
+                    onClick={() => toggleCheck(p.userId)}
+                    type="button"
+                    aria-label={`환불 대상 선택: ${p.name}`}
+                    $checked={p.attended}
+                  >
+                    {p.attended ? (
+                      <ImCheckboxChecked />
+                    ) : (
+                      <ImCheckboxUnchecked />
+                    )}
+                  </IconBox>
+                  <AvatarBox>
+                    <ParticipantImage
+                      src={p.image || profileFallback}
+                      alt={`${p.name} 프로필`}
+                    />
+                  </AvatarBox>
+                  <ParticipantName>{p.name}</ParticipantName>
+                </ParticipantRow>
+              ))}
+            </ParticipantList>
+          </ParticipantListContainer>
+        </>
+      )}
       <FooterContainer>
         <Button
           title="환불"
@@ -346,7 +369,6 @@ const CheckParticipants = () => {
           textStyle={{ color: theme.colors.white, fontWeight: "bold" }}
         />
       </FooterContainer>
-
       {/* 완료 모달 */}
       <AlertModal
         visible={modalVisible}
@@ -369,7 +391,7 @@ const CheckParticipants = () => {
           setErrorModalVisible(false);
         }}
       />
-    </PageWrapper>
+    </Container>
   );
 };
 

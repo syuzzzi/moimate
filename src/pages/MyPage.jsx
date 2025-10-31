@@ -329,25 +329,20 @@ const MyPage = () => {
                 </PlaceholderWrapper>
               ) : (
                 <ul style={{ listStyle: "none", padding: 0 }}>
-                  {section.data.map(
-                    (meeting) => (
-                      console.log(meeting),
-                      (
-                        <li key={`${meeting.postId}-${meeting.title}`}>
-                          <MeetingItem
-                            to={
-                              meeting.userId === currentUserId
-                                ? `/mypostdetail/${meeting.postId}`
-                                : `/postdetail/${meeting.postId}`
-                            }
-                          >
-                            <MeetingTitle>{meeting.title}</MeetingTitle>
-                            <MeetingDate>{meeting.createdAt}</MeetingDate>
-                          </MeetingItem>
-                        </li>
-                      )
-                    )
-                  )}
+                  {section.data.map((meeting) => (
+                    <li key={`${meeting.postId}-${meeting.title}`}>
+                      <MeetingItem
+                        to={
+                          meeting.userId === currentUserId
+                            ? `/mypostdetail/${meeting.postId}`
+                            : `/postdetail/${meeting.postId}`
+                        }
+                      >
+                        <MeetingTitle>{meeting.title}</MeetingTitle>
+                        <MeetingDate>{meeting.createdAt}</MeetingDate>
+                      </MeetingItem>
+                    </li>
+                  ))}
                 </ul>
               )}
             </Section>
