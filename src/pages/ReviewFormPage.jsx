@@ -122,7 +122,6 @@ const ReviewForm = () => {
             style={{ marginHorizontal: 2, cursor: "pointer" }}
             onClick={() => {
               setRating(num);
-              console.log("선택된 별점:", num);
             }}
           />
         ))}
@@ -139,8 +138,6 @@ const ReviewForm = () => {
 
     try {
       const accessToken = localStorage.getItem("accessToken");
-
-      console.log("리뷰 써질 유저", userId);
 
       await api.post(
         "/review",

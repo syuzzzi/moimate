@@ -113,8 +113,6 @@ const SearchPage = () => {
     try {
       const token = localStorage.getItem("accessToken");
 
-      console.log("토큰 확인:", token); // 토큰 값 확인용 로그
-
       if (token) {
         const response = await api.get("/mypage/me", {
           headers: {

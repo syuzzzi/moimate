@@ -176,7 +176,6 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
         headers: { access: accessToken },
       });
 
-      console.log("✔️프로필 API 응답: ", res.data);
       const data = res.data?.data || res.data;
       setUser({
         name: data.name,
@@ -200,8 +199,6 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
       const res = await api.get(`/review/${userId}`, {
         headers: { access: accessToken },
       });
-
-      console.log("✔️리뷰 API 응답: ", res.data);
 
       const reviewList = res.data.dtoList || res.data.data || [];
       const mapped = reviewList.map((item) => ({
@@ -235,9 +232,6 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
 
       setReviewerId(data);
 
-      console.log("✔️ 로그인 유저 ID:", data);
-      console.log("✔️ 프로필 유저 ID:", userId);
-
       return data;
     } catch (error) {
       console.error("❌ 로그인 유저 ID 가져오기 실패:", error);
@@ -270,8 +264,6 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
       const res = await api.post("/payments/review/eligibility", requestData, {
         headers: { access: accessToken },
       });
-
-      console.log("✔️ 리뷰 권한 확인 응답:", res.data);
 
       const responseData = res.data.data;
       if (responseData && responseData.participationCount > 0) {

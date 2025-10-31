@@ -129,8 +129,6 @@ const ChatListPage = () => {
 
       const accessToken = localStorage.getItem("accessToken");
 
-      console.log("🔑 accessToken:", accessToken);
-
       if (!accessToken) {
         console.warn("⚠️ accessToken 없음");
         return;
@@ -139,8 +137,6 @@ const ChatListPage = () => {
       const res = await api.get("/chatroom", {
         headers: { access: accessToken },
       });
-
-      console.log("✅ 채팅방 목록 조회 성공:", res.data.dtoList);
 
       const list = Array.isArray(res.data?.dtoList) ? res.data.dtoList : [];
 

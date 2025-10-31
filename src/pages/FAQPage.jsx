@@ -144,8 +144,6 @@ export default function FaqPage() {
       try {
         const res = await api.get("/faqs");
 
-        console.log("✔️ FAQ 목록 조회 응답:", res.data);
-
         const fetchedFaqs = res.data.faqs || [];
 
         if (fetchedFaqs.length === 0) {

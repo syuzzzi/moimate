@@ -215,7 +215,6 @@ const NotificationsPage = () => {
           headers: { access: token },
         }); // 가정: 프로필 API
 
-        console.log("프로필 확인", userProfileRes.data.data.name);
         setCurrentUserName(userProfileRes.data.data || "사용자");
       } catch (e) {
         console.warn("사용자 이름 로드 실패, 기본값 사용:", e);
@@ -227,7 +226,6 @@ const NotificationsPage = () => {
         headers: { access: token },
         timeout: 5000, // 5초 타임아웃 설정
       });
-      console.log("🔔 알림 조회 성공:", res.data.data);
 
       const responseData = res.data.data;
 
@@ -256,7 +254,6 @@ const NotificationsPage = () => {
       await api.patch("/notifications/read-all", null, {
         headers: { access: token },
       });
-      console.log("✅ 전체 읽음 처리 완료");
     } catch (e) {
       console.log("❌ 알림 읽음 처리 실패", e);
     }
@@ -273,8 +270,6 @@ const NotificationsPage = () => {
       const roomId = item.roomId;
       const url = `/sessions/chatroom/${roomId}/active`;
 
-      console.log(`📡 세션 정보 요청 URL: ${url}`);
-
       const res = await api.get(url, {
         headers: { access: token },
       });
@@ -286,10 +281,6 @@ const NotificationsPage = () => {
         setAlertVisible(true);
         return;
       }
-
-      console.log(`✅ 세션 정보 조회 성공 (roomId: ${roomId}):`, sessionInfo);
-
-      console.log("세션 날짜", sessionInfo.sessionDate);
 
       setModalData({
         title: item.title,
@@ -312,7 +303,6 @@ const NotificationsPage = () => {
   useEffect(() => {
     // modalData가 유효하고, 특히 sessionNumber(sessionId)가 설정되었을 때만 모달을 엽니다.
     if (modalData && modalData.sessionId) {
-      console.log("🔥 useEffect: 업데이트된 modalData 확인:", modalData); // 확인용 로그
       setModalVisible(true);
     }
   }, [modalData]); // modalData가 변경될 때마다 실행
@@ -432,7 +422,6 @@ const NotificationsPage = () => {
       userName: currentUserName,
     };
 
-    console.log("🚀 결제 페이지로 전송되는 데이터 (State):", paymentParams);
     navigate("/payment", {
       state: paymentParams,
     });

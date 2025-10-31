@@ -191,12 +191,10 @@ const ProfilePage = () => {
     // 1. 로컬 토큰 삭제
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    console.log("✅ 3단계: 로컬 토큰 삭제 완료");
 
     // 2. 앱 상태 변경
     setAccessToken(null);
     setUser(null);
-    console.log("✅ 4단계: 앱 상태 초기화 완료");
 
     // 3. 메인 페이지로 이동
     navigate("/main");
@@ -227,8 +225,6 @@ const ProfilePage = () => {
         headers: { access: token },
       });
 
-      console.log("프로필 데이터:", profileRes.data.data);
-
       const { name, image, career, ratingAverage } = profileRes.data.data;
 
       setUser({
@@ -243,7 +239,7 @@ const ProfilePage = () => {
       });
 
       const mapped = reviewRes.data.dtoList.map((r, index) => ({
-        key: index,
+        //key: index,
         star: r.star,
         sentence: r.sentence,
         createdAt: r.createdAt?.split("T")[0].split("-").join("."),
@@ -283,7 +279,6 @@ const ProfilePage = () => {
       if (window.stompClient && window.stompClient.connected) {
         await new Promise((resolve) => {
           window.stompClient.disconnect(() => {
-            console.log("✅ 1단계: 웹소켓 연결 해제 완료");
             resolve();
           });
         });
@@ -298,7 +293,6 @@ const ProfilePage = () => {
         await api.post("/auth/logout", {
           refresh_token: refreshToken,
         });
-        console.log("✅ 2단계: 백엔드 로그아웃 요청 완료");
       }
 
       setModalVisible(true);

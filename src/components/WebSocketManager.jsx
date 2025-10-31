@@ -24,12 +24,6 @@ export default function WebSocketManager() {
 
   useEffect(() => {
     // 1. 초기 로딩 상태 또는 토큰이 없을 경우 연결하지 않습니다.
-    console.log(
-      "[WS] loading:",
-      loading,
-      "accessToken:",
-      accessToken ? "존재함" : "없음"
-    );
     if (loading || !accessToken) return;
 
     // 2. 이전에 연결된 클라이언트가 있다면 비활성화합니다.
@@ -49,8 +43,6 @@ export default function WebSocketManager() {
       },
 
       onConnect: () => {
-        console.log("✅알림 Websocket 연결됨");
-
         // 4. 알림 구독
         client.subscribe("/user/queue/chat-notifications", (message) => {
           const payload = JSON.parse(message.body);
@@ -73,7 +65,6 @@ export default function WebSocketManager() {
 
       onWebSocketError: (error) => console.error("❌ WebSocket 에러:", error),
       onStompError: (frame) => console.error("❌ STOMP 에러:", frame),
-      onWebSocketClose: () => console.warn("🔌 WebSocket 연결 종료"),
     });
 
     clientRef.current = client;

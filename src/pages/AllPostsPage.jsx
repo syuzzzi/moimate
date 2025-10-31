@@ -196,8 +196,6 @@ const AllPostsPage = ({ route }) => {
 
         const response = await api.get("/posts/list", { params });
 
-        console.log("게시글 불러오기 응답:", response);
-
         const newPosts = response.data.dtoList;
 
         if (newPosts.length > 0) {
