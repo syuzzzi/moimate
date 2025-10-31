@@ -441,14 +441,35 @@ const ChatPage = () => {
 
   // ───────── History
   const fetchHistory = useCallback(
-    async (plist) => {
+    async (lastMessageId = null, initialLoad = false) => {
+      if (lastMessageId && !hasNextPage) return; // 이미 끝까지 로드했으면 중단
+
+      // 초기 로드(initialLoad가 true)가 아니면서, 다음 페이지가 없으면 로드 중단
+      if (!initialLoad && lastMessageId && !hasNextPage) return;
+
+      setLoading(true);
+      const token = localStorage.getItem("accessToken");
+
       try {
-        const token = localStorage.getItem("accessToken");
+        const params = {
+          size: 500, // 한 번에 가져올 메시지 개수
+          ...(lastMessageId && { lastMessageId: lastMessageId }), // lastMessageId가 있으면 추가
+        };
+
+        // 🚨 백엔드 API가 이 쿼리 파라미터(lastMessageId, size)를 받아들이는지 확인해주세요!
         const { data } = await api.get(`/chatroom/${roomId}`, {
           headers: { access: token },
+          params,
         });
-        const history = (data?.data?.messages ?? []).map((m) => {
-          const matchedUser = plist.find(
+
+        // 🚨 백엔드 응답 구조에 따라 `messages` 배열과 `hasNext` 값을 추출해야 합니다.
+        // 현재는 data.data에 바로 메시지 배열이 있는 것으로 가정합니다. (백엔드 구조에 맞게 수정 필요)
+        const messagesData = data?.data?.messages ?? [];
+        const hasNext = data?.data?.hasNext ?? false; // **🚨 백엔드에서 다음 페이지 존재 여부를 응답해줘야 합니다.**
+
+        const history = messagesData.map((m) => {
+          // 기존 메시지 매핑 로직 (senderId로 참가자 정보 찾기)
+          const matchedUser = participants.find(
             (p) => Number(p.userId) === Number(m.senderId)
           );
           return ensureId({
@@ -460,15 +481,32 @@ const ChatPage = () => {
             time: m.createdAt?.slice(11, 16) ?? "",
           });
         });
-        setTitle(data.data.roomName);
-        setHostExists(!data.data.deleteFlag);
-        setMyRole(data.data.role);
-        setMessages(history);
+
+        // 🚨 새로운 메시지들을 기존 메시지 목록의 끝(과거 방향)에 추가합니다.
+        setMessages((prev) => {
+          // 중복 메시지 제거 로직을 추가하여 안전하게 병합합니다.
+          const newMessages = history.filter(
+            (m) => !prev.some((p) => p.id === m.id)
+          );
+          return [...prev, ...newMessages];
+        });
+
+        // 초기 로드 시에만 채팅방 정보 업데이트
+        if (!lastMessageId) {
+          setTitle(data.data.roomName);
+          setHostExists(!data.data.deleteFlag);
+          setMyRole(data.data.role);
+        }
+
+        setHasNextPage(hasNext);
       } catch (e) {
         console.error("메시지 불러오기 실패", e.response?.data ?? e.message);
+      } finally {
+        setLoading(false);
       }
     },
-    [roomId]
+    // 의존성 배열에 messages, hasNextPage, participants 등을 추가합니다.
+    [roomId, hasNextPage, participants]
   );
 
   // ───────── WebSocket
@@ -515,9 +553,13 @@ const ChatPage = () => {
   useEffect(() => {
     if (!roomId) return;
     (async () => {
+      // 1. 참가자 목록을 먼저 불러옵니다. (메시지 매핑에 필요)
       const plist = await fetchParticipants();
+      // 2. 웹소켓을 연결합니다.
       await connectSocket();
-      await fetchHistory(plist);
+      // 3. 메시지 기록을 불러옵니다. (lastMessageId=null로 최신 메시지 30개 로드)
+      await fetchHistory(null, true); // 🚨 수정: lastMessageId 없이 초기 호출
+      // 4. 세션 상태를 불러옵니다.
       await fetchSessionStatus();
       // 최초 읽음 표시 (안전빵)
       const accessToken = localStorage.getItem("accessToken");
@@ -578,18 +620,23 @@ const ChatPage = () => {
   const handleScroll = useCallback(
     (e) => {
       const target = e.target;
-      const scrollHeight = target.scrollHeight;
       const scrollTop = target.scrollTop;
-      const clientHeight = target.clientHeight;
 
-      if (
-        scrollTop + clientHeight >= scrollHeight - 5 &&
-        hasNextPage &&
-        !loading
-      ) {
+      // 🚨 스크롤이 거의 최상단에 도달했을 때 (과거 메시지 로드)
+      // scrollTop이 0에 가까워졌을 때 과거 메시지를 로드해야 합니다.
+      const isNearTop = scrollTop < 50;
+
+      if (isNearTop && hasNextPage && !loading) {
+        // 현재 메시지 목록에서 가장 오래된 메시지의 ID를 가져옵니다.
+        const oldestMessageId = messages[messages.length - 1]?.id;
+
+        if (oldestMessageId) {
+          // 🚨 가장 오래된 메시지 ID를 넘겨서 그 이전 메시지를 로드
+          fetchHistory(oldestMessageId, false);
+        }
       }
     },
-    [loading, hasNextPage]
+    [loading, hasNextPage, messages, fetchHistory]
   );
   // ───────── actions
   const handleSend = () => {
