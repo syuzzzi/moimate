@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Star } from "react-feather";
+import { FaStar } from "react-icons/fa";
 import PropTypes from "prop-types";
 
 const Container = styled.div`
@@ -47,7 +47,7 @@ const Review = ({ star, sentence, createdAt }) => {
   return (
     <Container>
       <StarContainer>
-        <Star size={18} color="#FFC107" />
+        <FaStar size={18} color="#FFC107" />
         <StarText>{star}</StarText>
       </StarContainer>
       <Content>{sentence}</Content>

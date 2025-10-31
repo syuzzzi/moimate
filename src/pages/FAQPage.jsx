@@ -10,8 +10,8 @@ const Container = styled.div`
   flex: 1;
   background-color: #fff;
   padding: 30px 20px;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-y: auto;
   position: relative;
 `;
 
@@ -141,10 +141,11 @@ export default function FaqPage() {
     const fetchFaqs = async () => {
       const accessToken = localStorage.getItem("accessToken");
 
-      console.log("🔑 FAQ 목록 조회, 액세스 토큰:", accessToken);
-
       try {
-        const res = await api.get("/v1/faqs", { headers: accessToken });
+        const res = await api.get("/faqs");
+
+        console.log("✔️ FAQ 목록 조회 응답:", res.data);
+
         const fetchedFaqs = res.data.faqs || [];
 
         if (fetchedFaqs.length === 0) {
