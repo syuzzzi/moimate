@@ -322,6 +322,9 @@ const ChatPage = () => {
           headers: { access: token },
         });
         setCurrentUserId(Number(data.data));
+
+        console.log("data", data);
+        console.log("내 유저 아이디:", data.data);
       } catch (e) {
         console.error("유저 정보 가져오기 실패", e);
       }
@@ -399,6 +402,7 @@ const ChatPage = () => {
         { headers: { access: token } }
       );
 
+      console.log("결제 상태 응답도 옴");
       const map = {};
 
       const statuses = payRes?.data?.data?.userPaymentStatuses ?? [];
@@ -617,6 +621,10 @@ const ChatPage = () => {
       setSideOpen(false);
 
       const token = localStorage.getItem("accessToken");
+
+      console.log("currentRound:", currentRound);
+      console.log("roomId:", roomId);
+
       const res = await api.post(
         "/payments/info",
         {
@@ -626,6 +634,8 @@ const ChatPage = () => {
         },
         { headers: { access: token } }
       );
+
+      console.log("결제 정보 조회 성공:", res.data);
 
       const { impUid, amount } = res.data.data;
 

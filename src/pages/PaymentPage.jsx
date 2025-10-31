@@ -87,6 +87,7 @@ const PaymentPage = () => {
     setStatusMessage("결제 정보를 서버에 전송 중..."); // 상태 업데이트
 
     const currentParams = new URLSearchParams(window.location.search);
+    console.log("현재 URL 파라미터:", currentParams.toString());
     const somoimIdFromUrl = currentParams.get("somoimId");
     const sessionIdFromUrl = currentParams.get("sessionId");
 
