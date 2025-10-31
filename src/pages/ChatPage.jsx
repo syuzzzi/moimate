@@ -80,6 +80,7 @@ const ChatArea = styled.main`
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: hidden;
 `;
 
 const MessageList = styled.div`
@@ -290,6 +291,9 @@ const ChatPage = () => {
   const [startModalOpen, setStartModalOpen] = useState(false);
   const [endConfirmOpen, setEndConfirmOpen] = useState(false);
   const [failModalOpen, setFailModalOpen] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(true);
 
   // start form defaults
   const getToday = () => {
@@ -564,6 +568,22 @@ const ChatPage = () => {
     throttledPostRead(latestMessageId);
   }, [latestMessageId, throttledPostRead]);
 
+  const handleScroll = useCallback(
+    (e) => {
+      const target = e.target;
+      const scrollHeight = target.scrollHeight;
+      const scrollTop = target.scrollTop;
+      const clientHeight = target.clientHeight;
+
+      if (
+        scrollTop + clientHeight >= scrollHeight - 5 &&
+        hasNextPage &&
+        !loading
+      ) {
+      }
+    },
+    [loading, hasNextPage]
+  );
   // ───────── actions
   const handleSend = () => {
     if (!input.trim()) return;
@@ -733,41 +753,43 @@ const ChatPage = () => {
       </ChatHeader>
 
       <ChatArea>
-        <MessageList>{messages.map(renderMessage)}</MessageList>
-
-        <InputBar>
-          {hostExists ? (
-            <>
-              <TextInput
-                placeholder="메세지를 입력해보세요!"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend();
-                  }
-                }}
-              />
-              <IconButton onClick={handleSend} title="전송">
-                <SendIcon size={20} />
-              </IconButton>
-            </>
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                color: "#000",
-              }}
-            >
-              <AlertCircle size={18} />
-              <div style={{ fontSize: 14 }}>종료된 채팅입니다</div>
-            </div>
-          )}
-        </InputBar>
+        <MessageList onScroll={handleScroll} id="scroll-container">
+          {messages.map(renderMessage)}
+        </MessageList>
       </ChatArea>
+
+      <InputBar>
+        {hostExists ? (
+          <>
+            <TextInput
+              placeholder="메세지를 입력해보세요!"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+            />
+            <IconButton onClick={handleSend} title="전송">
+              <SendIcon size={20} />
+            </IconButton>
+          </>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              color: "#000",
+            }}
+          >
+            <AlertCircle size={18} />
+            <div style={{ fontSize: 14 }}>종료된 채팅입니다</div>
+          </div>
+        )}
+      </InputBar>
 
       {/* 오른쪽 패널 */}
       {sideOpen && (
