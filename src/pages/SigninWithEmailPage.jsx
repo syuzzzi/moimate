@@ -122,7 +122,6 @@ const SigninWithEmail = () => {
       // AuthContext 로그인 상태 업데이트
       login(accessToken, refreshToken, userData || {});
 
-      console.log("로그인 성공", userData);
       navigate("/main", { replace: true });
     } catch (error) {
       if (error.response) {

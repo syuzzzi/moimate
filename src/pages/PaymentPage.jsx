@@ -64,7 +64,6 @@ const PaymentPage = () => {
     const script = document.createElement("script");
     script.src = "https://cdn.iamport.kr/js/iamport.payment-1.2.0.js";
     script.onload = () => {
-      console.log("✔️ Iamport SDK 로드 완료");
       setIsSdkLoaded(true);
       setStatusMessage("결제 정보를 확인하고 있습니다."); // SDK 로드 성공 메시지
     };
@@ -87,7 +86,6 @@ const PaymentPage = () => {
     setStatusMessage("결제 정보를 서버에 전송 중..."); // 상태 업데이트
 
     const currentParams = new URLSearchParams(window.location.search);
-    console.log("현재 URL 파라미터:", currentParams.toString());
     const somoimIdFromUrl = currentParams.get("somoimId");
     const sessionIdFromUrl = currentParams.get("sessionId");
 
@@ -121,13 +119,10 @@ const PaymentPage = () => {
         somoimId: parsedSomoimId,
         sessionId: parsedSessionId,
       };
-      console.log("📤 전송할 결제 아이디들", payload);
 
       const response = await api.post("/payments/verify", payload, {
         headers: { access: accessToken },
       });
-
-      console.log("✅ 결제 정보 전송 성공:", response.data);
 
       // ★★★ 성공 시 바로 알림 페이지로 이동 ★★★
       setStatusMessage("결제가 성공적으로 완료되었습니다!");
@@ -170,7 +165,6 @@ const PaymentPage = () => {
         m_redirect_url: redirectUrl,
       },
       (rsp) => {
-        console.log("유저이름", userName);
         console.warn("아임포트 콜백 실행됨 (리다이렉션으로 처리)");
       }
     );
@@ -191,9 +185,6 @@ const PaymentPage = () => {
     const isInitialLoad = !queryParams.get("imp_uid");
 
     if (isSdkLoaded && dataValid && isInitialLoad) {
-      console.log("💰 자동 결제 요청 시작...");
-
-      console.log("유저 이름", userName.name);
       requestPay();
     }
 
@@ -213,7 +204,6 @@ const PaymentPage = () => {
 
     if (imp_uid && !isProcessingRef.current) {
       if (imp_success === "true") {
-        console.log("🎁 URL 파라미터에서 결제 성공 데이터 수신");
         setStatusMessage("결제 성공 확인. 서버에 최종 승인 요청 중...");
 
         sendPaymentDataToServer({

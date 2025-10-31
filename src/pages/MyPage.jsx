@@ -186,8 +186,6 @@ const MyPage = () => {
 
       const resData = profileRes.data.data;
 
-      console.log("마이페이지 데이터:", resData);
-
       const formatDate = (isoDate) => {
         const date = new Date(isoDate);
         return `${date.getFullYear()}.${(date.getMonth() + 1)

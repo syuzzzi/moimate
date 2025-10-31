@@ -217,8 +217,6 @@ const MyPostDetailPage = () => {
       const res = await api.get(`/posts/${postId}`, { headers });
       const data = res.data.data;
 
-      console.log("상세 데이터:", data);
-
       setMeeting({
         postId: data.id,
         title: data.title,

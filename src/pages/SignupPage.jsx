@@ -215,7 +215,6 @@ const SignupPage = () => {
         password,
         gender,
       });
-      console.log("회원가입 성공:", response.data);
       navigate("/done");
     } catch (error) {
       if (error.response) {
