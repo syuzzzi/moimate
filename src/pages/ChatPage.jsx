@@ -86,7 +86,7 @@ const ChatArea = styled.main`
 const MessageList = styled.div`
   flex: 1;
   display: flex;
-  flex-direction: column-reverse; /* 최신 메시지 하단 고정 느낌 */
+  flex-direction: column;
   overflow-y: auto;
   padding: 8px 12px;
   gap: 6px;
@@ -315,7 +315,14 @@ const ChatPage = () => {
   const [formLocation, setFormLocation] = useState("");
 
   const stompRef = useRef(null);
+  const messageEndRef = useRef(null);
   const lastSentReadIdRef = useRef(null);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const ensureId = (msg) => ({ ...msg, id: msg.id ?? uuid() });
 
@@ -754,7 +761,8 @@ const ChatPage = () => {
 
       <ChatArea>
         <MessageList onScroll={handleScroll} id="scroll-container">
-          {messages.map(renderMessage)}
+          {[...messages].reverse().map(renderMessage)}
+          <div ref={messageEndRef} />
         </MessageList>
       </ChatArea>
 
