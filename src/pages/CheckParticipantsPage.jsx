@@ -203,19 +203,6 @@ const CheckParticipants = () => {
     return Status.filter((p) => p.attended);
   }, [Status]);
 
-  useEffect(() => {
-    console.log("환불 대상자 목록:");
-    if (refundTargets.length > 0) {
-      refundTargets.forEach((p) => {
-        console.log(
-          `- 환불 대상 (체크됨): 이름: ${p.name}, userId: ${p.userId}`
-        );
-      });
-    } else {
-      console.log("환불 대상자가 없습니다.");
-    }
-  }, [refundTargets]);
-
   const handleSubmit = async () => {
     if (!roomId || !sessionId) {
       setErrorModalMessage("세션 정보가 누락되었습니다.");
@@ -225,11 +212,6 @@ const CheckParticipants = () => {
 
     try {
       const token = localStorage.getItem("accessToken");
-
-      console.log(
-        "최종 환불 대상자:",
-        refundTargets.map((p) => p.userId)
-      );
 
       // 1. 환불 대상자에 대한 환불 처리
       if (refundTargets.length > 0) {
@@ -248,15 +230,7 @@ const CheckParticipants = () => {
               }
             );
 
-            console.log(
-              `- ${p.name}의 결제 정보 조회 응답:`,
-              refundInfoResponse.data
-            );
-
             const { amount, impUid } = refundInfoResponse.data.data;
-            console.log(
-              `- ${p.name}의 환불 정보: amount=${amount}, impUid=${impUid}`
-            );
 
             // 1-2. 가져온 환불 정보를 포함하여 환불 API 호출
             return api.post(
@@ -281,8 +255,6 @@ const CheckParticipants = () => {
           headers: { access: token, "Content-Type": "application/json" },
         }
       );
-
-      console.log("모든 환불 처리와 세션 종료가 완료되었습니다.");
 
       setModalMessage("참가자들에 대한\n환불 처리가 완료 되었습니다");
       setModalVisible(true);

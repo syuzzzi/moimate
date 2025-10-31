@@ -114,7 +114,6 @@ const ApplicationDecisionPage = () => {
       });
 
       setFormData(response.data.data); // content, userName, userImage (백엔드 구조 유지)
-      console.log("폼데이터", response.data.data);
     } catch (e) {
       console.error("신청폼 조회 실패", e);
       setAlertMessage("신청서를 불러오는 데 실패했습니다.");

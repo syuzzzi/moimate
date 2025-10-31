@@ -132,7 +132,6 @@ const EditProfilePage = () => {
           },
         });
         const userCareer = profileRes.data.data.career || "";
-        console.log("📦 불러온 career:", userCareer);
         setCareer(userCareer);
         setImage(profileRes.data.data.image || null);
       } catch (err) {
@@ -183,8 +182,6 @@ const EditProfilePage = () => {
           access: `${token}`,
         },
       });
-
-      console.log("✅ 저장 성공:", res.data);
 
       navigate(-1);
     } catch (error) {
