@@ -201,6 +201,8 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
         headers: { access: accessToken },
       });
 
+      console.log("✔️리뷰 API 응답: ", res.data);
+
       const reviewList = res.data.dtoList || res.data.data || [];
       const mapped = reviewList.map((item) => ({
         star: item.star,
@@ -268,6 +270,8 @@ const PublicProfilePage = ({ userId: profileUserId }) => {
       const res = await api.post("/payments/review/eligibility", requestData, {
         headers: { access: accessToken },
       });
+
+      console.log("✔️ 리뷰 권한 확인 응답:", res.data);
 
       const responseData = res.data.data;
       if (responseData && responseData.participationCount > 0) {

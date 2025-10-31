@@ -127,7 +127,9 @@ const SigninWithEmail = () => {
     } catch (error) {
       if (error.response) {
         console.error("서버 응답:", error.response);
-        setErrorMessage(error.response.data.message || "로그인 실패");
+        setErrorMessage(
+          error.response.data.message || "일치하는 회원정보가 없습니다"
+        );
       } else if (error.request) {
         console.error("네트워크 오류:", error.request);
         setErrorMessage("서버와 연결할 수 없습니다.");

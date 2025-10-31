@@ -116,7 +116,7 @@ const ReviewForm = () => {
         {[1, 2, 3, 4, 5].map((num) => (
           <FaStar
             key={num}
-            fill={rating >= num ? "#FFD000" : "none"}
+            fill={rating >= num ? "#FFD000" : "#e1e1e1"}
             stroke="#FFD000"
             size={23}
             style={{ marginHorizontal: 2, cursor: "pointer" }}
@@ -139,6 +139,8 @@ const ReviewForm = () => {
 
     try {
       const accessToken = localStorage.getItem("accessToken");
+
+      console.log("리뷰 써질 유저", userId);
 
       await api.post(
         "/review",

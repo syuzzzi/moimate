@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ChevronDown, ChevronLeft } from "react-feather";
-//import api from "../api/api";
+import api from "../api/api";
 
 const Container = styled.div`
   display: flex;
@@ -139,8 +139,12 @@ export default function FaqPage() {
   // FAQ 목록 조회
   useEffect(() => {
     const fetchFaqs = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+
+      console.log("🔑 FAQ 목록 조회, 액세스 토큰:", accessToken);
+
       try {
-        const res = await api.get("/faqs");
+        const res = await api.get("/v1/faqs", { headers: accessToken });
         const fetchedFaqs = res.data.faqs || [];
 
         if (fetchedFaqs.length === 0) {
